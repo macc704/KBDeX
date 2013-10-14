@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="src_jung"/>
+	<classpathentry kind="src" path="src_test"/>
+	<classpathentry kind="src" path="construction"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CommonLibrary"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JUNG"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CSwing"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CChart"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CTable"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/Sen1221"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/KFLoader"/>
+	<classpathentry kind="lib" path="lib/BiSlider.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CTimeLineView"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/CSwingApp"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

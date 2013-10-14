@@ -1,0 +1,12 @@
+wavelength
+velocity
+electron
+the-work-function
+energy-k
+lambda
+photon
+Planck/mass
+right
+Energy-k
+Planck
+light

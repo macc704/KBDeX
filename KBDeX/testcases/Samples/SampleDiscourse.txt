@@ -1,0 +1,19 @@
+This discourse is taken from Jun Oshima, Ritsuko Oshima, Yoshiaki Matsuzawa: "Knowledge Building Discourse Explorer: a social network analysis application for knowledge building discourse", Educational Technology Research and Development, Volume 60, Issue 5, pp.903-921, 2012. And the original version is Sawyer et al(in Press).
+A1 So we need lambda and its give us the *** so with the wavelength we can find velocity. And with...
+A3 And we don't have to works [sic] with the-work-function right away.
+A1 Not right away but we do need the-work-function at the end.
+A3 Ok to find the...
+A1 Because the important thing that for the lambda we are find the wavelength of the electron not of light
+A3 Right, exactly. So, first for the electron we use Planck/mass velocity because we know the mass of an electron
+A1 We need to find the mass of an electron.
+A3 No, we know the mass of an electron. It's an electron.
+A1 Very true, very true
+A3 But we don't know...
+A1 With this wavelength we would be find velocity
+A2 What did they give us. For the following wavelength. So, well lambda equal [sic] Planck/mass velocity right?
+A1 Yes, its tell us to use lambda equal Planck/mass velocity.
+A1 You can find energy-k.
+A3 Energy-k of a photon.
+A1 Use energy-k of the-work-function equal [sic] energy-k equal Planck nu minus the-work-function equal energy-k of a photon and use energy-k of a photon to find the wavelength of light.
+
+

@@ -1,0 +1,1 @@
+javaw -ms512m -mx1024m -jar kbdex.jar >> kbdex.log 2>&1 kbdex.log

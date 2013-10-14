@@ -1,0 +1,90 @@
+;;
+;;  chasenrc for @PACKAGE@-@VERSION@
+;;
+;;;
+;;;  grammar.cha/ctypes.cha/cforms.cha location
+;;;
+(GRAMMAR  @CHASEN_DIC_DIR@/@PACKAGE@)
+
+;;;
+;;;  dictionary
+;;;
+(DADIC        chadic)
+
+;;;
+;;;  POS for Unknown words
+;;;
+(UNKNOWN_POS (名詞 サ変接続))
+
+;;;
+;;;  output format
+;;;
+;(OUTPUT_FORMAT "%m\t%y\t%M\t%U(%P-)\t%T \t%F \n")     ; default(-f)
+;(OUTPUT_FORMAT "%m\t%y\t%M\t%P-\t%T \t%F \n")         ; POS name
+;(OUTPUT_FORMAT "%m\t%?U/UNKNOWN/%y/\t%M\t%h/%t/%f\n") ; POS code
+;(OUTPUT_FORMAT "%M\t%P-\n")
+
+;;;
+;;;  output format for compound words
+;;;
+;(OUTPUT_COMPOUND "COMPOUND")      ; default
+;(OUTPUT_COMPOUND "SEG")
+
+;;;
+;;;  BOS string
+;;;
+;(BOS_STRING "BOS")      
+
+;;;
+;;;  EOS string
+;;;
+;(EOS_STRING "EOS")      
+
+;;;
+;;;  Connection cost for Undefined contexts
+;;;
+(DEF_CONN_COST 10000)
+
+;;;
+;;;  POS Weight
+;;;
+(POS_COST
+	((*) 		1)
+	((UNKNOWN)    30000)
+)
+;;;
+;;;  connecition rules Weight
+;;;
+(CONN_WEIGHT 1)
+
+;;;
+;;;  morphemes Weight
+;;;
+(MORPH_WEIGHT 1)
+
+;;;
+;;;  cost width 
+;;;
+(COST_WIDTH	  0)
+
+;;;
+;;;  composit POSs
+;;;
+;(COMPOSIT ((名詞 数))
+;          ((記号 アルファベット)))
+
+;;;
+;;;  POSs as white space
+;;;
+;(SPACE_POS (記号 空白))
+
+;;;
+;;;  annotation POSs
+;;;
+;(ANNOTATION (("<" ">") (記号 一般)))
+
+;;;
+;;;  delimiter for option -j
+;;;
+;(DELIMITER "。．、，！？.,!? "
+

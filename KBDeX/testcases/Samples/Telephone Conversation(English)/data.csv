@@ -1,0 +1,13 @@
+Id (Unique Id Required),Agent Name (Unique Name Required),Script,"Group(Optional, Text type)",Time(Optional. Long type ms count from Jan.1.1970)
+1,M,Hello? ?,,
+2,X,Helo. ?,,
+3,M,Who is this? ?,,
+4,X,Don't you recognize me? ?,,
+5,M,Am I supposed to? ?,,
+6,X,Sure. We met at Jack's Bar and Grill last night. We danced until about one this morning. ?,,
+7,M,"You must have the wrong person. I don't drink, and I don't dance with strangers. My husband wouldn't like it. ?",,
+8,X,But you sound just like Kelly. ?,,
+9,M,Kelly was at the bar last night? Until One? How much did she drink? Who was she with? ?,,
+10,X,Wait a minute. Who are you? ?,,
+11,M,"Kelly's mother. Thanks for saying I sound like my sixteen year-old daughter, by the way. But who are you? ?",,
+12,X,Uhhh. Heh heh. I think I must have the wrong number. ?,,

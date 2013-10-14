@@ -1,0 +1,24 @@
+dry cell
+wet cell
+battery
+fruit cell
+salt bridge
+voltage
+current
+electrolyte
+electron
+oxidation
+reduction
+redox
+galvanic cell
+daniell cell
+oxidizing agent
+reducing agent
+oxidation number
+electrolysis
+anode 
+cathode
+electrode
+preferential discharge
+electroplating
+anodization

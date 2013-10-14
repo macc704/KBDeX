@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
+<plist version="0.9">
+<dict>
+	<key>CFBundleName</key>
+	<string>kbdex</string>
+	<key>CFBundleIdentifier</key>
+	<string>kbdex.app.KaiMain</string>
+	<key>CFBundleVersion</key>
+	<string>100.0</string>
+	<key>CFBundleAllowMixedLocalizations</key>
+	<string>true</string>
+	<key>CFBundleExecutable</key>
+	<string>JavaApplicationStub</string>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleSignature</key>
+	<string>matsuzawa</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>7.0</string>
+	<key>CFBundleIconFile</key>
+	<string>kbdex.icns</string>
+	<key>Java</key>
+	<dict>
+		<key>VMOptions</key>
+		<string>-Xms512m -Xmx1024m</string>
+		<key>MainClass</key>
+		<string>kbdex.app.Main</string>
+		<key>JVMVersion</key>
+		<string>1.7+</string>
+		<key>ClassPath</key>
+		<string>kbdex.jar</string>
+	</dict>
+</dict>
+</plist>
