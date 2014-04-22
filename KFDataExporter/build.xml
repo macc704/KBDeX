@@ -14,9 +14,12 @@
             <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/images.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/jzlib.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/k5common.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/zoolib.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/zoolib.jar"/>
             <fileset dir="../../CommonLibrary/CommonLibrary/bin"/>
             <fileset dir="../../CommonLibrary/CSwing/bin"/>
+        	<zipfileset excludes="META-INF/*.SF" src="../../commonlibrary/CommonLibrary/lib/commons-csv-20070730.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="../../commonlibrary/CommonLibrary/lib/commons-codec-1.9.jar"/>
+        	<zipfileset excludes="META-INF/*.SF" src="../../commonlibrary/CommonLibrary/lib/CEncodingDetector.jar"/>
         </jar>
     </target>
 </project>

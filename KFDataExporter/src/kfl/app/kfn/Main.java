@@ -91,9 +91,10 @@ public class Main {
 							newDir.findOrCreateFile("tuples.txt").toJavaFile());
 				} catch (Exception ex) {
 					ex.printStackTrace();
-				} finally {
-					System.exit(0);
 				}
+				// finally {
+				System.exit(0);
+				// }
 			}
 		});
 	}
@@ -164,7 +165,7 @@ public class Main {
 			}
 			CCSVFileIO.saveByListList(table, file);
 		}
-		
+
 		{
 			CFile file = dir.findOrCreateFile("attachments.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
