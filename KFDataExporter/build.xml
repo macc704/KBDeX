@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?><project default="create_run_jar" name="Create Runnable Jar for Project KFConnector">
+    <!--this file was created by Eclipse Runnable JAR Export Wizard-->
+    <!--ANT 1.7 is required                                        -->
+    <target name="create_run_jar">
+		<tstamp>
+			<format property="now.time" pattern="yyyyMMddHHmm"/>
+		</tstamp>
+        <jar destfile="KFNotesRetriever-${now.time}.jar" filesetmanifest="mergewithoutmain">
+            <manifest>
+                <attribute name="Main-Class" value="kfl.app.kfn.Main"/>
+                <attribute name="Class-Path" value="."/>
+            </manifest>
+            <fileset dir="bin"/>
+            <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/images.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/jzlib.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/k5common.jar"/>
+            <zipfileset excludes="META-INF/*.SF" src="../KFLib/lib/zoolib.jar"/>
+            <fileset dir="../CommonLibrary/bin"/>
+            <fileset dir="../CSwing/bin"/>
+        </jar>
+    </target>
+</project>
