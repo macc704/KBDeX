@@ -59,11 +59,22 @@ public class KFLog implements Serializable {
 		List<String> strings = new ArrayList<String>();
 		strings.add(getTime().toString());
 		strings.add(getMethod());
-		strings.add(getAuthor().getIdAsString());
-		strings.add(getAuthor().getName().toString());
-		strings.add(getTarget1().getIdAsString());
-		strings.add(getTarget1().getType());
-		strings.add(getTarget1().getShortDescrption());
+		if (getAuthor() != null) {
+			strings.add(getAuthor().getIdAsString());
+			strings.add(getAuthor().getName().toString());
+		} else {
+			strings.add("");
+			strings.add("");
+		}
+		if (target1 != null) {
+			strings.add(getTarget1().getIdAsString());
+			strings.add(getTarget1().getType());
+			strings.add(getTarget1().getShortDescrption());
+		} else {
+			strings.add("");
+			strings.add("");
+			strings.add("");
+		}
 		if (target2 != null) {
 			strings.add(getTarget2().getIdAsString());
 			strings.add(getTarget2().getType());
