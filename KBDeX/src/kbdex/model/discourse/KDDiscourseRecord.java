@@ -31,6 +31,10 @@ public class KDDiscourseRecord {
 		this.agentName = student;
 		this.text = new KDContentsText(text);
 	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	/**
 	 * @return the valid
@@ -44,7 +48,6 @@ public class KDDiscourseRecord {
 	 *            the valid to set
 	 */
 	public void setValid(boolean valid) {
-
 		this.valid = valid;
 	}
 

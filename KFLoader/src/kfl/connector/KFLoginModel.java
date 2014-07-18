@@ -59,4 +59,8 @@ public class KFLoginModel {
 		this.password = password;
 	}
 
+	public String getBaseAddress() {
+		return "http://" + host + ":" + port + "/";
+	}
+
 }

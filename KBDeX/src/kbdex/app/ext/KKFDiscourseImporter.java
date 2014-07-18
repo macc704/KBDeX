@@ -89,7 +89,7 @@ public class KKFDiscourseImporter {
 
 			conn = KFConnector.connect(model);
 			if (conn == null) {
-				panel.setFailed(true);
+				panel.setFailiureMessage("Login Failed - Try Again");
 			}
 		}
 		return conn;

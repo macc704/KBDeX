@@ -41,8 +41,10 @@ public class KFLoginPanel extends JPanel {
 
 	private JButton login = new JButton("Login");
 
-	private boolean failed = false;
+	private String failiureMessage = null;
 	private boolean ok = false;
+
+	private boolean showDatabase = true;
 
 	private KFLoginModel model;
 
@@ -50,8 +52,25 @@ public class KFLoginPanel extends JPanel {
 		initializeComponents();
 	}
 
+	public void setShowDatabase(boolean showDatabase) {
+		this.showDatabase = showDatabase;
+	}
+
+	public boolean isShowDatabase() {
+		return showDatabase;
+	}
+
+	@Deprecated
 	public void setFailed(boolean failed) {
-		this.failed = failed;
+		if (failed) {
+			this.failiureMessage = "Failed - Try Again";
+		} else {
+			this.failiureMessage = null;
+		}
+	}
+
+	public void setFailiureMessage(String message) {
+		this.failiureMessage = message;
 	}
 
 	public boolean isOk() {
@@ -101,8 +120,8 @@ public class KFLoginPanel extends JPanel {
 
 		addC(new JLabel("Login to KF:"), x, y);
 
-		if (failed) {
-			JLabel label = new JLabel("Failed - Try Again");
+		if (failiureMessage != null) {
+			JLabel label = new JLabel(failiureMessage);
 			label.setForeground(Color.RED);
 			addC(label, x + w1, y);
 		}
@@ -111,8 +130,10 @@ public class KFLoginPanel extends JPanel {
 		y += h;
 		addLine(portLabel, port, w1, x, y);
 		y += h;
-		addLine(databaseLabel, database, w1, x, y);
-		y += h;
+		if (isShowDatabase()) {
+			addLine(databaseLabel, database, w1, x, y);
+			y += h;
+		}
 		addLine(userLabel, user, w1, x, y);
 		y += h;
 		addLine(passwordLabel, password, w1, x, y);

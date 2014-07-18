@@ -24,6 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import kbdex.app.KBDeX;
+import kbdex.app.ext.KKF5Importer;
 import kbdex.app.ext.KKFDiscourseImporter;
 import kbdex.app.ext.KKaniChatCSVImporter;
 import kbdex.model.discourse.KDDiscourseFile;
@@ -98,6 +99,18 @@ public class KDiscourseManagerFrame extends JFrame {
 		{
 			JMenu menu = new JMenu("Import");
 			menuBar.add(menu);
+			{
+				final KKF5Importer importer = new KKF5Importer();
+				CAction action = CActionUtils.createAction("From KF5",
+						new ICTask() {
+							@Override
+							public void doTask() {
+								importer.doLoad();
+								refreshDiscourseList();
+							}
+						});
+				menu.add(action);
+			}			
 			{
 				final KKFDiscourseImporter importer = new KKFDiscourseImporter();
 				CAction action = CActionUtils.createAction("From KF",

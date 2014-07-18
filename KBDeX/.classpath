@@ -15,5 +15,6 @@
 	<classpathentry kind="lib" path="lib/BiSlider.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CTimeLineView"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CSwingApp"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/KF5Loader"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
