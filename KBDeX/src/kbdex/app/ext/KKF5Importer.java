@@ -93,12 +93,12 @@ public class KKF5Importer {
 				service.login(model.getUser(), model.getPassword());
 				break;
 			} catch (HttpHostConnectException ex) {
-				panel.setFailiureMessage("failed to connect internet");
+				panel.setFailiureMessage("failed to connect the server or the port");
 			} catch (SocketException ex) {
-				panel.setFailiureMessage("failed to connect server and port");
+				panel.setFailiureMessage("failed to connect the internet");
 			} catch (KF5ServiceException ex) {
 				if (ex.getHttpCode() == 404) {
-					panel.setFailiureMessage("there is no service");
+					panel.setFailiureMessage("there is no service on the server");
 				} else if (ex.getHttpCode() == 401) {
 					panel.setFailiureMessage("login failed");
 				} else {
@@ -125,8 +125,11 @@ public class KKF5Importer {
 				KF5Registration reg = new KF5Registration(regs.getJSONObject(i));
 				combobox.addItem(reg);
 			}
-			JOptionPane.showConfirmDialog(null, combobox, "Registration?",
+			int res = JOptionPane.showConfirmDialog(null, combobox, "Registration?",
 					JOptionPane.OK_OPTION);
+			if (res != JOptionPane.OK_OPTION) {
+				return;
+			}
 			selectedReg = (KF5Registration) combobox.getSelectedItem();
 		}
 		service.enterCommunity(selectedReg.guid);
@@ -145,8 +148,11 @@ public class KKF5Importer {
 				KF5View view = new KF5View(views.getJSONObject(i));
 				combobox.addItem(view);
 			}
-			JOptionPane.showConfirmDialog(null, combobox, "View?",
+			int res = JOptionPane.showConfirmDialog(null, combobox, "View?",
 					JOptionPane.OK_OPTION);
+			if (res != JOptionPane.OK_OPTION) {
+				return;
+			}
 			selectedView = (KF5View) combobox.getSelectedItem();
 		}
 		monitor.progress(1);
@@ -196,6 +202,7 @@ public class KKF5Importer {
 		model.setDBName(selectedReg.sectionTitle + "-" + selectedView.title);
 		KDDiscourseManager manager = KBDeX.getInstance().getDiscourseManager();
 		String name = fnameFormat.format(new Date()) + "-" + model.getDBName();
+		name = encodeFilename(name);
 		KDDiscourseFile dFile = manager.createNewDiscourse(name);
 		CFile file = dFile.getRecordFile();
 		KRecordFileIO.save(records, file);
@@ -236,6 +243,19 @@ public class KKF5Importer {
 		String text = source.getTextExtractor().toString();
 		return text;
 	}
+
+	private static String encodeFilename(String name) {
+		String notAllowedChars = "[( |\\\\|/|:|\\*|?|\"|<|>|\\|)]";
+		name = name.replaceAll(notAllowedChars, "_");
+		return name;
+	}
+
+	public static void main(String[] args) {
+		System.out.println(encodeFilename("hoge"));
+		System.out.println(encodeFilename("hoge/hoge"));
+		System.out.println(encodeFilename("hoge/h::\\?<oge"));
+		System.out.println(encodeFilename("hoge/h::\\?<og e"));
+	}
 }
 
 class KF5Registration {
@@ -254,6 +274,7 @@ class KF5Registration {
 	public String toString() {
 		return sectionTitle + " (as " + roleName + ")";
 	}
+
 }
 
 class KF5View {

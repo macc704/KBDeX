@@ -39,6 +39,9 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.7.1 2014.07.18
+ *		・KF5, ファイル名，キャンセルなど細かいミスなどの修正． 		
+ * 
  * 1.7.0 2014.07.17
  * 		・KF5に対応
  * 		
@@ -185,8 +188,8 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.7.0";
-	private static final String DATE = "2014.07.17";
+	private static final String VERSION = "1.7.1";
+	private static final String DATE = "2014.07.18";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
