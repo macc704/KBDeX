@@ -37,25 +37,31 @@ public class Test {
 			System.out.println("kf5 error " + ex.getHttpCode());
 			return;
 		}
+		System.out.println("-view registrations-");
 		JSONArray regs = service.getRegistrations();
 		System.out.println(regs.toString(2));
 		String code = regs.getJSONObject(0).getString("guid");
 		JSONArray community = service.enterCommunity(code);
+		
+		System.out.println("-view section-");
 		String communityId = community.getJSONObject(0)
 				.getJSONObject("section").getString("guid");
-		JSONArray views = service.getViews(communityId);
+		JSONArray views = service.getViews(communityId);		
 		System.out.println(views.toString(2));
+		
+		System.out.println("-view posts-");
 		String viewId = views.getJSONObject(0).getString("guid");
 		// JSONArray notes = service.getPostsForCommunity(communityId);
 		// System.out.println(notes.length());
 		// System.out.println(notes.toString(2));
-		JSONArray notes = service.getPostsForView(viewId);
-		System.out.println("-view posts-");
+		JSONArray notes = service.getPostsForView(viewId);		
 		System.out.println(notes.toString(2));
 
 		System.out.println("-view post history-");
-		JSONArray history = service.getPostHistoriesForView(viewId);
-		System.out.println(history.toString(2));
+		//74a28acb-cd5d-4cd0-abde-359c2c9840d2
+		//JSONArray history = service.getPostHistoriesForView(viewId);
+		//JSONArray history = service.getPostHistoriesForView("74a28acb-cd5d-4cd0-abde-359c2c9840d2");
+		//System.out.println(history.toString(2));
 
 		// JSONArray history = service
 		// .getPostHistory("5c1295fc-664c-45df-b81b-29ba316a3c80");
