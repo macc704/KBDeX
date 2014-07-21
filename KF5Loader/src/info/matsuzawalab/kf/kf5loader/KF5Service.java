@@ -102,5 +102,17 @@ public class KF5Service {
 				+ communityId));
 		return getJSON(method);
 	}
+	
+	public JSONArray getPostHistory(String postId) throws Exception {
+		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistory/"
+				+ postId));
+		return getJSON(method);
+	}
+	
+	public JSONArray getPostHistoriesForView(String viewId) throws Exception {
+		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistoriesForView/"
+				+ viewId));
+		return getJSON(method);
+	}
 
 }

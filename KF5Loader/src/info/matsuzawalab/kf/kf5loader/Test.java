@@ -15,8 +15,8 @@ public class Test {
 
 	private void run() throws Exception {
 		// KF5Service service = new KF5Service("http://132.203.154.41:8080/");
-
-		KF5Service service = new KF5Service("http://128.100.72.137:8080/");
+		// KF5Service service = new KF5Service("http://128.100.72.137:8080/");
+		KF5Service service = new KF5Service("http://localhost:8080/");
 		service.setKf51(true);
 
 		try {
@@ -52,6 +52,23 @@ public class Test {
 		JSONArray notes = service.getPostsForView(viewId);
 		System.out.println("-view posts-");
 		System.out.println(notes.toString(2));
+
+		System.out.println("-view post history-");
+		JSONArray history = service.getPostHistoriesForView(viewId);
+		System.out.println(history.toString(2));
+
+		// JSONArray history = service
+		// .getPostHistory("5c1295fc-664c-45df-b81b-29ba316a3c80");
+		// // {
+		// // "guid": "a71aa619-f73e-4214-8922-2f658d948e3b",
+		// // "accessTime": "Apr 3, 2014 11:56:01 AM",
+		// // "operationType": "UPDATE",
+		// // "entityId": "5c1295fc-664c-45df-b81b-29ba316a3c80",
+		// // "userName": "cesaraanunes",
+		// // "entityType": "POST"
+		// // },
+		// System.out.println("-history-");
+		// System.out.println(history.toString(2));
 	}
 
 }
