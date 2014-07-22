@@ -42,39 +42,44 @@ public class Test {
 		System.out.println(regs.toString(2));
 		String code = regs.getJSONObject(0).getString("guid");
 		JSONArray community = service.enterCommunity(code);
-		
+
 		System.out.println("-view section-");
 		String communityId = community.getJSONObject(0)
 				.getJSONObject("section").getString("guid");
-		JSONArray views = service.getViews(communityId);		
+		JSONArray views = service.getViews(communityId);
 		System.out.println(views.toString(2));
-		
+
 		System.out.println("-view posts-");
 		String viewId = views.getJSONObject(0).getString("guid");
 		// JSONArray notes = service.getPostsForCommunity(communityId);
 		// System.out.println(notes.length());
 		// System.out.println(notes.toString(2));
-		JSONArray notes = service.getPostsForView(viewId);		
+		JSONArray notes = service.getPostsForView(viewId);
 		System.out.println(notes.toString(2));
 
-		System.out.println("-view post history-");
-		//74a28acb-cd5d-4cd0-abde-359c2c9840d2
-		//JSONArray history = service.getPostHistoriesForView(viewId);
-		//JSONArray history = service.getPostHistoriesForView("74a28acb-cd5d-4cd0-abde-359c2c9840d2");
-		//System.out.println(history.toString(2));
+		{
+			System.out.println("-view post history-");
+			// 74a28acb-cd5d-4cd0-abde-359c2c9840d2
+			JSONArray history = service.getPostHistoriesForView(viewId);
+			// JSONArray history =
+			// service.getPostHistoriesForView("74a28acb-cd5d-4cd0-abde-359c2c9840d2");
+			System.out.println(history.toString(2));
+		}
 
-		// JSONArray history = service
-		// .getPostHistory("5c1295fc-664c-45df-b81b-29ba316a3c80");
-		// // {
-		// // "guid": "a71aa619-f73e-4214-8922-2f658d948e3b",
-		// // "accessTime": "Apr 3, 2014 11:56:01 AM",
-		// // "operationType": "UPDATE",
-		// // "entityId": "5c1295fc-664c-45df-b81b-29ba316a3c80",
-		// // "userName": "cesaraanunes",
-		// // "entityType": "POST"
-		// // },
-		// System.out.println("-history-");
-		// System.out.println(history.toString(2));
+		{
+			JSONArray history = service
+					.getPostHistory("5c1295fc-664c-45df-b81b-29ba316a3c80");
+			System.out.println("-history-");
+			System.out.println(history.toString(2));
+			// // {
+			// // "guid": "a71aa619-f73e-4214-8922-2f658d948e3b",
+			// // "accessTime": "Apr 3, 2014 11:56:01 AM",
+			// // "operationType": "UPDATE",
+			// // "entityId": "5c1295fc-664c-45df-b81b-29ba316a3c80",
+			// // "userName": "cesaraanunes",
+			// // "entityType": "POST"
+			// // },
+		}
 	}
 
 }
