@@ -130,7 +130,7 @@ class KNetworkRExporter<V, E> {
 
 		PrintStream writer;
 		//writer = System.out;//for debug
-		writer = new PrintStream(f, KBDeX.ENCODING.toString());
+		writer = new PrintStream(f, KBDeX.ENCODING_OUT.toString());
 
 		//write header
 		URL url = getClass().getResource("Rfunctions.txt");

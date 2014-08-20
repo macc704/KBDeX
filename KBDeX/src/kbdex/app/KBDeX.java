@@ -10,6 +10,7 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
+import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -39,6 +40,9 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.7.2 2014.08.20
+ * 		・HongKongの人の要請で，UTF-8のテキストを扱えるようにする（DefaultをUTF-8，読み込み自動判定にした）
+ * 
  * 1.7.1 2014.07.18
  *		・KF5, ファイル名，キャンセルなど細かいミスなどの修正． 		
  * 
@@ -193,7 +197,9 @@ public class KBDeX {
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
-	public static final CEncoding ENCODING = CEncoding.Shift_JIS;
+	//public static final CEncoding ENCODING = CEncoding.Shift_JIS;
+	//public static CEncoding ENCODING_IN = CEncoding.UTF8;
+	public static CEncoding ENCODING_OUT = CEncoding.UTF8;
 	public static final boolean DEBUG = true;
 
 	private static KBDeX instance;
@@ -213,17 +219,27 @@ public class KBDeX {
 
 	public void run() throws Exception {
 		checkJavaVersion();
+		initializeEncoding();
 		initializeUI();
 		dManager = new KDDiscourseManager(getDataDir());
 		KDiscourseManagerFrame frame = new KDiscourseManagerFrame(dManager,
 				KBDeX.TITLE);
 		frame.openWindowInDefaultSize();
 	}
-	
-	public void checkJavaVersion(){
+
+	private void initializeEncoding() {
+		if (Locale.JAPAN.getCountry().equals(Locale.getDefault().getCountry())) {
+			//ENCODING_IN = CEncoding.JISAutoDetect;
+			ENCODING_OUT = CEncoding.Shift_JIS;
+		}
+	}
+
+	public void checkJavaVersion() {
 		double version = CJavaSystem.getInstance().getVersion();
-		if(version < 1.7){
-			JOptionPane.showMessageDialog(null, "KBDeX requires Java 1.7+ but your Java version is " + version);
+		if (version < 1.7) {
+			JOptionPane.showMessageDialog(null,
+					"KBDeX requires Java 1.7+ but your Java version is "
+							+ version);
 			System.exit(0);
 		}
 	}

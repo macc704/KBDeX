@@ -20,6 +20,7 @@ import clib.common.filesystem.CDirectory;
 import clib.common.filesystem.CFile;
 import clib.common.filesystem.CFileElement;
 import clib.common.system.CEncoding;
+import clib.common.system.CEncodingDetector;
 import clib.common.table.CCSVFileIO;
 
 /**
@@ -29,7 +30,7 @@ import clib.common.table.CCSVFileIO;
  */
 public class KDDiscourseFile {
 
-	private static final CEncoding ENCODING = KBDeX.ENCODING;
+	//private static final CEncoding ENCODING = KBDeX.ENCODING;
 
 	private static final String RECORD_FILE = "data.csv";
 	private static final String WORD_FILE = "word.txt";
@@ -85,10 +86,7 @@ public class KDDiscourseFile {
 	 ***************************************************************/
 
 	public CFile getRecordFile() {
-		CFile file = dir.findOrCreateFile(RECORD_FILE);
-		file.setEncodingIn(ENCODING);
-		file.setEncodingOut(ENCODING);
-		return file;
+		return openCFile(RECORD_FILE);
 	}
 
 	protected List<KDDiscourseRecord> loadRecords() {
@@ -96,10 +94,7 @@ public class KDDiscourseFile {
 	}
 
 	public CFile getSelectedWordFile() {
-		CFile file = dir.findOrCreateFile(WORD_FILE);
-		file.setEncodingIn(ENCODING);
-		file.setEncodingOut(ENCODING);
-		return file;
+		return openCFile(WORD_FILE);
 	}
 
 	protected KDictionary<String> loadSelectedWords() {
@@ -123,17 +118,15 @@ public class KDDiscourseFile {
 	}
 
 	protected KAgentNameDiscourseFilter loadAgentFilter() {
-		CFile file = dir.findFile(AGENT_FILTER_FILE);
-		if (file == null) {
+		CFile file = openCFile(AGENT_FILTER_FILE);
+		if (file.loadText().isEmpty()) {
 			return null;
 		}
-		file.setEncodingIn(ENCODING);
 		return new KAgentNameDiscourseFilter(file.loadTextAsList());
 	}
 
 	protected void saveAgentFilter(KAgentNameDiscourseFilter filter) {
-		CFile file = dir.findOrCreateFile(AGENT_FILTER_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(AGENT_FILTER_FILE);
 		file.saveTextFromList(filter.getAgentNames());
 	}
 
@@ -149,15 +142,13 @@ public class KDDiscourseFile {
 		}
 
 		// write
-		CFile file = dir.findOrCreateFile(TIME_FILTER_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(TIME_FILTER_FILE);
 		CCSVFileIO.save(lines, file);
 	}
 
 	protected Map<String, KTimeDiscourseFilter> loadTimeFilters() {
 		Map<String, KTimeDiscourseFilter> filters = new LinkedHashMap<String, KTimeDiscourseFilter>();
-		CFile file = dir.findOrCreateFile(TIME_FILTER_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(TIME_FILTER_FILE);
 		String[][] values = CCSVFileIO.load(file);
 		for (String[] line : values) {
 			try {
@@ -175,8 +166,7 @@ public class KDDiscourseFile {
 
 	protected String loadTimeFilterName() {
 		try {
-			CFile file = dir.findOrCreateFile(CURRENT_TIME_FILTER_FILE);
-			file.setEncodingIn(ENCODING);
+			CFile file = openCFile(CURRENT_TIME_FILTER_FILE);
 			return file.loadTextAsList().get(0);
 		} catch (Exception ex) {
 			return "";
@@ -184,15 +174,13 @@ public class KDDiscourseFile {
 	}
 
 	protected void saveTimeFilterName(String name) {
-		CFile file = dir.findOrCreateFile(CURRENT_TIME_FILTER_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(CURRENT_TIME_FILTER_FILE);
 		file.saveText(name);
 	}
 
 	protected List<KDGroup> loadGroups() {
 		Map<String, KDGroup> groups = new LinkedHashMap<String, KDGroup>();
-		CFile file = dir.findOrCreateFile(GROUP_FILE);
-		file.setEncodingIn(ENCODING);
+		CFile file = openCFile(GROUP_FILE);
 
 		String[][] values = CCSVFileIO.load(file);
 		int len = values.length;
@@ -220,8 +208,7 @@ public class KDDiscourseFile {
 	 * @param language
 	 */
 	public void saveLanguage(Language language) {
-		CFile file = dir.findOrCreateFile(LANGUAGE_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(LANGUAGE_FILE);
 		file.saveText(language.toString());
 	}
 
@@ -229,11 +216,10 @@ public class KDDiscourseFile {
 	 * @return
 	 */
 	public Language loadLanguage() {
-		CFile file = dir.findFile(LANGUAGE_FILE);
-		if (file == null) {
+		CFile file = openCFile(LANGUAGE_FILE);
+		if (file.loadText().isEmpty()) {
 			return Language.ENGLISH;
 		}
-		file.setEncodingIn(ENCODING);
 		try {
 			Language language = Language.valueOf(file.loadText());
 			return language;
@@ -247,8 +233,7 @@ public class KDDiscourseFile {
 	 * @param unitType
 	 */
 	public void saveUnitType(DiscourseUnitType unitType) {
-		CFile file = dir.findOrCreateFile(UNIT_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(UNIT_FILE);
 		file.saveText(unitType.toString());
 	}
 
@@ -256,11 +241,10 @@ public class KDDiscourseFile {
 	 * @return
 	 */
 	public DiscourseUnitType loadUnitType() {
-		CFile file = dir.findFile(UNIT_FILE);
-		if (file == null) {
+		CFile file = openCFile(UNIT_FILE);
+		if (file.loadText().isEmpty()) {
 			return DiscourseUnitType.NOTE;
 		}
-		file.setEncodingIn(ENCODING);
 		try {
 			DiscourseUnitType type = DiscourseUnitType.valueOf(file.loadText());
 			return type;
@@ -274,8 +258,7 @@ public class KDDiscourseFile {
 	 * @param lifetime
 	 */
 	public void saveLifetime(int lifetime) {
-		CFile file = dir.findOrCreateFile(LIFETIME_FILE);
-		file.setEncodingOut(ENCODING);
+		CFile file = openCFile(LIFETIME_FILE);
 		file.saveText(Integer.toString(lifetime));
 	}
 
@@ -283,17 +266,26 @@ public class KDDiscourseFile {
 	 * @param lifetime
 	 */
 	public int loadLifetime() {
-		CFile file = dir.findFile(LIFETIME_FILE);
-		if (file == null) {
+		CFile file = openCFile(LIFETIME_FILE);
+		if (file.loadText().isEmpty()) {
 			return KDDiscourse.DEFAULT_LIFETIME;
 		}
-		file.setEncodingIn(ENCODING);
 		try {
 			return Integer.parseInt(file.loadText());
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return KDDiscourse.DEFAULT_LIFETIME;
 		}
+	}
+
+	private CFile openCFile(String filename) {
+		CFile file = dir.findOrCreateFile(filename);
+		CEncoding enc = CEncodingDetector.detect(file.toJavaFile());
+		if (enc != CEncoding.UNKNOWN) {
+			file.setEncodingIn(enc);
+		}
+		file.setEncodingOut(KBDeX.ENCODING_OUT);
+		return file;
 	}
 
 }

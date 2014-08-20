@@ -42,7 +42,7 @@ public class KRecordFileIO {
 			values[row][4] = Long.toString(record.getTimeAsLong());
 		}
 
-		file.setEncodingOut(KBDeX.ENCODING);
+		file.setEncodingOut(KBDeX.ENCODING_OUT);
 		CCSVFileIO.save(values, file);
 	}
 
