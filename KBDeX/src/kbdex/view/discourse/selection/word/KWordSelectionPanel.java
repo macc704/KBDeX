@@ -14,6 +14,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -23,7 +24,10 @@ import javax.swing.KeyStroke;
 import kbdex.app.KBDeX;
 import kbdex.model.discourse.KDDiscourse;
 import kbdex.view.discourse.KDiscourseViewerPanel;
+import clib.common.system.CJavaSystem;
 import clib.common.thread.ICTask;
+import clib.view.dialogs.ICOKCancelDialogListener;
+import clib.view.editor.ICDirtyStateListener;
 import clib.view.progress.CPanelProcessingMonitor;
 
 /**
@@ -102,6 +106,10 @@ public class KWordSelectionPanel extends JPanel {
 		action.putValue(Action.NAME, "Save");
 		action.putValue(Action.ACCELERATOR_KEY,
 				KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_MASK));
+		if (CJavaSystem.getInstance().isMac()) {
+			action.putValue(Action.ACCELERATOR_KEY,
+					KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.META_MASK));
+		}
 		return action;
 	}
 
@@ -136,5 +144,43 @@ public class KWordSelectionPanel extends JPanel {
 				histgramViewer.refreshSelectedWords();
 			}
 		});
+	}
+
+	public ICOKCancelDialogListener getOKCancelListener() {
+		return new ICOKCancelDialogListener() {
+
+			@Override
+			public boolean canOkProcess() {
+				return askSaveIfDirty();
+			}
+
+			@Override
+			public boolean canCancelProcess() {
+				return askSaveIfDirty();
+			}
+		};
+	}
+
+	private boolean askSaveIfDirty() {
+		if (!textEditor.isDirty()) {
+			return true;//no problem
+		}
+
+		//in case of dirty
+		int res = JOptionPane.showConfirmDialog(null,
+				"Would you like save words?", "Your word list is not saved",
+				JOptionPane.YES_NO_CANCEL_OPTION);
+		if (res == JOptionPane.YES_OPTION) {
+			textEditor.doSave();
+			return true;
+		} else if (res == JOptionPane.NO_OPTION) {
+			return true;
+		} else {//cancel
+			return false;
+		}
+	}
+
+	public void setDirtyStateListener(ICDirtyStateListener dirtyStateListener) {
+		this.textEditor.setDirtyStateListener(dirtyStateListener);
 	}
 }

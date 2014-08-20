@@ -40,8 +40,15 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.8.0 2014.08.20
+ * 		・GPL License
+ * 		・Launch
+ * 		・non-japanese version
+ * 
  * 1.7.2 2014.08.20
  * 		・HongKongの人の要請で，UTF-8のテキストを扱えるようにする（DefaultをUTF-8，読み込み自動判定にした）
+ * 		・WordSelectionでDirtyStateの検知，表示，確認．
+ * 		・WordSelection他のDialogSizeを変更 (screenの3/4)
  * 
  * 1.7.1 2014.07.18
  *		・KF5, ファイル名，キャンセルなど細かいミスなどの修正． 		
@@ -192,8 +199,8 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.7.1";
-	private static final String DATE = "2014.07.18";
+	private static final String VERSION = "1.8.0";
+	private static final String DATE = "2014.08.20";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";

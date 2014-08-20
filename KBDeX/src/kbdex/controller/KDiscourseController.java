@@ -7,6 +7,8 @@ package kbdex.controller;
 
 import java.awt.Dimension;
 import java.awt.Frame;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.List;
@@ -33,13 +35,14 @@ import clib.common.thread.ICTask;
 import clib.common.utils.ICProgressMonitor;
 import clib.view.actions.CActionManager;
 import clib.view.dialogs.COKCancelDialog;
+import clib.view.editor.ICDirtyStateListener;
 import clib.view.progress.CDelayProcessingMonitor;
 import clib.view.progress.ICProgressTask;
 import clib.view.windowmanager.CWindowCentraizer;
 
 public class KDiscourseController {
 
-	private static final Dimension DIALOG_SIZE = new Dimension(1024, 768);
+	//private static final Dimension DIALOG_SIZE = new Dimension(1024, 768);
 	private static final long DELAY = 2500;
 
 	private KDDiscourse discourse;
@@ -434,12 +437,22 @@ public class KDiscourseController {
 
 		KWordSelectionPanel panel = new KWordSelectionPanel(discourse,
 				discourseViewer.isShowInvalidRecord());
-
-		COKCancelDialog dialog = new COKCancelDialog(getOwnerFrame(),
+		final COKCancelDialog dialog = new COKCancelDialog(getOwnerFrame(),
 				"Word Selection Window", panel);
+		dialog.setOkCancelDialogListener(panel.getOKCancelListener());
+		panel.setDirtyStateListener(new ICDirtyStateListener() {
+			@Override
+			public void dirtyStateChanged(boolean dirty) {
+				if (dirty) {
+					dialog.setTitle("Word Selection Window*");
+				} else {
+					dialog.setTitle("Word Selection Window");
+				}
+			}
+		});
 		dialog.setJMenuBar(new JMenuBar());
 		dialog.getJMenuBar().add(panel.createMenu());
-		dialog.setSize(DIALOG_SIZE);
+		dialog.setSize(createDialogSize());
 		dialog.showDialog();
 
 		if (dialog.isOK()) {
@@ -455,7 +468,7 @@ public class KDiscourseController {
 		KAgentFilteringPanel panel = new KAgentFilteringPanel(discourse);
 		COKCancelDialog dialog = new COKCancelDialog(getOwnerFrame(),
 				"Agent Selection Window", panel);
-		dialog.setSize(DIALOG_SIZE);
+		dialog.setSize(createDialogSize());
 		dialog.showDialog();
 
 		if (dialog.isOK()) {
@@ -472,7 +485,7 @@ public class KDiscourseController {
 		final KTimeFilteringPanel panel = new KTimeFilteringPanel(discourse);
 		COKCancelDialog dialog = new COKCancelDialog(getOwnerFrame(),
 				"Time Selection Window", panel);
-		dialog.setSize(DIALOG_SIZE);
+		dialog.setSize(createDialogSize());
 		dialog.addWindowListener(new WindowAdapter() {
 			public void windowOpened(WindowEvent e) {
 				panel.fitScale();
@@ -528,6 +541,24 @@ public class KDiscourseController {
 				viewer.setVisible(true);
 			}
 		}.start();
+	}
+
+	/***********************************************
+	 * Dialog Size
+	 ***********************************************/
+
+	public Dimension createDialogSize() {
+		GraphicsEnvironment gEnv = GraphicsEnvironment
+				.getLocalGraphicsEnvironment();
+		//GraphicsDevice gDevice = gEnv.getDefaultScreenDevice();
+		Rectangle r = gEnv.getMaximumWindowBounds();
+		int prefferedWidth = 1024;
+		int calculatedWidth = r.width * 3 / 4;
+		int width = Math.min(prefferedWidth, calculatedWidth);
+		int prefferedHeight = 768;
+		int calculatedHeight = r.height * 3 / 4;
+		int height = Math.min(prefferedHeight, calculatedHeight);
+		return new Dimension(width, height);
 	}
 
 }

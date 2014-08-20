@@ -52,9 +52,16 @@
             <zipfileset excludes="META-INF/*.SF" src="../../KBDeX/JUNG/junglib/jung-visualization-2.0.1.jar"/>
         </jar>
     	
-        <zip destfile="packages/kbdex-${now.time}.zip" encoding="UTF-8">
+        <zip destfile="packages/kbdex-${now.time}-with-japanese.zip" encoding="UTF-8">
         	<!-- <fileset dir="package"/> -->
         	<zipfileset dir="package" filemode="755"/>
+        </zip>
+    	
+        <zip destfile="packages/kbdex-${now.time}.zip" encoding="UTF-8">
+        	<!-- <fileset dir="package"/> -->
+        	<zipfileset dir="package" filemode="755">
+        		<exclude name="**/Sen1221/**"/>
+        	</zipfileset>
         </zip>
     </target>
 </project>
