@@ -15,6 +15,13 @@
  - mac user
  	double click "kbdex-mac (.command)" file
  	
+# Citation
+ If you have found KBDeX helpful in your research, please consider citing the paper published at ETR&D. 
+ By doing this, you contribute to the recognition of tool-building as a valuable scientific activity that has impact.
+  (The above sentence is borrowed from Gephi's one https://gephi.github.io/users/publications/. We love this notion.)
+ 	
+ Oshima, J., Oshima, R., and Matsuzawa, Y. (2012) "Knowledge Building Discourse Explorer: a social network analysis application for knowledge building discourse", Educational Technology Research and Development, Vol.60, No.5, pp.903-921.
+ 
 # System Requirements
  - Java 1.7 (or later)
  
