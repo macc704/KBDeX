@@ -40,6 +40,10 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.8.1 2014.08.20
+ * 		・CFileがBOMをつけないように，かつBOMを読み飛ばすように変更
+ * 		・辞書なしのエラー処理
+ * 
  * 1.8.0 2014.08.20
  * 		・GPL License
  * 		・Launch
@@ -199,7 +203,7 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.8.0";
+	private static final String VERSION = "1.8.1";
 	private static final String DATE = "2014.08.20";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";

@@ -6,6 +6,7 @@
 package kbdex.model.discourse.wordprocessing;
 
 import net.java.sen.StringTagger;
+import clib.view.dialogs.CErrorDialog;
 
 /**
  * @author macchan
@@ -24,6 +25,8 @@ public class KSenStringTagger {
 		try {
 			tagger = StringTagger.getInstance();
 		} catch (Exception ex) {
+			CErrorDialog.show(null, "日本語辞書が見つかりません．日本語辞書付きバージョンをダウンロードしてください．",
+					ex);
 			ex.printStackTrace();
 		}
 	}
