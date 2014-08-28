@@ -5,7 +5,9 @@
  */
 package kbdex.view.network;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
@@ -25,8 +27,7 @@ import kbdex.model.kbmodel.KBRelation;
 
 import org.apache.commons.collections15.Transformer;
 
-import clib.common.filesystem.CFile;
-import clib.common.filesystem.CFileSystem;
+import clib.common.system.CEncoding;
 import clib.common.thread.ICTask;
 import clib.view.actions.CActionUtils;
 import edu.uci.ics.jung.graph.Graph;
@@ -134,8 +135,10 @@ class KNetworkRExporter<V, E> {
 
 		//write header
 		URL url = getClass().getResource("Rfunctions.txt");
-		CFile functionFile = CFileSystem.findFile(url.getPath());
-		writer.println(functionFile.loadText());
+		// this does not work in Java 2013
+		//CFile functionFile = CFileSystem.findFile(url.getPath());
+		//writer.println(functionFile.loadText());
+		writer.println(getContent(url, CEncoding.UTF8));
 
 		//list
 		boolean first = true;
@@ -190,5 +193,23 @@ class KNetworkRExporter<V, E> {
 		writer.println("kb.rev(kb.sortedmetrics(g, betweenness(g)))");
 
 		writer.close();
+	}
+
+	//temporary
+	private String getContent(URL url, CEncoding enc) throws Exception {
+		//NG
+		//return new String(Files.readAllBytes(Paths.get(url.toURI())),	enc.toString());
+
+		BufferedReader br = new BufferedReader(new InputStreamReader(
+				url.openStream(), enc.toString()));
+		StringBuffer buf = new StringBuffer();
+		while (true) {
+			String line = br.readLine();
+			if (line == null) {
+				break;
+			}
+			buf.append(line + "\n");
+		}
+		return buf.toString();
 	}
 }
