@@ -43,8 +43,7 @@ public class KNetworkViewPanel<V extends KBElement, E extends KBRelation>
 	private KNetworkScaleController<V, E> scaleController = new KNetworkScaleController<V, E>(
 			networkPanel);
 	private KNetworkVertexDecorationController<V, E> vertexController;
-	private KNetworkEdgeDecorationController<V, E> edgeController = new KNetworkEdgeDecorationController<V, E>(
-			networkPanel);
+	private KNetworkEdgeDecorationController<V, E> edgeController;
 	private KNetworkExportActionContributor<V, E> exporter = new KNetworkExportActionContributor<V, E>(
 			networkPanel);
 	private KGraphLayoutChooser layoutChooser = new KGraphLayoutChooser(
@@ -52,8 +51,14 @@ public class KNetworkViewPanel<V extends KBElement, E extends KBRelation>
 	private KNetworkFontController<V, E> fontController = new KNetworkFontController<V, E>(
 			networkPanel);
 
-	public KNetworkViewPanel(KNNetworkController<V> controller, Icon icon) {
+	private KParameterProvider<Integer> weightPerStroke;
+
+	public KNetworkViewPanel(KNNetworkController<V> controller, Icon icon,
+			KParameterProvider<Integer> weightPerStroke) {
 		this.controller = controller;
+		this.weightPerStroke = weightPerStroke;
+		this.edgeController = new KNetworkEdgeDecorationController<V, E>(
+				networkPanel, weightPerStroke);
 		this.vertexController = new KNetworkVertexDecorationController<V, E>(
 				networkPanel, icon);
 		initialize();
@@ -107,9 +112,32 @@ public class KNetworkViewPanel<V extends KBElement, E extends KBRelation>
 				menu.add(fontController.createDefaultFontAction());
 				menu.add(fontController.createDialogFontAction());
 			}
+			
+			{
+				JMenu sub = new JMenu("WeightPerStroke");
+				menu.add(sub);
+
+				sub.add(createWeightPerStrokeAction(1));
+				sub.add(createWeightPerStrokeAction(2));				
+				sub.add(createWeightPerStrokeAction(3));				
+				sub.add(createWeightPerStrokeAction(4));				
+				sub.add(createWeightPerStrokeAction(8));
+				sub.add(createWeightPerStrokeAction(16));
+				sub.add(createWeightPerStrokeAction(32));
+			}
 		}
 
 		return menuBar;
+	}
+	
+	private Action createWeightPerStrokeAction(final int x){
+		return CActionUtils.createAction(""+ x,
+				new ICTask() {
+			public void doTask() {
+				weightPerStroke.set(x);
+				networkPanel.getViewer().repaint();
+			}
+		});
 	}
 
 	protected Action createToggleActiveAction(final JToggleButton button) {

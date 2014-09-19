@@ -17,6 +17,7 @@ import kbdex.model.discourse.filters.KAgentNameDiscourseFilter;
 import kbdex.model.discourse.filters.KTimeDiscourseFilter;
 import kbdex.model.discourse.wordprocessing.KWordProcessorFactory;
 import kbdex.utils.KDictionary;
+import kbdex.view.network.KParameterProvider;
 import clib.common.collections.CVocaburary;
 import clib.common.model.CObject;
 import clib.common.time.CTime;
@@ -385,4 +386,26 @@ public class KDDiscourse extends CObject {
 			monitor.progress(1);
 		}
 	}
+
+	private KParameterProvider<Integer> agentWeightParameter = new KParameterProvider<Integer>(
+			1);
+
+	public KParameterProvider<Integer> getAgentWeightParameter() {
+		return agentWeightParameter;
+	}
+
+	private KParameterProvider<Integer> discourseUnitWeightParameter = new KParameterProvider<Integer>(
+			1);
+
+	public KParameterProvider<Integer> getDiscourseUnitWeightParameter() {
+		return discourseUnitWeightParameter;
+	}
+
+	private KParameterProvider<Integer> wordWeightParameter = new KParameterProvider<Integer>(
+			1);
+
+	public KParameterProvider<Integer> getWordWeightParameter() {
+		return wordWeightParameter;
+	}
+
 }

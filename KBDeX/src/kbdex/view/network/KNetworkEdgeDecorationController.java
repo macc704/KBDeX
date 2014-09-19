@@ -35,9 +35,12 @@ public class KNetworkEdgeDecorationController<V, E> {
 	private Transformer<Context<Graph<V, E>, E>, Shape> straight = new EdgeShape.Line<V, E>();
 
 	private JCheckBox toggleLineCurveCheckBox = new JCheckBox();
+	
+	private KParameterProvider<Integer> weightPerStroke = null;
 
-	public KNetworkEdgeDecorationController(KNetworkPanel<V, E> networkPanel) {
+	public KNetworkEdgeDecorationController(KNetworkPanel<V, E> networkPanel, KParameterProvider<Integer> weightPerStroke) {
 		this.networkPanel = networkPanel;
+		this.weightPerStroke = weightPerStroke;
 		initialize();
 	}
 
@@ -45,12 +48,12 @@ public class KNetworkEdgeDecorationController<V, E> {
 		networkPanel.getViewer().getRenderContext().setEdgeStrokeTransformer(
 				new Transformer<E, Stroke>() {
 					int MAX = 10;
-					BasicStroke[] store;
+					BasicStroke[] strokes;					
 
 					void initialize() {
-						store = new BasicStroke[MAX];
+						strokes = new BasicStroke[MAX];
 						for (int i = 0; i < MAX; i++) {
-							store[i] = new BasicStroke(i + 1);
+							strokes[i] = new BasicStroke(i + 1);
 						}
 					}
 
@@ -60,15 +63,16 @@ public class KNetworkEdgeDecorationController<V, E> {
 						} else if (count > MAX) {
 							count = MAX;
 						}
-						if (store == null) {
+						if (strokes == null) {
 							initialize();
 						}
-						return store[count - 1];
+						return strokes[count - 1];
 					}
 
 					public Stroke transform(E e) {
+						int wps = weightPerStroke.get();
 						int count = ((KBRelation) e).getReasonCount();
-						return get(count);
+						return get(count/wps);
 					};
 				});
 

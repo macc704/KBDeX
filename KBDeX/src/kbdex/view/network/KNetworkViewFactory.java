@@ -70,7 +70,7 @@ public class KNetworkViewFactory {
 	public KNetworkViewPanel<KBAgent, KBRelation> createAgentNetworkPanel(
 			KNNetworkController<KBAgent> netController) {
 		KNetworkViewPanel<KBAgent, KBRelation> panel = new KNetworkViewPanel<KBAgent, KBRelation>(
-				netController, studentIcon);
+				netController, studentIcon, discourseController.getDiscourse().getAgentWeightParameter());
 		KNetworkViewContextMenuProvider<KBAgent> provider = new KNetworkViewContextMenuProvider<KBAgent>(
 				getDiscourseController(), getWorld()) {
 
@@ -155,7 +155,7 @@ public class KNetworkViewFactory {
 	public KNetworkViewPanel<KBDiscourseUnit, KBRelation> createUnitNetworkPanel(
 			KNNetworkController<KBDiscourseUnit> netController) {
 		KNetworkViewPanel<KBDiscourseUnit, KBRelation> panel = new KNetworkViewPanel<KBDiscourseUnit, KBRelation>(
-				netController, discourseunitIcon);
+				netController, discourseunitIcon, discourseController.getDiscourse().getDiscourseUnitWeightParameter());
 		KNetworkViewContextMenuProvider<KBDiscourseUnit> provider = new KNetworkViewContextMenuProvider<KBDiscourseUnit>(
 				getDiscourseController(), getWorld()) {
 
@@ -244,7 +244,7 @@ public class KNetworkViewFactory {
 	public KNetworkViewPanel<KBWord, KBRelation> createWordNetworkPanel(
 			KNNetworkController<KBWord> netController) {
 		KNetworkViewPanel<KBWord, KBRelation> panel = new KNetworkViewPanel<KBWord, KBRelation>(
-				netController, wordIcon);
+				netController, wordIcon, discourseController.getDiscourse().getWordWeightParameter());
 		KNetworkViewContextMenuProvider<KBWord> provider = new KNetworkViewContextMenuProvider<KBWord>(
 				getDiscourseController(), getWorld()) {
 
