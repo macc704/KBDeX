@@ -36,6 +36,9 @@ public class KSimpleWordFinder implements IKWordFinder {
 
 		for (String word : keywords.getElements()) {
 			String currentText = text;
+			if (lowercaseCheck) {
+				word = word.toLowerCase();
+			}
 			while (true) {// 後ろから切っていくこと．前から切ると，indexがずれる．
 				int index = currentText.lastIndexOf(word);
 				if (index < 0) {
