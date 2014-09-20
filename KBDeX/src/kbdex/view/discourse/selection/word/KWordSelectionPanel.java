@@ -86,12 +86,21 @@ public class KWordSelectionPanel extends JPanel {
 		discourseViewer.setDiscourse(discourse);
 	}
 
-	public JMenu createMenu() {
+	public JMenu createFileMenu() {
 		JMenu menuFile = new JMenu("File");
 		menuFile.add(createSaveAction());
 		menuFile.add(createReloadAction());
-
 		return menuFile;
+	}
+
+	public JMenu createEditMenu() {
+		JMenu menu = new JMenu("Edit");
+		menu.add(textEditor.getCutAction());
+		menu.add(textEditor.getCopyAction());
+		menu.add(textEditor.getPasteAction());
+		menu.add(textEditor.getRedoAction());
+		menu.add(textEditor.getUndoAction());
+		return menu;
 	}
 
 	private Action createSaveAction() {

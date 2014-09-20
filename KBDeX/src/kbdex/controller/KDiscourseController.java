@@ -451,7 +451,8 @@ public class KDiscourseController {
 			}
 		});
 		dialog.setJMenuBar(new JMenuBar());
-		dialog.getJMenuBar().add(panel.createMenu());
+		dialog.getJMenuBar().add(panel.createFileMenu());
+		dialog.getJMenuBar().add(panel.createEditMenu());
 		dialog.setSize(createDialogSize());
 		dialog.showDialog();
 
