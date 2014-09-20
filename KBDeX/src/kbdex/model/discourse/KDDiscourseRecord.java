@@ -8,6 +8,7 @@ package kbdex.model.discourse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import kbdex.model.discourse.wordprocessing.IKSentenceCutter;
 import kbdex.model.discourse.wordprocessing.KWordProcessorFactory;
@@ -119,6 +120,13 @@ public class KDDiscourseRecord {
 		IKSentenceCutter cutter = factory.createSentenceCutter();
 		for (String text : cutter.parse(getText())) {
 			sentences.add(new KDContentsText(text));
+		}
+	}
+	
+	public void createFilterTextCash(Map<String, String> textfilter) {
+		this.text.createFilterTextCash(textfilter);
+		for (KDContentsText text : sentences) {
+			text.createFilterTextCash(textfilter);
 		}
 	}
 

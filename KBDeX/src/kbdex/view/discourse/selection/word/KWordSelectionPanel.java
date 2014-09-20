@@ -139,8 +139,10 @@ public class KWordSelectionPanel extends JPanel {
 		monitor.doTaskWithDialog(new ICTask() {
 			public void doTask() {
 				textEditor.doLoad();
-				discourse.reloadSelectedWords(monitor);
+				//discourse.reloadSelectedWords(monitor);
+				discourse.reloadFilterTexts(monitor);
 				discourseViewer.refreshView();
+				histgramViewer.refreshVocaburary();
 				histgramViewer.refreshSelectedWords();
 			}
 		});

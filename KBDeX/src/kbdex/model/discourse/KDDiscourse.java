@@ -49,6 +49,7 @@ public class KDDiscourse extends CObject {
 
 	private List<KDDiscourseRecord> records;
 	private KDictionary<String> selectedWords;
+	private Map<String, String> textfilter;
 	private Language language = Language.JAPANESE;
 	private DiscourseUnitType unitType = DiscourseUnitType.NOTE;
 	private KAgentNameDiscourseFilter agentFilter;
@@ -70,6 +71,7 @@ public class KDDiscourse extends CObject {
 		this.lifetime = this.file.loadLifetime();
 		this.records = this.file.loadRecords();
 		this.selectedWords = this.file.loadSelectedWords();
+		this.textfilter = this.file.loadTextFilter();
 		this.groups = getGroupsByDiscourse();
 		this.groups.addAll(this.file.loadGroups());
 
@@ -346,6 +348,14 @@ public class KDDiscourse extends CObject {
 		return KWordProcessorFactory.createFactory(language);
 	}
 
+	public void reloadFilterTexts(ICProgressMonitor monitor) {
+		this.selectedWords = this.file.loadSelectedWords();
+		this.textfilter = this.file.loadTextFilter();
+		createFilterTextCash(monitor);
+		createVocaburaryCash(monitor);
+		createKeywordingCash(monitor);
+	}
+	
 	public void reloadSelectedWords(ICProgressMonitor monitor) {
 		this.selectedWords = this.file.loadSelectedWords();
 		createKeywordingCash(monitor);
@@ -353,6 +363,7 @@ public class KDDiscourse extends CObject {
 
 	private void createAllCash(ICProgressMonitor monitor) {
 		createSentenceCash(monitor);
+		createFilterTextCash(monitor);
 		createVocaburaryCash(monitor);
 		createKeywordingCash(monitor);
 	}
@@ -373,6 +384,16 @@ public class KDDiscourse extends CObject {
 
 		for (KDDiscourseRecord record : records) {
 			record.createKeywordingCash(selectedWords, getFactory());
+			monitor.progress(1);
+		}
+	}
+	
+	private void createFilterTextCash(ICProgressMonitor monitor) {
+		monitor.setWorkTitle("Cashing FilteringText");
+		monitor.setMax(records.size());
+
+		for (KDDiscourseRecord record : records) {
+			record.createFilterTextCash(this.textfilter);
 			monitor.progress(1);
 		}
 	}

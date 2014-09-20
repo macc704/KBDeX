@@ -16,6 +16,9 @@ import kbdex.model.discourse.KDDiscourse.Language;
 import kbdex.model.discourse.filters.KAgentNameDiscourseFilter;
 import kbdex.model.discourse.filters.KTimeDiscourseFilter;
 import kbdex.utils.KDictionary;
+
+import org.apache.commons.collections15.map.HashedMap;
+
 import clib.common.filesystem.CDirectory;
 import clib.common.filesystem.CFile;
 import clib.common.filesystem.CFileElement;
@@ -106,15 +109,80 @@ public class KDDiscourseFile {
 				return text;
 			}
 		};
-		List<String> words = file.loadTextAsList();
-		for (String word : words) {
-			if (word.startsWith("#")) {
+		List<String> lines = file.loadTextAsList();
+		for (String line : lines) {
+			if (line.isEmpty()) {
+				continue;
+			}
+			if (line.startsWith("#")) {
+				continue;
+			}
+			if (line.startsWith("!")) {
+				KDWordSet wordset = parseLine(line);
+				if (wordset == null) {
+					continue;
+				}
+				keywords.getElement(wordset.trunkWord);
 				continue;
 			}
 
-			keywords.getElement(word);
+			keywords.getElement(line);
 		}
 		return keywords;
+	}
+
+	public Map<String, String> loadTextFilter() {
+		Map<String, String> textfilter = new HashedMap<String, String>();
+		CFile file = getSelectedWordFile();
+		List<String> lines = file.loadTextAsList();
+		for (String line : lines) {
+			KDWordSet wordset = parseLine(line);
+			if (wordset == null) {
+				continue;
+			}
+
+			for (String branchWord : wordset.branchWords) {
+				textfilter.put(branchWord, wordset.trunkWord);
+			}
+		}
+		return textfilter;
+	}
+
+	private KDWordSet parseLine(String line) {
+		try {
+			if (!line.startsWith("!")) {
+				return null;
+			}
+
+			KDWordSet wordset = new KDWordSet();
+
+			line = line.substring(1);//cut first !			
+			int index = line.indexOf(":");
+			if (index < 0) {
+				wordset.trunkWord = line;
+				return wordset;
+			}
+			wordset.trunkWord = line.substring(0, index);
+			if (index >= line.length()) {
+				return wordset;
+			}
+			String branchWordLine = line.substring(index + 1);
+			for (String branchWord : branchWordLine.split(",")) {
+				if (branchWord != null && !branchWord.isEmpty() && !branchWord.equals(" ")) {					
+					wordset.branchWords.add(branchWord);
+				}
+			}
+
+			return wordset;
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	class KDWordSet {
+		String trunkWord;
+		List<String> branchWords = new ArrayList<String>();
 	}
 
 	protected KAgentNameDiscourseFilter loadAgentFilter() {

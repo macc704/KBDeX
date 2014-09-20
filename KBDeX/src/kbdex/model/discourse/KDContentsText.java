@@ -6,6 +6,7 @@
 package kbdex.model.discourse;
 
 import java.util.List;
+import java.util.Map;
 
 import kbdex.model.discourse.wordprocessing.IKWordFinder;
 import kbdex.model.discourse.wordprocessing.KHTMLMaker;
@@ -19,9 +20,10 @@ import clib.common.collections.CVocaburary;
  */
 public class KDContentsText {
 
-	private String text;
+	private String originalText;
 
 	//cash
+	private String filteredText;
 	private CVocaburary vocaburary;
 	private List<String> foundKeywords;
 	private String highlightedHtmlText;
@@ -29,28 +31,45 @@ public class KDContentsText {
 	//private JLabel highlightedJLabel; //Labelは時間がかかりすぎるのでcashしない
 
 	public KDContentsText(String text) {
-		this.text = text;
+		this.originalText = text;
+	}
+	
+	public String getOriginalText(){
+		return originalText;
 	}
 
 	public String getText() {
-		return text;
+		if(filteredText == null){
+			return originalText;
+		}
+		return filteredText;
 	}
 
 	/*******************************************
 	 * cashing strategy
 	 *******************************************/
 
+	public void createFilterTextCash(Map<String, String> textfilter) {
+		filteredText = originalText.toLowerCase();
+		for (String key : textfilter.keySet()) {
+			key = key.toLowerCase();
+			filteredText = filteredText.replaceAll(key, textfilter.get(key));
+		}
+	}
+
 	public void createVocaburaryCash(KDictionary<String> keywords,
 			KWordProcessorFactory factory) {
-		vocaburary = factory.createVocaburaryParser().parse(text, keywords);
+		vocaburary = factory.createVocaburaryParser().parse(getText(),
+				keywords);
 	}
 
 	public void createKeywordingCash(KDictionary<String> keywords,
 			KWordProcessorFactory factory) {
 		IKWordFinder finder = factory.createWordFinder();
-		finder.parse(text, keywords);
+		finder.parse(getText(), keywords);
 		this.foundKeywords = finder.getFoundWords();
-		this.highlightedHtmlText = KHTMLMaker.makeHighlightedHtml(text, finder);
+		this.highlightedHtmlText = KHTMLMaker.makeHighlightedHtml(getText(),
+				finder);
 	}
 
 	public CVocaburary getVocaburary() {

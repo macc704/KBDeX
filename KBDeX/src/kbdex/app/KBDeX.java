@@ -40,6 +40,9 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.9.0 2014.09.19
+ * 		・WordBag
+ * 
  * 1.8.2 2014.08.28
  * 		・Fixed bug of output-R 
  * 
@@ -206,8 +209,8 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.8.2";
-	private static final String DATE = "2014.08.28";
+	private static final String VERSION = "1.9.0";
+	private static final String DATE = "2014.09.19";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";

@@ -128,7 +128,7 @@ public class KHistgramViewer extends JPanel {
 		refreshSelectedWords();
 	}
 
-	private void refreshVocaburary() {
+	public void refreshVocaburary() {
 		table.setAutoCreateRowSorter(true);
 		Map<String, Integer> histgram = discourse.getVocaburary().getHistgram();
 		CMapTableModel<String, Integer> model = new CMapTableModel<String, Integer>(
