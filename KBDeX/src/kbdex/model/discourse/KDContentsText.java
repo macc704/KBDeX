@@ -7,6 +7,7 @@ package kbdex.model.discourse;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import kbdex.model.discourse.wordprocessing.IKWordFinder;
 import kbdex.model.discourse.wordprocessing.KHTMLMaker;
@@ -33,13 +34,13 @@ public class KDContentsText {
 	public KDContentsText(String text) {
 		this.originalText = text;
 	}
-	
-	public String getOriginalText(){
+
+	public String getOriginalText() {
 		return originalText;
 	}
 
 	public String getText() {
-		if(filteredText == null){
+		if (filteredText == null) {
 			return originalText;
 		}
 		return filteredText;
@@ -53,14 +54,19 @@ public class KDContentsText {
 		filteredText = originalText.toLowerCase();
 		for (String key : textfilter.keySet()) {
 			key = key.toLowerCase();
-			filteredText = filteredText.replaceAll(key, textfilter.get(key));
+			try {
+				filteredText = filteredText.replaceAll(Pattern.quote(key),
+						textfilter.get(key));
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 		}
 	}
 
 	public void createVocaburaryCash(KDictionary<String> keywords,
 			KWordProcessorFactory factory) {
-		vocaburary = factory.createVocaburaryParser().parse(getText(),
-				keywords);
+		vocaburary = factory.createVocaburaryParser()
+				.parse(getText(), keywords);
 	}
 
 	public void createKeywordingCash(KDictionary<String> keywords,
