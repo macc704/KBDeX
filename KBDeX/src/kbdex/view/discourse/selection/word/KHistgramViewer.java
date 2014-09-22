@@ -8,8 +8,12 @@ package kbdex.view.discourse.selection.word;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -22,10 +26,16 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableModel;
 
 import kbdex.model.discourse.KDDiscourse;
 import clib.common.collections.CList;
+import clib.common.thread.ICTask;
+import clib.view.actions.CAction;
+import clib.view.actions.CActionUtils;
+import clib.view.table.common.CTableUtils;
 import clib.view.table.model.CMapTableModel;
 
 /**
@@ -69,6 +79,7 @@ public class KHistgramViewer extends JPanel {
 		setLayout(new BorderLayout());
 		add(scroll);
 
+		table.setComponentPopupMenu(popupMenu);
 		table.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				if (e.getButton() == MouseEvent.BUTTON1
@@ -84,8 +95,7 @@ public class KHistgramViewer extends JPanel {
 						}
 					}
 				}
-				if (e.getButton() == MouseEvent.BUTTON3
-						&& e.getClickCount() == 1) {// right click
+				if (e.isPopupTrigger()) {
 					popupMenu.show(table, e.getX(), e.getY());
 				}
 			}
@@ -109,6 +119,48 @@ public class KHistgramViewer extends JPanel {
 
 		});
 		popupMenu.add(itemDeselect);
+
+		{
+			CAction action = CActionUtils.createAction("Copy", new ICTask() {
+				@Override
+				public void doTask() {
+					clip();
+				}
+			});
+			action.setAcceralator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK));
+			popupMenu.add(action);
+		}
+		{
+			CAction action = CActionUtils.createAction("SelectAll", new ICTask() {
+				@Override
+				public void doTask() {
+					table.selectAll();					
+				}
+			});
+			popupMenu.add(action);
+		}		
+	}
+
+	private void clip() {
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		List<Integer> rows = CTableUtils.getSelectedModelRows(table);
+		TableModel model = table.getModel();
+		int column = model.getColumnCount();
+		StringBuffer whole = new StringBuffer();
+		for(int row:rows){
+			StringBuffer line = new StringBuffer();
+			for(int i=0;i<column;i++){
+				if(i!=0){
+					line.append("\t");
+				}
+				Object value = model.getValueAt(row, i);
+				line.append(value);
+			}
+			line.append("\n");
+			whole.append(line);
+		}
+		StringSelection sel = new StringSelection(whole.toString());
+		clipboard.setContents(sel, sel);
 	}
 
 	private List<String> getSelectingWords() {
