@@ -117,6 +117,9 @@ public class KDDiscourseFile {
 			if (line.startsWith("#")) {
 				continue;
 			}
+			if (line.startsWith("-")) {
+				continue;
+			}
 			if (line.startsWith("!")) {
 				KDWordSet wordset = parseLine(line);
 				if (wordset == null) {
@@ -129,6 +132,28 @@ public class KDDiscourseFile {
 			keywords.getElement(line);
 		}
 		return keywords;
+	}
+	
+	protected KDictionary<String> loadIgnoreWords() {
+		CFile file = getSelectedWordFile();
+		KDictionary<String> words = new KDictionary<String>() {
+			private static final long serialVersionUID = 1L;
+
+			protected String createInstance(String text) {
+				return text;
+			}
+		};
+		List<String> lines = file.loadTextAsList();
+		for (String line : lines) {
+			if (line.isEmpty()) {
+				continue;
+			}
+			if (line.startsWith("-") && line.length() >= 2) {
+				String word = line.substring(1);
+				words.getElement(word);
+			}			
+		}
+		return words;
 	}
 
 	public Map<String, String> loadTextFilter() {

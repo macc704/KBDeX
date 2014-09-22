@@ -49,6 +49,7 @@ public class KDDiscourse extends CObject {
 
 	private List<KDDiscourseRecord> records;
 	private KDictionary<String> selectedWords;
+	private KDictionary<String> ignoreWords;
 	private Map<String, String> textfilter;
 	private Language language = Language.JAPANESE;
 	private DiscourseUnitType unitType = DiscourseUnitType.NOTE;
@@ -71,6 +72,7 @@ public class KDDiscourse extends CObject {
 		this.lifetime = this.file.loadLifetime();
 		this.records = this.file.loadRecords();
 		this.selectedWords = this.file.loadSelectedWords();
+		this.ignoreWords = this.file.loadIgnoreWords();
 		this.textfilter = this.file.loadTextFilter();
 		this.groups = getGroupsByDiscourse();
 		this.groups.addAll(this.file.loadGroups());
@@ -148,11 +150,16 @@ public class KDDiscourse extends CObject {
 		return selectedWords.getElements();
 	}
 
+	//	public List<String> getIgnoreWords() {
+	//		return ignoreWords.getElements();
+	//	}
+
 	public CVocaburary getVocaburary() {
 		CVocaburary vocaburary = new CVocaburary();
 		for (KDDiscourseRecord record : getFilteredRecords()) {
 			vocaburary.addAll(record.getVocaburary());
 		}
+		vocaburary.removeByList(ignoreWords.getElements());
 		return vocaburary;
 	}
 
@@ -350,12 +357,14 @@ public class KDDiscourse extends CObject {
 
 	public void reloadFilterTexts(ICProgressMonitor monitor) {
 		this.selectedWords = this.file.loadSelectedWords();
+		this.ignoreWords = this.file.loadIgnoreWords();
 		this.textfilter = this.file.loadTextFilter();
 		createFilterTextCash(monitor);
 		createVocaburaryCash(monitor);
 		createKeywordingCash(monitor);
 	}
-	
+
+	@Deprecated
 	public void reloadSelectedWords(ICProgressMonitor monitor) {
 		this.selectedWords = this.file.loadSelectedWords();
 		createKeywordingCash(monitor);
@@ -387,7 +396,7 @@ public class KDDiscourse extends CObject {
 			monitor.progress(1);
 		}
 	}
-	
+
 	private void createFilterTextCash(ICProgressMonitor monitor) {
 		monitor.setWorkTitle("Cashing FilteringText");
 		monitor.setMax(records.size());
@@ -403,7 +412,7 @@ public class KDDiscourse extends CObject {
 		monitor.setMax(records.size());
 
 		for (KDDiscourseRecord record : records) {
-			record.createVocaburaryCash(selectedWords, getFactory());
+			record.createVocaburaryCash(this.selectedWords, getFactory());
 			monitor.progress(1);
 		}
 	}
