@@ -120,6 +120,9 @@ public class KDDiscourseFile {
 			if (line.startsWith("-")) {
 				continue;
 			}
+			if (line.startsWith("+")) {
+				continue;
+			}
 			if (line.startsWith("!")) {
 				KDWordSet wordset = parseLine(line);
 				if (wordset == null) {
@@ -175,7 +178,7 @@ public class KDDiscourseFile {
 
 	private KDWordSet parseLine(String line) {
 		try {
-			if (!line.startsWith("!")) {
+			if (!line.startsWith("!") && !line.startsWith("+")) {
 				return null;
 			}
 
