@@ -13,7 +13,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -26,15 +25,11 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.KeyStroke;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableModel;
 
 import kbdex.model.discourse.KDDiscourse;
 import clib.common.collections.CList;
-import clib.common.thread.ICTask;
-import clib.view.actions.CAction;
-import clib.view.actions.CActionUtils;
 import clib.view.table.common.CTableUtils;
 import clib.view.table.model.CMapTableModel;
 
@@ -120,37 +115,38 @@ public class KHistgramViewer extends JPanel {
 		});
 		popupMenu.add(itemDeselect);
 
-		{
-			CAction action = CActionUtils.createAction("Copy", new ICTask() {
-				@Override
-				public void doTask() {
-					clip();
-				}
-			});
-			action.setAcceralator(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.META_MASK));
-			popupMenu.add(action);
-		}
-		{
-			CAction action = CActionUtils.createAction("SelectAll", new ICTask() {
-				@Override
-				public void doTask() {
-					table.selectAll();					
-				}
-			});
-			popupMenu.add(action);
-		}		
+		// not necessary because it works by ctrl-?? in mac
+		//		{
+		//			CAction action = CActionUtils.createAction("Copy", new ICTask() {
+		//				@Override
+		//				public void doTask() {
+		//					clip();
+		//				}
+		//			});
+		//			popupMenu.add(action);
+		//		}
+		//		{
+		//			CAction action = CActionUtils.createAction("SelectAll", new ICTask() {
+		//				@Override
+		//				public void doTask() {
+		//					table.selectAll();					
+		//				}
+		//			});
+		//			popupMenu.add(action);
+		//		}		
 	}
 
+	@SuppressWarnings("unused")
 	private void clip() {
 		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
 		List<Integer> rows = CTableUtils.getSelectedModelRows(table);
 		TableModel model = table.getModel();
 		int column = model.getColumnCount();
 		StringBuffer whole = new StringBuffer();
-		for(int row:rows){
+		for (int row : rows) {
 			StringBuffer line = new StringBuffer();
-			for(int i=0;i<column;i++){
-				if(i!=0){
+			for (int i = 0; i < column; i++) {
+				if (i != 0) {
 					line.append("\t");
 				}
 				Object value = model.getValueAt(row, i);
