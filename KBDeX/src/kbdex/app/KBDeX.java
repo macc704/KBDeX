@@ -40,12 +40,19 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.9.2 2014.09.23
+ * 		・Word Bag for frequency
+ * 		 (plus mark to create a word bag for frequency)
+ * 		・ignore word list
+ * 		 (minus mark to suppress detecting the particular word in word selection)
+ * 
  * 1.9.1 2014.09.19
  * 		・Bugfix for WordBag
  * 		・copy pasting for mac java7
  * 
  * 1.9.0 2014.09.19
  * 		・WordBag
+ * 		(exclamation mark to make a word bag)
  * 
  * 1.8.2 2014.08.28
  * 		・Fixed bug of output-R 
@@ -213,8 +220,8 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.9.1";
-	private static final String DATE = "2014.09.19";
+	private static final String VERSION = "1.9.2";
+	private static final String DATE = "2014.09.23";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
