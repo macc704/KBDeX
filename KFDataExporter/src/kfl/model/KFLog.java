@@ -61,7 +61,7 @@ public class KFLog implements Serializable {
 		strings.add(getMethod());
 		if (getAuthor() != null) {
 			strings.add(getAuthor().getIdAsString());
-			strings.add(getAuthor().getName().toString());
+			strings.add(getAuthor().getUserName().toString());
 		} else {
 			strings.add("");
 			strings.add("");
