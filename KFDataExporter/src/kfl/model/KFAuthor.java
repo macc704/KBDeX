@@ -6,6 +6,7 @@
 package kfl.model;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -18,6 +19,10 @@ public class KFAuthor extends KFOwnerObject {
 	
 	private String firstName;
 	private String lastName;
+	private String userName;
+	private String role;
+	private Date lastLogin;
+
 	private List<KFNote> notes = new ArrayList<KFNote>();
 	private KFGroup group;
 
@@ -48,6 +53,30 @@ public class KFAuthor extends KFOwnerObject {
 	public String getName() {
 		return firstName + " " + lastName;
 	}
+	
+	public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getRole() {
+		return role;
+	}
+
+	public void setRole(String role) {
+		this.role = role;
+	}
+
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
 
 	public List<KFNote> getNotes() {
 		return notes;
@@ -69,12 +98,20 @@ public class KFAuthor extends KFOwnerObject {
 	public String toString() {
 		return "((author)" + getName() + ")";
 	}
+	
+	public String getShortDescrption() {
+		return getUserName();
+	}
 
 	public List<String> getStrings() {
 		List<String> strings = new ArrayList<String>();		
-		addBasicStrings(strings);
-		strings.add(getFirstName());
-		strings.add(getLastName());
+//		addBasicStrings(strings);
+		strings.add(getId().toString());
+		strings.add(getRole());
+		strings.add(getUserName());
+		strings.add(getName());
+		strings.add(getStatus());
+		strings.add(getLastLogin().toString());
 		return strings;
 	}
 }

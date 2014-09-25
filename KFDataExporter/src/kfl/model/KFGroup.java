@@ -59,9 +59,25 @@ public class KFGroup extends KFOwnerObject {
 	public String toString() {
 		return "((group)" + getName() + ")";
 	}
+	
+	@Override
+	public String listToString(String name, List<? extends KFElement> list) {
+		StringBuffer buf = new StringBuffer();
+		buf.append("{'" + name + "':[");
+		for (int i = 0; i < list.size(); i++) {
+			if (i != 0) {
+				buf.append(", ");
+			}
+			buf.append("{'id':'" + list.get(i).getIdAsString());
+			buf.append("', 'username':'" + list.get(i).getShortDescrption() + "'}");
+		}
+		buf.append("]}");
+		return buf.toString();
+	}
 
 	public List<String> getStrings() {
-		List<String> strings = new ArrayList<String>();		
+		List<String> strings = new ArrayList<String>();	
+		strings.add(getIdAsString());
 		strings.add(getName());
 		strings.add(listToString("members", authors));
 		return strings;

@@ -91,8 +91,12 @@ public class KFDataRetriever {
 				// unam=James McGuire,
 				KFAuthor author = new KFAuthor();
 				element = author;
+				author.setLastLogin(tuple.getTime("last"));
 				author.setFirstName(tuple.getString("fnam"));
 				author.setLastName(tuple.getString("lnam"));
+				author.setStatus(tuple.getString("stat"));
+				author.setUserName(tuple.getString("unam"));
+				author.setRole(tuple.getString("type"));
 			} else if (kind.equals("group")) {
 				// group=Object=group, fsiz=, modi=, titl=Sample Group,
 				KFGroup group = new KFGroup();

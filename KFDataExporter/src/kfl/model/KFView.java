@@ -76,7 +76,7 @@ public class KFView extends KFElement {
 
 	@Override
 	public String getShortDescrption() {
-		return getName();
+		return this.getType() + "," + getName();
 	}
 
 	public List<String> getStrings() {
