@@ -186,16 +186,14 @@ public class KBWorldController implements ICModelChangeListener,
 	private void undoNetwork(KBDiscourseUnit unit) {
 
 		// Agent Graph
-		//		System.out.println("remove" + unit
-		//				+ "--------------------------------------");
 		Collection<KBDiscourseUnit> neighbors = unitNetworkController
 				.getModel().getGraph().getNeighbors(unit);
-		for (KBDiscourseUnit neighbor : neighbors) {
-			//			System.out.println("remove" + unit.getAgent() + ","
-			//					+ neighbor.getAgent() + "," + unit + "," + neighbor);
-			agentNetworkController.getModel().removeRelation(unit.getAgent(),
-					neighbor.getAgent(),
-					new KBAgentRelationReason(unit, neighbor));
+		if (neighbors != null) {
+			for (KBDiscourseUnit neighbor : neighbors) {
+				agentNetworkController.getModel().removeRelation(
+						unit.getAgent(), neighbor.getAgent(),
+						new KBAgentRelationReason(unit, neighbor));
+			}
 		}
 
 		// Word Graph

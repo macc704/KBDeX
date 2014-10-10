@@ -178,7 +178,9 @@ public class KBWorld extends CAbstractModelObject {
 		fireModelUpdated(Event.PREPARE_UNIT_REMOVE, unit);
 
 		units.removeElement(unit.toString());
-		unit.getAgent().removeUnit(unit);
+		if (unit.getAgent() != null) {
+			unit.getAgent().removeUnit(unit);
+		}
 		for (KBWord word : unit.getWords()) {
 			word.removeUnit(unit);
 		}
