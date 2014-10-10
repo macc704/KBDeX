@@ -10,7 +10,6 @@ import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
-import java.util.Locale;
 
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
@@ -40,6 +39,10 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.9.3 2014.10.10
+ * 		・fixed Turkish problem -> utf8
+ * 		・fixed bug of lifetime
+ * 
  * 1.9.2 2014.09.23
  * 		・Word Bag for frequency
  * 		 (plus mark to create a word bag for frequency)
@@ -220,13 +223,11 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.9.2";
-	private static final String DATE = "2014.09.23";
+	private static final String VERSION = "1.9.3";
+	private static final String DATE = "2014.10.10";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
-	//public static final CEncoding ENCODING = CEncoding.Shift_JIS;
-	//public static CEncoding ENCODING_IN = CEncoding.UTF8;
 	public static CEncoding ENCODING_OUT = CEncoding.UTF8;
 	public static final boolean DEBUG = true;
 
@@ -256,8 +257,7 @@ public class KBDeX {
 	}
 
 	private void initializeEncoding() {
-		if (Locale.JAPAN.getCountry().equals(Locale.getDefault().getCountry())) {
-			//ENCODING_IN = CEncoding.JISAutoDetect;
+		if (CJavaSystem.getInstance().isJapaneseOS()) {
 			ENCODING_OUT = CEncoding.Shift_JIS;
 		}
 	}
