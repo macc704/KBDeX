@@ -4,3 +4,5 @@
 #*.jar
 *.war
 *.ear
+KBDeX/data.csv
+KBDeX/in.csv
