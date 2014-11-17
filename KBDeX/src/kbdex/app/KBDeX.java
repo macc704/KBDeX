@@ -39,7 +39,7 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
- * 1.9.3 2014.10.10
+ * 1.9.4 2014.10.10
  * 		・fixed Turkish problem -> utf8
  * 		・fixed bug of lifetime
  * 
@@ -223,7 +223,7 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.9.3";
+	private static final String VERSION = "1.9.4";
 	private static final String DATE = "2014.10.10";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
