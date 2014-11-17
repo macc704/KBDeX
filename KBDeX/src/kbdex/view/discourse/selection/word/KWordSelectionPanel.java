@@ -182,7 +182,7 @@ public class KWordSelectionPanel extends JPanel {
 				"Would you like save words?", "Your word list is not saved",
 				JOptionPane.YES_NO_CANCEL_OPTION);
 		if (res == JOptionPane.YES_OPTION) {
-			textEditor.doSave();
+			doSave();
 			return true;
 		} else if (res == JOptionPane.NO_OPTION) {
 			return true;
