@@ -139,6 +139,10 @@ public class KMetricsChartPanel<V extends KBElement> extends JPanel {
 		chart.getNavigator().setValue(frameNo);
 		repaint();
 	}
+	
+	public CVChartController getChart() {
+		return chart;
+	}
 
 	private void refreshChartData() {
 		chart.getChart().clear();

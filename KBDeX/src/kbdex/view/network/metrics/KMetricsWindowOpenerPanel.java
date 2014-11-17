@@ -9,11 +9,13 @@ import java.awt.BorderLayout;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 
@@ -23,6 +25,16 @@ import kbdex.controller.metrics.IKTemporalMetricsScorer;
 import kbdex.model.kbmodel.KBElement;
 import kbdex.view.KDiscourseControllerView;
 import kbdex.view.KScreenShotMessageCreater;
+import clib.common.filesystem.CDirectory;
+import clib.common.filesystem.CFile;
+import clib.common.filesystem.CFileSystem;
+import clib.common.table.CCSVFileIO;
+import clib.common.thread.ICTask;
+import clib.view.actions.CAction;
+import clib.view.actions.CActionUtils;
+import clib.view.chart.model.ICDataSet;
+import clib.view.chart.viewer.model.CVChart;
+import clib.view.chart.viewer.model.CVDataSet;
 
 /**
  * @author macchan
@@ -109,7 +121,7 @@ public class KMetricsWindowOpenerPanel<V extends KBElement> extends JPanel {
 			KDiscourseControllerView desktop,
 			List<IKTemporalMetricsScorer> scorers) {
 
-		KMetricsChartPanel<K> graphPanel = new KMetricsChartPanel<K>(
+		final KMetricsChartPanel<K> graphPanel = new KMetricsChartPanel<K>(
 				discourseController, networkController, scorers);
 		JMenuBar menuBar = new JMenuBar();
 		JInternalFrame f = desktop.openInternalFrame(
@@ -119,6 +131,57 @@ public class KMetricsWindowOpenerPanel<V extends KBElement> extends JPanel {
 				new Rectangle(100, 100, 640, 480));
 		KScreenShotMessageCreater.addScreenShotFunction(menuBar, f,
 				discourseController);
+
+		{//export csv
+			JMenu menu = new JMenu("Export");
+			CAction toCSV = CActionUtils.createAction("CSV(be saved to metrics.csv)", new ICTask() {
+				@Override
+				public void doTask() {
+					exportCSV(graphPanel.getChart().getChart());
+				}
+			});
+			menu.add(toCSV);
+			menuBar.add(menu);
+		}
+	}
+
+	private static DecimalFormat formatter = new DecimalFormat("0.000");
+
+	private static void exportCSV(CVChart chart) {
+		List<CVDataSet> dataSets = chart.getDataSets();
+		int colnum = dataSets.size();
+		if (colnum <= 0) {
+			return;
+		}
+		int rownum = dataSets.get(0).getModel().getPoints().getPoints().size();
+		String[][] table = new String[rownum + 1][colnum + 1];
+		//fill initialize
+		for (int r = 0; r < rownum; r++) {
+			for (int c = 0; c < colnum; c++) {
+				table[r][c] = "";
+			}
+		}
+
+		//fill data
+		for (int r = 0; r < rownum; r++) {
+			table[r + 1][0] = Integer.toString(r + 1);
+		}
+		for (int c = 0; c < colnum; c++) {
+			CVDataSet dataset = dataSets.get(c);
+			ICDataSet model = dataset.getModel();
+			table[0][c + 1] = model.getLabel();
+			for (int r = 0; r < rownum; r++) {
+				try {
+					table[r + 1][c + 1] = formatter.format(model.getPoints()
+							.getPoints().get(r).getY());
+				} catch (Exception ex) {
+					//ignore
+				}
+			}
+		}
+		CDirectory dir = CFileSystem.getExecuteDirectory();
+		CFile file = dir.findOrCreateFile("metrics.csv");
+		CCSVFileIO.save(table, file);
 	}
 
 	protected void openTable() {
