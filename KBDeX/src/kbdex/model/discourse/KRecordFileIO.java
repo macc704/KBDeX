@@ -52,9 +52,13 @@ public class KRecordFileIO {
 		List<KDDiscourseRecord> records = new ArrayList<KDDiscourseRecord>();
 		int rowCount = values.length;
 		for (int i = 0; i < rowCount; i++) {
-			KDDiscourseRecord record = loadOne(values[i], i);
-			if (record != null) {
-				records.add(record);
+			try {
+				KDDiscourseRecord record = loadOne(values[i], i);
+				if (record != null) {
+					records.add(record);
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
 			}
 		}
 		return records;
@@ -69,7 +73,17 @@ public class KRecordFileIO {
 			throw new RuntimeException();
 		}
 
-		long id = Long.parseLong(values[0]);
+		long id = i;
+		try {
+			id = Long.parseLong(values[0]);
+		} catch (Exception ex) {
+			//ex.printStackTrace();
+		}
+
+		if (values[1].isEmpty()) {
+			return null;
+		}
+		
 		String name = CStringCleaner.cleaning(values[1]);
 		String text = CStringCleaner.cleaning(values[2]);
 
