@@ -56,7 +56,7 @@ public class KFAttachment extends KFElement {
 
 	@Override
 	public String getShortDescrption() {
-		return this.getType() + "," + path;
+		return this.getType() + "-" + path;
 	}
 
 	public List<String> getStrings() {
