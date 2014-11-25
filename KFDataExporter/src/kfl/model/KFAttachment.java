@@ -1,6 +1,7 @@
 package kfl.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 //To retrive the body of attachement, throw a query in this form
@@ -57,6 +58,11 @@ public class KFAttachment extends KFElement {
 	@Override
 	public String getShortDescrption() {
 		return this.getType() + "-" + path;
+	}
+
+	public static List<String> header() {
+		return Arrays.asList("id", "crea", "modi", "titl", "path", "mime",
+				"file");
 	}
 
 	public List<String> getStrings() {

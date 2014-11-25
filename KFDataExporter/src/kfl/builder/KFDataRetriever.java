@@ -21,6 +21,7 @@ import kfl.model.KFOwnerObject;
 import kfl.model.KFRiseAbove;
 import kfl.model.KFScaffold;
 import kfl.model.KFSupport;
+import kfl.model.KFTextLocator;
 import kfl.model.KFUnknownElement;
 import kfl.model.KFView;
 import kfl.model.KFWorld;
@@ -75,6 +76,7 @@ public class KFDataRetriever {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void loadAllObjects(ZTBTxn transaction) {
 		Map<String, String> unhandled = new HashMap<String, String>();
 
@@ -111,6 +113,7 @@ public class KFDataRetriever {
 				element = note;
 				note.setTitle(tuple.getString("titl"));
 				note.setText(tuple.getString("text"));
+				note.setOffsets(tuple.getList("offsets"));
 			} else if (kind.equals("view")) {
 				// view:{ Object = "view"; crea = date(1.251136096156E9)/* Mon
 				// Aug 24 13:48:16 EDT 2009 */; fontSize = int32(10); hdht =
@@ -219,16 +222,18 @@ public class KFDataRetriever {
 			else if (kind.startsWith("contains from:group")) {
 				KFGroup group = (KFGroup) fromObject;
 				KFAuthor author = (KFAuthor) toObject;
-				group.addAuthor(author);
+				group.addMember(author);
 			} else if (kind.startsWith("owns")) {
 				KFOwnerObject owner = (KFOwnerObject) fromObject;
 				owner.addBelonging(toObject);
+				toObject.addAuthor(owner);
 			}
 			/* view */
 			else if (kind.startsWith("contains from:view")) {
 				KFView view = (KFView) fromObject;
 				Point p = tuple.getPoint("location");
 				view.addElement(toObject, p);
+				toObject.addView(view);
 			} else if (kind.startsWith("uses from:view to:scaffold")) {
 				KFView view = (KFView) fromObject;
 				KFScaffold scaffold = (KFScaffold) toObject;
@@ -260,7 +265,21 @@ public class KFDataRetriever {
 			} else if (kind.startsWith("supports from:support to:note")) {
 				KFSupport support = (KFSupport) fromObject;
 				KFNote note = (KFNote) toObject;
-				note.addSupport(support);
+				KFTextLocator locator = new KFTextLocator();
+				String text = tuple.getString("text");
+				locator.setText(text);
+				int loca = tuple.getInt32("loca");
+				locator.setOffset(loca);
+				note.addSupport(support, locator);
+			} else if (kind.startsWith("references from:note to:note")) {
+				KFNote noteFrom = (KFNote) fromObject;
+				KFNote noteTo = (KFNote) toObject;
+				KFTextLocator locator = new KFTextLocator();
+				String text = tuple.getString("quotation");
+				locator.setText(text);
+				int loca = tuple.getInt32("loca");
+				locator.setOffset(loca);
+				noteFrom.addReference(noteTo, locator);
 			} else {
 				if (!unhandled.containsKey(kind)) {
 					unhandled.put(kind, tuple.toString());

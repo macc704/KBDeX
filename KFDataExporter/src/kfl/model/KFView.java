@@ -2,6 +2,7 @@ package kfl.model;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +15,9 @@ public class KFView extends KFElement {
 
 	private List<KFScaffold> scaffolds = new ArrayList<KFScaffold>();
 	private Map<KFElement, Point> elements = new LinkedHashMap<KFElement, Point>();
-	//mode = "as link", or "in place"
-	//locked = true, or false
+
+	// mode = "as link", or "in place"
+	// locked = true, or false
 
 	public KFView() {
 		this("");
@@ -77,6 +79,10 @@ public class KFView extends KFElement {
 	@Override
 	public String getShortDescrption() {
 		return this.getType() + "-" + getName();
+	}
+
+	public static List<String> header() {
+		return Arrays.asList("id", "crea", "modi", "titl", "elements");
 	}
 
 	public List<String> getStrings() {

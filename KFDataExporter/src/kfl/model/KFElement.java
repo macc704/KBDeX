@@ -24,6 +24,8 @@ public abstract class KFElement implements Serializable {
 	private Date created;
 	private Date modified;
 	private String status;
+	private List<KFOwnerObject> authors = new ArrayList<KFOwnerObject>();
+	private List<KFView> views = new ArrayList<KFView>();
 
 	public ZID getId() {
 		return id;
@@ -77,6 +79,22 @@ public abstract class KFElement implements Serializable {
 	
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public List<KFOwnerObject> getAuthors() {
+		return authors;
+	}
+	
+	public void addAuthor(KFOwnerObject author){
+		authors.add(author);
+	}
+	
+	public List<KFView> getViews() {
+		return views;
+	}
+	
+	public void addView(KFView view){
+		views.add(view);
 	}
 
 	abstract public String getType();

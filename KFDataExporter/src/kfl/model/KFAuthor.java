@@ -6,6 +6,7 @@
 package kfl.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 public class KFAuthor extends KFOwnerObject {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String firstName;
 	private String lastName;
 	private String userName;
@@ -53,7 +54,7 @@ public class KFAuthor extends KFOwnerObject {
 	public String getName() {
 		return firstName + " " + lastName;
 	}
-	
+
 	public String getUserName() {
 		return userName;
 	}
@@ -98,14 +99,19 @@ public class KFAuthor extends KFOwnerObject {
 	public String toString() {
 		return "((author)" + getName() + ")";
 	}
-	
+
 	public String getShortDescrption() {
 		return getUserName();
 	}
 
+	public static List<String> header() {
+		return Arrays.asList("id", "type", "uname", "name", "stat",
+				"last_login");
+	}
+
 	public List<String> getStrings() {
-		List<String> strings = new ArrayList<String>();		
-//		addBasicStrings(strings);
+		List<String> strings = new ArrayList<String>();
+		// addBasicStrings(strings);
 		strings.add(getId().toString());
 		strings.add(getRole());
 		strings.add(getUserName());

@@ -6,6 +6,7 @@
 package kfl.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,16 +16,16 @@ import java.util.List;
 public class KFGroup extends KFOwnerObject {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private String name;
 
-	private List<KFAuthor> authors = new ArrayList<KFAuthor>();
+	private List<KFAuthor> members = new ArrayList<KFAuthor>();
 
 	@Override
 	public String getType() {
 		return "group";
 	}
-	
+
 	/**
 	 * @return the name
 	 */
@@ -43,23 +44,23 @@ public class KFGroup extends KFOwnerObject {
 	/**
 	 * @return the authors
 	 */
-	public List<KFAuthor> getAuthors() {
-		return authors;
+	public List<KFAuthor> getMembers() {
+		return members;
 	}
 
 	/**
-	 * @param authors
+	 * @param members
 	 *            the authors to set
 	 */
-	public void addAuthor(KFAuthor author) {
-		this.authors.add(author);
+	public void addMember(KFAuthor author) {
+		this.members.add(author);
 	}
-	
+
 	@Override
 	public String toString() {
 		return "((group)" + getName() + ")";
 	}
-	
+
 	@Override
 	public String listToString(String name, List<? extends KFElement> list) {
 		StringBuffer buf = new StringBuffer();
@@ -69,17 +70,22 @@ public class KFGroup extends KFOwnerObject {
 				buf.append(", ");
 			}
 			buf.append("{'id':'" + list.get(i).getIdAsString());
-			buf.append("', 'username':'" + list.get(i).getShortDescrption() + "'}");
+			buf.append("', 'username':'" + list.get(i).getShortDescrption()
+					+ "'}");
 		}
 		buf.append("]}");
 		return buf.toString();
 	}
 
+	public static List<String> header() {
+		return Arrays.asList("id", "name", "members");
+	}
+
 	public List<String> getStrings() {
-		List<String> strings = new ArrayList<String>();	
+		List<String> strings = new ArrayList<String>();
 		strings.add(getIdAsString());
 		strings.add(getName());
-		strings.add(listToString("members", authors));
+		strings.add(listToString("members", members));
 		return strings;
 	}
 

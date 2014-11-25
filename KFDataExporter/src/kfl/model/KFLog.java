@@ -2,6 +2,7 @@ package kfl.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +54,12 @@ public class KFLog implements Serializable {
 
 	public KFElement getTarget2() {
 		return target2;
+	}
+	
+	public static List<String> header(){
+		return Arrays.asList("crea", "action", "uid", "uname", 
+				"obj_id", "obj_type", "obj_info",
+				"obj2_id", "obj2_type", "obj2_info");
 	}
 
 	public List<String> getStrings() {

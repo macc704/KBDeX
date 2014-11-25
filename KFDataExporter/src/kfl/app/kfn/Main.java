@@ -9,7 +9,6 @@ import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -21,6 +20,7 @@ import kfl.model.KFAuthor;
 import kfl.model.KFGroup;
 import kfl.model.KFLog;
 import kfl.model.KFNote;
+import kfl.model.KFOwnerObject;
 import kfl.model.KFView;
 import kfl.model.KFWorld;
 
@@ -125,9 +125,7 @@ public class Main {
 		{
 			CFile file = dir.findOrCreateFile("log.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
-			table.add(Arrays.asList("crea", "action", "uid", "uname", 
-					"obj_id", "obj_type", "obj_info",
-					"obj2_id", "obj2_type", "obj2_info"));
+			table.add(KFLog.header());
 			for (KFLog each : world.getLogs()) {
 				table.add(each.getStrings());
 			}
@@ -137,10 +135,19 @@ public class Main {
 		{
 			CFile file = dir.findOrCreateFile("notes.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
-			table.add(Arrays.asList("id", "crea", "modi", "titl", 
-					"text", "buildons", "keywords", "supports", "riseaboves"));
+			List<String> header = KFNote.header();
+			header.add("viewId");
+			header.add("authorId");
+			table.add(header);
 			for (KFNote each : world.getNotes()) {
-				table.add(each.getStrings());
+				for (KFView eachView : each.getViews()) {
+					for (KFOwnerObject eachAuthor : each.getAuthors()) {
+						List<String> row = each.getStrings();
+						row.add(eachView.getIdAsString());
+						row.add(eachAuthor.getIdAsString());
+						table.add(row);
+					}
+				}
 			}
 			CCSVFileIO.saveByListList(table, file);
 		}
@@ -148,8 +155,7 @@ public class Main {
 		{
 			CFile file = dir.findOrCreateFile("authors.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
-			table.add(Arrays.asList("id", "type", "uname", "name", 
-					"stat", "last_login"));
+			table.add(KFAuthor.header());
 			for (KFAuthor each : world.getAuthors()) {
 				table.add(each.getStrings());
 			}
@@ -159,7 +165,7 @@ public class Main {
 		{
 			CFile file = dir.findOrCreateFile("groups.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
-			table.add(Arrays.asList("id", "name", "members"));
+			table.add(KFGroup.header());
 			for (KFGroup each : world.getGroups()) {
 				table.add(each.getStrings());
 			}
@@ -169,7 +175,7 @@ public class Main {
 		{
 			CFile file = dir.findOrCreateFile("views.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
-			table.add(Arrays.asList("id", "crea", "modi", "titl", "elements"));
+			table.add(KFView.header());
 			for (KFView each : world.getViews()) {
 				table.add(each.getStrings());
 			}
@@ -179,7 +185,7 @@ public class Main {
 		{
 			CFile file = dir.findOrCreateFile("attachments.csv");
 			List<List<String>> table = new ArrayList<List<String>>();
-			table.add(Arrays.asList("id", "crea", "modi", "titl", "path", "mime", "file"));
+			table.add(KFAttachment.header());
 			for (KFAttachment each : world.getAttachments()) {
 				table.add(each.getStrings());
 			}
