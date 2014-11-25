@@ -117,7 +117,7 @@ public class KFNote extends KFElement {
 
 	@Override
 	public String getShortDescrption() {
-		return getType() + "," + getTitle();
+		return getType() + "-" + getTitle();
 	}
 
 }

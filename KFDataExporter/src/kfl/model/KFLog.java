@@ -69,7 +69,7 @@ public class KFLog implements Serializable {
 		if (target1 != null) {
 			strings.add(getTarget1().getIdAsString());
 			strings.add(getTarget1().getType());
-			strings.add(getTarget1().getShortDescrption());
+//			strings.add(getTarget1().getShortDescrption());
 		} else {
 			strings.add("");
 			strings.add("");
@@ -78,7 +78,7 @@ public class KFLog implements Serializable {
 		if (target2 != null) {
 			strings.add(getTarget2().getIdAsString());
 			strings.add(getTarget2().getType());
-			strings.add(getTarget2().getShortDescrption());
+//			strings.add(getTarget2().getShortDescrption());
 		} else {
 			strings.add("");
 			strings.add("");
