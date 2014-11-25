@@ -5,12 +5,16 @@
  */
 package kfl.app.kfn;
 
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import kfl.builder.KFDataRetriever;
 import kfl.connector.KFConnector;
@@ -44,7 +48,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws Exception{
 		new Main().doLoad();
 	}
 
@@ -53,21 +57,23 @@ public class Main {
 	// private static DateFormat dformat = new SimpleDateFormat(
 	// "yy/MM/dd-HH:mm:ss");
 
-	private void doLoad() {
+	private void doLoad() throws Exception{
 		// create model
 		final KFLoginModel model = new KFLoginModel();
 
 		model.setPort(80);
-		// model.setHost("joshimalab.cs.inf.shizuoka.ac.jp");
-		// model.setDBName("LM2010_2");
-		// model.setUser("ymatsuzawa");
-		// model.setPassword("yoshiaki");
 
-		model.setHost("builder.ikit.org");
-		// model.setDBName("KSN");
-		model.setDBName("Susana_test");
-		model.setUser("yoshiaki");
-		model.setPassword("yoshiaki");
+		File propfile = new File("kfloader.ini");
+		if(!propfile.exists()){
+			propfile.createNewFile();
+		}
+		Properties prop = new Properties();
+		prop.load(new FileReader(propfile));
+
+		model.setHost(prop.getProperty("host", "builder.ikit.org"));
+		model.setDBName(prop.getProperty("db", "Susana_test"));
+		model.setUser(prop.getProperty("user", ""));
+		model.setPassword(prop.getProperty("pass", ""));
 
 		// connect
 		final ZTB conn = KFConnector.connectWithDialog(model);
@@ -80,6 +86,12 @@ public class Main {
 		final CDirectory newDir = baseDir.findOrCreateDirectory(model
 				.getDBName() + format.format(new Date()));
 
+		prop.setProperty("host", model.getHost());
+		prop.setProperty("db", model.getDBName());
+		prop.setProperty("user", model.getUser());
+		prop.setProperty("pass", model.getPassword());
+		prop.store(new FileWriter(propfile), "");
+		
 		// do task (build)
 		final CPanelProcessingMonitor monitor = new CPanelProcessingMonitor();
 		monitor.doTaskWithDialog(new ICTask() {
@@ -98,6 +110,7 @@ public class Main {
 				// }
 			}
 		});
+
 	}
 
 	private void build(ZTB conn, CDirectory dir, ICProgressMonitor monitor)

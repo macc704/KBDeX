@@ -126,8 +126,8 @@ public class KFNote extends KFElement {
 		List<String> strings = new ArrayList<String>();
 		addBasicStrings(strings);
 		strings.add(getTitle());
-		strings.add(getText());		
-		strings.add(getDecoratedText());	
+		strings.add(getText());
+		strings.add(getDecoratedText());
 		if (getBuildson() != null) {
 			strings.add(getBuildson().getIdAsString());
 		} else {
@@ -149,18 +149,48 @@ public class KFNote extends KFElement {
 		ReplacableString replacable = new ReplacableString(getText(), offsets);
 		for (KFSupport support : supporteds.keySet()) {
 			KFTextLocator loca = supporteds.get(support);
+			if (checkRange(loca.getOffset1()) == false
+					|| checkRange(loca.getOffset2()) == false) {
+				replacable.insertLast("{[" + support.getName() + "]:}");
+				continue;
+			}
 			replacable.insert(loca.getOffset1(), "{[" + support.getName()
 					+ "]:");
 			replacable.insert(loca.getOffset2(), "}");
 		}
 		for (KFNote note : references.keySet()) {
 			KFTextLocator loca = references.get(note);
-			replacable.insert(loca.getOffset1(), "[[" + loca.getText()
-					+ "][from " + note.getIdAsString() + "]]");
+			String textInsert = "[[" + loca.getText() + "][from "
+					+ note.getIdAsString() + "]]";
+			if (checkRange(loca.getOffset1()) == false) {
+				replacable.insertLast(textInsert);
+				continue;
+			}
+			replacable.insert(loca.getOffset1(), textInsert);
 		}
 		return replacable.getText();
 	}
-	
+
+	private boolean checkRange(int offsetIndex) {
+		if (offsetIndex >= offsets.size()) {
+			// System.out.println("[offset index error] noteId=" + getId()
+			// + ", title=" + getTitle() + ", offsetIndex=" + offsetIndex
+			// + ", offsets=" + offsets);
+			// System.err.flush();
+			return false;
+		}
+		if (offsets.get(offsetIndex) > text.length()) {// = ok
+			// System.out.println("[offset error] noteId=" + getId() +
+			// ", title="
+			// + getTitle() + ", offsetIndex=" + offsetIndex + ", offset="
+			// + offsets.get(offsetIndex) + ", textlength="
+			// + text.length());
+			// System.err.flush();
+			return false;
+		}
+		return true;
+	}
+
 	class ReplacableString {
 		private StringBuffer text;
 		private List<Offset> offsets = new ArrayList<Offset>();
@@ -170,6 +200,10 @@ public class KFNote extends KFElement {
 			for (Integer ioffset : ioffsets) {
 				offsets.add(new Offset(ioffset));
 			}
+		}
+
+		public void insertLast(String textInsert) {
+			text.append(textInsert);
 		}
 
 		public void insert(int offset, String textInsert) {
@@ -209,6 +243,11 @@ public class KFNote extends KFElement {
 
 			public Offset(int value) {
 				this.value = value;
+			}
+
+			@Override
+			public String toString() {
+				return "Offset(" + value + ")";
 			}
 		}
 	}
