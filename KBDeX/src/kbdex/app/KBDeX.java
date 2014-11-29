@@ -39,6 +39,9 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.9.7 2014.11.28
+ * 		・Color kinds are added to 22
+ * 
  * 1.9.6 2014.11.18
  * 		・Fixed CSV file reading problem
  * 
@@ -233,8 +236,8 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.9.6";
-	private static final String DATE = "2014.11.18";
+	private static final String VERSION = "1.9.7";
+	private static final String DATE = "2014.11.28";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
