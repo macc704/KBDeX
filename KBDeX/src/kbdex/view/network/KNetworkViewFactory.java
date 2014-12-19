@@ -12,7 +12,6 @@ import javax.swing.Icon;
 
 import kbdex.adapters.jung.IKNetworkMouseListener;
 import kbdex.adapters.jung.IKNetworkViewPickingListener;
-import kbdex.adapters.jung.KCircleLayout;
 import kbdex.app.KBDeX;
 import kbdex.controller.KBWorldController;
 import kbdex.controller.KDiscourseController;
@@ -148,7 +147,7 @@ public class KNetworkViewFactory {
 						getWorldController().refreshWithoutAnimation();
 					}
 				});
-		panel.getGraphLayoutChooser().selectLayout(KCircleLayout.class);
+		panel.getGraphLayoutChooser().selectLayout(FRLayout.class);
 		return panel;
 	}
 
@@ -231,7 +230,7 @@ public class KNetworkViewFactory {
 								getWorldController().refreshWithoutAnimation();
 							}
 						});
-		panel.getGraphLayoutChooser().selectLayout(KCircleLayout.class);
+		panel.getGraphLayoutChooser().selectLayout(FRLayout.class);
 		return panel;
 	}
 
