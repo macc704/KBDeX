@@ -3,6 +3,7 @@ package kbdex.app.ext;
 import info.matsuzawalab.kf.kf5loader.KF5Service;
 import info.matsuzawalab.kf.kf5loader.KF5ServiceException;
 
+import java.awt.Color;
 import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,8 +13,11 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 import kbdex.app.KBDeX;
 import kbdex.app.manager.KDDiscourseManager;
@@ -125,8 +129,8 @@ public class KKF5Importer {
 				KF5Registration reg = new KF5Registration(regs.getJSONObject(i));
 				combobox.addItem(reg);
 			}
-			int res = JOptionPane.showConfirmDialog(null, combobox, "Registration?",
-					JOptionPane.OK_OPTION);
+			int res = JOptionPane.showConfirmDialog(null, combobox,
+					"Registration?", JOptionPane.OK_OPTION);
 			if (res != JOptionPane.OK_OPTION) {
 				return;
 			}
@@ -136,29 +140,58 @@ public class KKF5Importer {
 		monitor.progress(1);
 
 		monitor.setWorkTitle("selecting view ...");
-		KF5View selectedView = null;
+		List<KF5View> selected = new ArrayList<KF5View>();
 		{
-			JSONArray views = service.getViews(selectedReg.communityId);
-			int len = views.length();
+			JSONArray viewJsons = service.getViews(selectedReg.communityId);
+			int len = viewJsons.length();
 			if (len <= 0) {
 				throw new RuntimeException("There is no view.");
 			}
-			JComboBox<KF5View> combobox = new JComboBox<KF5View>();
+			List<KF5View> views = new ArrayList<KF5View>();
 			for (int i = 0; i < len; i++) {
-				KF5View view = new KF5View(views.getJSONObject(i));
-				combobox.addItem(view);
+				KF5View view = new KF5View(viewJsons.getJSONObject(i));
+				views.add(view);
 			}
-			int res = JOptionPane.showConfirmDialog(null, combobox, "View?",
+
+			JPanel listPanel = new JPanel();
+			listPanel.setBackground(Color.WHITE);
+			listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+
+			List<JCheckBox> boxes = new ArrayList<JCheckBox>();
+			for (KF5View view : views) {
+				JCheckBox box = new JCheckBox(view.title);
+				listPanel.add(box);
+				boxes.add(box);
+			}
+
+			int res = JOptionPane.showConfirmDialog(null, listPanel, "View?",
 					JOptionPane.OK_OPTION);
 			if (res != JOptionPane.OK_OPTION) {
 				return;
 			}
-			selectedView = (KF5View) combobox.getSelectedItem();
+
+			for (int i = 0; i < len; i++) {
+				JCheckBox box = boxes.get(i);
+				if (box.isSelected()) {
+					selected.add(views.get(i));
+				}
+			}
 		}
 		monitor.progress(1);
 
 		monitor.setWorkTitle("connect and getting data...");
-		List<JSONObject> jsonPosts = retrieveNotesForView(selectedView);
+		List<JSONObject> jsonPosts = new ArrayList<JSONObject>();
+		List<String> guids = new ArrayList<String>();
+		for (KF5View view : selected) {
+			List<JSONObject> jsonpostsview = retrieveNotesForView(view);
+			for (JSONObject jsonpost : jsonpostsview) {
+				String guid = jsonpost.getString("guid");
+				if (!guids.contains(guid)) {
+					jsonPosts.add(jsonpost);
+					guids.add(guid);
+				}
+			}
+		}
 		monitor.progress(1);
 
 		monitor.setWorkTitle("analyzing data...");
@@ -199,7 +232,12 @@ public class KKF5Importer {
 		monitor.progress(1);
 
 		monitor.setWorkTitle("writing to your disk...");
-		model.setDBName(selectedReg.sectionTitle + "-" + selectedView.title);
+
+		String viewnames = "";
+		for (KF5View view : selected) {
+			viewnames += "-" + view.title;
+		}
+		model.setDBName(selectedReg.sectionTitle + "-" + viewnames);
 		KDDiscourseManager manager = KBDeX.getInstance().getDiscourseManager();
 		String name = fnameFormat.format(new Date()) + "-" + model.getDBName();
 		name = encodeFilename(name);
