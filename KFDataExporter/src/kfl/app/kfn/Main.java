@@ -48,7 +48,7 @@ public class Main {
 	/**
 	 * @param args
 	 */
-	public static void main(String[] args) throws Exception{
+	public static void main(String[] args) throws Exception {
 		new Main().doLoad();
 	}
 
@@ -57,14 +57,14 @@ public class Main {
 	// private static DateFormat dformat = new SimpleDateFormat(
 	// "yy/MM/dd-HH:mm:ss");
 
-	private void doLoad() throws Exception{
+	private void doLoad() throws Exception {
 		// create model
 		final KFLoginModel model = new KFLoginModel();
 
 		model.setPort(80);
 
 		File propfile = new File("kfloader.ini");
-		if(!propfile.exists()){
+		if (!propfile.exists()) {
 			propfile.createNewFile();
 		}
 		Properties prop = new Properties();
@@ -91,17 +91,21 @@ public class Main {
 		prop.setProperty("user", model.getUser());
 		prop.setProperty("pass", model.getPassword());
 		prop.store(new FileWriter(propfile), "");
-		
+
 		// do task (build)
 		final CPanelProcessingMonitor monitor = new CPanelProcessingMonitor();
 		monitor.doTaskWithDialog(new ICTask() {
 			public void doTask() {
 				try {
-					build(conn, newDir, monitor);
-					new DataDump().dump(model.getHost(), model.getPort(),
-							model.getDBName(), model.getUser(),
+					// build(conn, newDir, monitor);
+					new DataDump().dump(
+							model.getHost(),
+							model.getPort(),
+							model.getDBName(),
+							model.getUser(),
 							model.getPassword(),
-							newDir.findOrCreateFile("tuples.txt").toJavaFile());
+							newDir.findOrCreateFile("objects.txt").toJavaFile(),
+							newDir.findOrCreateFile("links.txt").toJavaFile());
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
@@ -113,6 +117,7 @@ public class Main {
 
 	}
 
+	@SuppressWarnings("unused")
 	private void build(ZTB conn, CDirectory dir, ICProgressMonitor monitor)
 			throws Exception {
 		// try {

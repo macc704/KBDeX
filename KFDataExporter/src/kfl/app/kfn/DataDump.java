@@ -24,11 +24,15 @@ import com.knowledgeforum.k5.common.K5TBConnector;
  * @author bodong
  */
 public class DataDump {
-
+	private static final ZTBQuery ALL_OBJECT_QUERY = new ZTBQuery(
+			ZTBSpec.sHas("Object"));
+	//private static final ZTBQuery All_LINKS_QUERY = new ZTBQuery(ZTBSpec.sHas("Link")).sorted("crea", true);;
+	private static final ZTBQuery All_LINKS_QUERY = new ZTBQuery(ZTBSpec.sHas("Link"));
 
 	// public static void main(String[] args) throws IOException {
 	public void dump(String db_host, int db_port, String db_name,
-			String db_user, String db_pass, File file) throws IOException {
+			String db_user, String db_pass, File file, File file2)
+			throws IOException {
 
 		// Database connection
 		ZTB theTB = K5TBConnector.sGetTB_HTTP_UserName(
@@ -37,40 +41,32 @@ public class DataDump {
 
 		ZTxn theTxn = new ZTxn();
 
-		// Query all tuples
-		ZTBQuery all_q = new ZTBQuery(ZTBSpec.sHas("Object")).or(new ZTBQuery(
-				ZTBSpec.sHas("Link")));
+		dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, file);
+		dumpOne(theTxn, theTB, All_LINKS_QUERY, file2);
+	}
+
+	private void dumpOne(ZTxn theTxn, ZTB theTB, ZTBQuery all_q, File file)
+			throws IOException {
+
 		ZTBIter all_it = new ZTBIter(theTxn, theTB, all_q);
 
-		// Get all tuples and store in a string builder
-		StringBuilder sb = new StringBuilder();
-		// StringBuilder sb_ids = new StringBuilder();
-		System.out.println("Reading data... May take a few minitues...");
-		// int i = 0; // for testing
-		while (all_it.hasNext()) {
-			sb.append(all_it.getZID().toString())
-					.append(all_it.getTuple().toString()).append("\n");
-			all_it.advance();
-			// if(i++ > 40) break; // for testing
-		}
-
-		// Dump data into a txt file
-		System.out.println("Writing file... Almost there...");
-		//DateFormat df = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-		//String date = df.format(new Date());
-		//File file = new File("tuplestore_dump_" + db_name + "_" + date + ".txt");
-		// if file doesnt exists, then create it
+		// Prepare file
 		if (!file.exists()) {
 			file.createNewFile();
 		}
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
-		bw.write(sb.toString());
+
+		int x = 0;
+		while (all_it.hasNext()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(all_it.getZID().toString())
+					.append(all_it.getTuple().toString()).append("\n");
+			bw.write(sb.toString());
+			all_it.advance();
+			System.out.println(x++);
+		}
 
 		bw.close();
-
-		System.out.println("Done!");
-
-		// System.exit(0);
 	}
 }
