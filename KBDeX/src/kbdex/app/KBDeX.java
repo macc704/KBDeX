@@ -39,6 +39,9 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.9.9 2014.12.19 with Frank
+ * 		・bugfix
+ * 
  * 1.9.8 2014.12.19 with Frank
  * 		・Multiple View for kf5
  * 		・FRLayout in default
@@ -240,7 +243,7 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.9.8";
+	private static final String VERSION = "1.9.9";
 	private static final String DATE = "2014.12.19";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";

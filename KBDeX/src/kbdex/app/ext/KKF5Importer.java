@@ -4,6 +4,7 @@ import info.matsuzawalab.kf.kf5loader.KF5Service;
 import info.matsuzawalab.kf.kf5loader.KF5ServiceException;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -18,6 +19,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import kbdex.app.KBDeX;
 import kbdex.app.manager.KDDiscourseManager;
@@ -154,6 +156,9 @@ public class KKF5Importer {
 			}
 
 			JPanel listPanel = new JPanel();
+			JScrollPane scroll = new JScrollPane(listPanel);
+			scroll.setPreferredSize(new Dimension(400, 300));
+
 			listPanel.setBackground(Color.WHITE);
 			listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
 
@@ -164,7 +169,7 @@ public class KKF5Importer {
 				boxes.add(box);
 			}
 
-			int res = JOptionPane.showConfirmDialog(null, listPanel, "View?",
+			int res = JOptionPane.showConfirmDialog(null, scroll, "View?",
 					JOptionPane.OK_OPTION);
 			if (res != JOptionPane.OK_OPTION) {
 				return;
@@ -237,6 +242,13 @@ public class KKF5Importer {
 		for (KF5View view : selected) {
 			viewnames += "-" + view.title;
 		}
+		viewnames = viewnames.replaceAll(":", "");
+		viewnames = viewnames.replaceAll(";", "");
+		viewnames = viewnames.replaceAll("&", "");
+		viewnames = viewnames.replaceAll("!", "");
+		if (viewnames.length() > 50) {
+			viewnames = viewnames.substring(0, 49);
+		}
 		model.setDBName(selectedReg.sectionTitle + "-" + viewnames);
 		KDDiscourseManager manager = KBDeX.getInstance().getDiscourseManager();
 		String name = fnameFormat.format(new Date()) + "-" + model.getDBName();
@@ -252,8 +264,13 @@ public class KKF5Importer {
 			throws Exception {
 		JSONArray jsonPosts = service.getPostsForView(view.guid);
 		List<JSONObject> posts = new ArrayList<JSONObject>();
-		JSONArray viewPostRefs = jsonPosts.getJSONObject(0).getJSONArray(
-				"viewPostRefs");
+		JSONArray viewPostRefs;
+		try {
+			viewPostRefs = jsonPosts.getJSONObject(0).getJSONArray(
+					"viewPostRefs");
+		} catch (Exception ex) {
+			return new ArrayList<JSONObject>();
+		}
 		int len = viewPostRefs.length();
 		for (int i = 0; i < len; i++) {
 			posts.add(viewPostRefs.getJSONObject(i).getJSONObject("postInfo"));
