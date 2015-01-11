@@ -198,8 +198,13 @@ public class KFJsonMain {
 			// pending
 			return;
 		} else if (type.equals("historicalNote")) {
-			// pending
-			return;
+			// temporary 
+			KFNote note = new KFNote();
+			contribution = note;
+			note.type = "HistoricalNote";
+			note.body = t.getString("text");		
+			// System.out.println(t.toString());
+			// return;
 		} else if (type.equals("backpack")) {
 			// System.out.println(t.toString());
 			contribution = new KFContribution();
@@ -230,14 +235,17 @@ public class KFJsonMain {
 	}
 
 	private void processLink(String type, ZTuple t) {
-		if (type.equals("predates")) {
+		if (type.equals("beacon")) {// temporary
+			return;
+		}
+		if (type.equals("read_ideas")) {// temporary
 			return;
 		}
 		KFObject to = objects.get(t.getZID("to"));
 		KFObject from = objects.get(t.getZID("from"));
 		if (to == null || from == null) {
-			println("missing link: type=" + type + ", from=" + from
-					+ ", to=" + to);
+			println("missing link: type=" + type + ", from=" + from + ", to="
+					+ to);
 			return;
 		}
 
@@ -245,7 +253,11 @@ public class KFJsonMain {
 		link.type = type;
 		link.from = t.getZID("from").toString();
 		link.to = t.getZID("to").toString();
-		if (type.equals("contains") && from.type.equals("View")) {
+		if (type.equals("predates")) {
+			// historical note to note
+			// detail is not implemented yet
+		}
+		else if (type.equals("contains") && from.type.equals("View")) {
 			if (to.type.equals("Shape")) {// Direct Shape will be converted to
 											// Drawing
 				KFShape shape = (KFShape) to;
@@ -261,9 +273,9 @@ public class KFJsonMain {
 			link.type = "onviewref";
 			KFContains contains = new KFContains();
 			Point p;
-			if(t.has("location")){
+			if (t.has("location")) {
 				p = t.getPoint("location");
-			}else{
+			} else {
 				p = new Point(10, 10);
 			}
 			contains.x = Math.max(10, p.x);
@@ -353,8 +365,8 @@ public class KFJsonMain {
 		println(msg + type);
 		println(t.toString());
 	}
-	
-	private void println(String msg){
-		//System.out.println(msg);
+
+	private void println(String msg) {
+		System.out.println(msg);
 	}
 }
