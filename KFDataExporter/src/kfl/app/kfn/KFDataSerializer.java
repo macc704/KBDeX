@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Properties;
 
+import kfl.connector.KFLoginModel;
+
 import org.zoolib.ZTuple;
 import org.zoolib.ZTxn;
 import org.zoolib.tuplebase.ZTB;
@@ -27,20 +29,20 @@ import com.knowledgeforum.k5.common.K5TBConnector;
  * 
  * @author bodong
  */
-public class DataSerialize {
+public class KFDataSerializer {
 	private static final ZTBQuery ALL_OBJECT_QUERY = new ZTBQuery(
 			ZTBSpec.sHas("Object"));
 	private static final ZTBQuery All_LINKS_QUERY = new ZTBQuery(
 			ZTBSpec.sHas("Link"));
 
 	// public static void main(String[] args) throws IOException {
-	public void dump(String db_host, int db_port, String db_name,
-			String db_user, String db_pass, CDirectory dir) throws IOException {
+	public void dump(KFLoginModel login, CDirectory dir) throws IOException {
 
 		// Database connection
 		ZTB theTB = K5TBConnector.sGetTB_HTTP_UserName(
-				new K5TBConnector.HostInfo(db_host, db_port, db_name), null,
-				db_user, db_pass, null);
+				new K5TBConnector.HostInfo(login.getHost(), login.getPort(),
+						login.getDBName()), null, login.getUser(), login
+						.getPassword(), null);
 
 		ZTxn theTxn = new ZTxn();
 
@@ -51,8 +53,8 @@ public class DataSerialize {
 
 		File metaFile = dir.findOrCreateFile("meta.txt").toJavaFile();
 		Properties prop = new Properties();
-		prop.setProperty("host", db_host);
-		prop.setProperty("name", db_name);
+		prop.setProperty("host", login.getHost());
+		prop.setProperty("name", login.getDBName());
 		prop.setProperty("objects", Integer.toString(numObjects));
 		prop.setProperty("links", Integer.toString(numLinks));
 		prop.store(new FileOutputStream(metaFile), "");

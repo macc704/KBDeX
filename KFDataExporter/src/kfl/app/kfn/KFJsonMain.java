@@ -5,7 +5,6 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -61,8 +60,17 @@ public class KFJsonMain {
 		data = new KFJson();
 		data.community = community;
 
-		processOneFile(dir, "objects");
-		processOneFile(dir, "links");
+		KFSerializeFolder folder = new KFSerializeFolder(dir);
+		folder.process("objects", new KFTupleProcessor() {
+			public void processOne(ZID id, ZTuple tuple) throws Exception {
+				processObject(id, tuple.getString("Object"), tuple);
+			}
+		});
+		folder.process("links", new KFTupleProcessor() {
+			public void processOne(ZID id, ZTuple tuple) throws Exception {
+				processLink(tuple.getString("Link"), tuple);
+			}
+		});
 
 		File jsonFile = dir.findOrCreateFile("data.json").toJavaFile();
 		Gson gson = new Gson();
@@ -73,37 +81,8 @@ public class KFJsonMain {
 		osw.close();
 	}
 
-	void processOneFile(CDirectory dir, String name) throws Exception {
-		File metaFile = dir.findOrCreateFile("meta.txt").toJavaFile();
-		Properties prop = new Properties();
-		prop.load(new FileInputStream(metaFile));
-		int len = Integer.parseInt(prop.getProperty(name));
-
-		File file = dir.findFile(name + ".db").toJavaFile();
-		ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-		for (int i = 0; i < len; i++) {
-			Object obj;
-			obj = ois.readObject();
-			ZID id = (ZID) obj;
-			obj = ois.readObject();
-			ZTuple t = (ZTuple) obj;
-			processOne(dir, id, t);
-		}
-		ois.close();
-	}
-
-	void processOne(CDirectory dir, ZID id, ZTuple t) throws Exception {
-		if (t.has("Object")) {
-			processObject(dir, id, t.getString("Object"), t);
-		} else if (t.has("Link")) {// link
-			processLink(t.getString("Link"), t);
-		} else {
-			throw new RuntimeException("unknown type");
-		}
-	}
-
 	@SuppressWarnings("unchecked")
-	private void processObject(CDirectory dir, ZID id, String type, ZTuple t)
+	private void processObject(ZID id, String type, ZTuple t)
 			throws Exception {
 		KFContribution contribution;
 		if (type.equals("author")) {
@@ -166,6 +145,7 @@ public class KFJsonMain {
 			attachment.type = "Attachment";
 			attachment.url = t.getString("file");
 			attachment.originalName = t.getString("file");
+
 		} else if (type.equals("shape")) {
 			// { Object = "shape"; color = int32(-16777216); crea =
 			// date(1.398175088758E9)/* Tue Apr 22 09:58:08 EDT 2014 */; modi =

@@ -107,9 +107,9 @@ public class Main {
 					// model.getPassword(),
 					// newDir.findOrCreateFile("objects.txt").toJavaFile(),
 					// newDir.findOrCreateFile("links.txt").toJavaFile());
-					new DataSerialize().dump(model.getHost(), model.getPort(),
-							model.getDBName(), model.getUser(),
-							model.getPassword(), newDir);
+					new KFDataSerializer().dump(model, newDir);
+					new KFAllAttachmentDownloader().start(model, newDir);
+					
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
