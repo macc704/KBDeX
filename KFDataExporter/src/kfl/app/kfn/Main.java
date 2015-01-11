@@ -12,7 +12,6 @@ import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -52,6 +51,7 @@ public class Main {
 		new Main().doLoad();
 	}
 
+	@SuppressWarnings("unused")
 	private static DateFormat format = new SimpleDateFormat("-yyyyMMdd-HHmmss");
 
 	// private static DateFormat dformat = new SimpleDateFormat(
@@ -83,8 +83,9 @@ public class Main {
 
 		CDirectory baseDir = CFileSystem.getExecuteDirectory()
 				.findOrCreateDirectory("kf.out");
-		final CDirectory newDir = baseDir.findOrCreateDirectory(model
-				.getDBName() + format.format(new Date()));
+		// final CDirectory newDir = baseDir.findOrCreateDirectory(model
+		// .getDBName() + format.format(new Date()));
+		final CDirectory newDir = baseDir.findOrCreateDirectory("test");
 
 		prop.setProperty("host", model.getHost());
 		prop.setProperty("db", model.getDBName());
@@ -98,14 +99,17 @@ public class Main {
 			public void doTask() {
 				try {
 					// build(conn, newDir, monitor);
-					new DataDump().dump(
-							model.getHost(),
-							model.getPort(),
-							model.getDBName(),
-							model.getUser(),
-							model.getPassword(),
-							newDir.findOrCreateFile("objects.txt").toJavaFile(),
-							newDir.findOrCreateFile("links.txt").toJavaFile());
+					// new DataDump().dump(
+					// model.getHost(),
+					// model.getPort(),
+					// model.getDBName(),
+					// model.getUser(),
+					// model.getPassword(),
+					// newDir.findOrCreateFile("objects.txt").toJavaFile(),
+					// newDir.findOrCreateFile("links.txt").toJavaFile());
+					new DataSerialize().dump(model.getHost(), model.getPort(),
+							model.getDBName(), model.getUser(),
+							model.getPassword(), newDir);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

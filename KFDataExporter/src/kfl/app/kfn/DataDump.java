@@ -26,12 +26,11 @@ import com.knowledgeforum.k5.common.K5TBConnector;
 public class DataDump {
 	private static final ZTBQuery ALL_OBJECT_QUERY = new ZTBQuery(
 			ZTBSpec.sHas("Object"));
-	//private static final ZTBQuery All_LINKS_QUERY = new ZTBQuery(ZTBSpec.sHas("Link")).sorted("crea", true);;
 	private static final ZTBQuery All_LINKS_QUERY = new ZTBQuery(ZTBSpec.sHas("Link"));
 
 	// public static void main(String[] args) throws IOException {
 	public void dump(String db_host, int db_port, String db_name,
-			String db_user, String db_pass, File file, File file2)
+			String db_user, String db_pass, File objsFile, File linksFile)
 			throws IOException {
 
 		// Database connection
@@ -41,30 +40,28 @@ public class DataDump {
 
 		ZTxn theTxn = new ZTxn();
 
-		dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, file);
-		dumpOne(theTxn, theTB, All_LINKS_QUERY, file2);
+		dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, objsFile);
+		dumpOne(theTxn, theTB, All_LINKS_QUERY, linksFile);
 	}
 
 	private void dumpOne(ZTxn theTxn, ZTB theTB, ZTBQuery all_q, File file)
 			throws IOException {
-
-		ZTBIter all_it = new ZTBIter(theTxn, theTB, all_q);
-
+		
 		// Prepare file
 		if (!file.exists()) {
 			file.createNewFile();
 		}
+
+		ZTBIter itr = new ZTBIter(theTxn, theTB, all_q);
 		FileWriter fw = new FileWriter(file.getAbsoluteFile());
 		BufferedWriter bw = new BufferedWriter(fw);
 
-		int x = 0;
-		while (all_it.hasNext()) {
+		while (itr.hasNext()) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(all_it.getZID().toString())
-					.append(all_it.getTuple().toString()).append("\n");
+			sb.append(itr.getZID().toString())
+					.append(itr.getTuple().toString()).append("\n");
 			bw.write(sb.toString());
-			all_it.advance();
-			System.out.println(x++);
+			itr.advance();
 		}
 
 		bw.close();
