@@ -82,8 +82,7 @@ public class KFJsonMain {
 	}
 
 	@SuppressWarnings("unchecked")
-	private void processObject(ZID id, String type, ZTuple t)
-			throws Exception {
+	private void processObject(ZID id, String type, ZTuple t) throws Exception {
 		KFContribution contribution;
 		if (type.equals("author")) {
 			// System.out.println(t.toString());
@@ -237,16 +236,16 @@ public class KFJsonMain {
 		KFObject to = objects.get(t.getZID("to"));
 		KFObject from = objects.get(t.getZID("from"));
 		if (to == null || from == null) {
-			System.out.println("missing link: type=" + type + ", from=" + from
+			println("missing link: type=" + type + ", from=" + from
 					+ ", to=" + to);
 			return;
 		}
+
 		KFLink link = new KFLink();
 		link.type = type;
 		link.from = t.getZID("from").toString();
 		link.to = t.getZID("to").toString();
 		if (type.equals("contains") && from.type.equals("View")) {
-			// System.out.println(t.toString());
 			if (to.type.equals("Shape")) {// Direct Shape will be converted to
 											// Drawing
 				KFShape shape = (KFShape) to;
@@ -261,9 +260,14 @@ public class KFJsonMain {
 			}
 			link.type = "onviewref";
 			KFContains contains = new KFContains();
-			Point p = t.getPoint("location");
-			contains.x = p.x;
-			contains.y = p.y;
+			Point p;
+			if(t.has("location")){
+				p = t.getPoint("location");
+			}else{
+				p = new Point(10, 10);
+			}
+			contains.x = Math.max(10, p.x);
+			contains.y = Math.max(10, p.y);
 			contains.z = t.getDouble("z");
 			if (t.has("mode") && t.getString("mode").equals("in place")) {
 				contains.showInPlace = true;
@@ -290,7 +294,9 @@ public class KFJsonMain {
 			contribution.authors.add(author._id);
 			return;
 		} else if ((type.equals("read") || type.equals("modified") || type
-				.equals("created")) && from.type.equals("Author")) {
+				.equals("created"))
+				&& from.type.equals("Author")
+				&& !to.type.equals("Author")) {
 			KFRecord record = new KFRecord();
 			KFAuthor author = (KFAuthor) from;
 			KFContribution contribution = (KFContribution) to;
@@ -344,7 +350,11 @@ public class KFJsonMain {
 			return;
 		}
 		unsupportedTypes.add(type);
-		System.out.println(msg + type);
-		System.out.println(t.toString());
+		println(msg + type);
+		println(t.toString());
+	}
+	
+	private void println(String msg){
+		//System.out.println(msg);
 	}
 }
