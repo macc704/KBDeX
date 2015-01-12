@@ -46,10 +46,10 @@ public class KFDataSerializer {
 
 		ZTxn theTxn = new ZTxn();
 
-		File objsFile = dir.findOrCreateFile("objects.db").toJavaFile();
-		int numObjects = dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, objsFile);
 		File linksFile = dir.findOrCreateFile("links.db").toJavaFile();
 		int numLinks = dumpOne(theTxn, theTB, All_LINKS_QUERY, linksFile);
+		File objsFile = dir.findOrCreateFile("objects.db").toJavaFile();
+		int numObjects = dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, objsFile);
 
 		File metaFile = dir.findOrCreateFile("meta.txt").toJavaFile();
 		Properties prop = new Properties();

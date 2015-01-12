@@ -67,7 +67,8 @@ public class KF4SerializerMain {
 				.findOrCreateDirectory("kf.out");
 		final CDirectory newDir = baseDir.findOrCreateDirectory(model
 				.getDBName() + format.format(new Date()));
-		// final CDirectory newDir = baseDir.findOrCreateDirectory("test");
+		// final CDirectory newDir =
+		// baseDir.findOrCreateDirectory("ICS Lab School-20150112-174341");
 
 		prop.setProperty("host", model.getHost());
 		prop.setProperty("db", model.getDBName());

@@ -3,6 +3,7 @@ package kfl.kf4.serializer;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.URLEncoder;
 
 import kfl.kf4.connector.KFLoginModel;
 
@@ -24,6 +25,7 @@ public class KFAttachmentDownloader {
 		this.login = login;
 		HttpPost req = new HttpPost("http://" + login.getHost()
 				+ "/authenticate");
+
 		req.setEntity(new UrlEncodedFormEntity(Form.form()
 				.add("DB", login.getDBName()).add("username", login.getUser())
 				.add("password", login.getPassword()).build()));
@@ -34,15 +36,15 @@ public class KFAttachmentDownloader {
 
 	public void download(String id, File file) {
 		try {
+			String dbName = URLEncoder.encode(login.getDBName(), "UTF8");
 			HttpGet req = new HttpGet("http://" + login.getHost()
-					+ "/attachment?DB=" + login.getDBName() + "&AttachmentID="
-					+ id);
+					+ "/attachment?DB=" + dbName + "&AttachmentID=" + id);
 			CloseableHttpResponse res = httpClient.execute(req);
 			long len = res.getEntity().getContentLength();
 			System.out.print("Download id:" + id + "(" + len + "bytes)");
 			if (len <= 0) {
 				System.out.println("canceled.");
-				return;
+				//return;
 			}
 			FileOutputStream out = new FileOutputStream(file);
 			InputStream in = res.getEntity().getContent();
