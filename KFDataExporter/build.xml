@@ -7,7 +7,7 @@
 		</tstamp>
         <jar destfile="jars.out/KFDataExporter-${now.time}.jar" filesetmanifest="mergewithoutmain">
             <manifest>
-                <attribute name="Main-Class" value="kfl.app.kfn.Main"/>
+                <attribute name="Main-Class" value="kfl.app.serializer.KFSerializerMain"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
             <fileset dir="bin"/>
