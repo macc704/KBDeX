@@ -119,10 +119,12 @@ public class KF6ConverterMain {
 			contribution = new KFContribution();
 			contribution.type = "View";
 			contribution.title = t.getString("titl");
+			data.community.views.add(id.toString());
 		} else if (type.equals("scaffold")) {
 			contribution = new KFContribution();
 			contribution.type = "Scaffold";
 			contribution.title = t.getString("text");
+			data.community.scaffolds.add(id.toString());
 		} else if (type.equals("support")) {
 			contribution = new KFContribution();
 			contribution.type = "Support";
