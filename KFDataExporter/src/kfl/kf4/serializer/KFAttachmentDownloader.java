@@ -32,24 +32,33 @@ public class KFAttachmentDownloader {
 		System.out.println(status);
 	}
 
-	public void download(String id, File file) throws Exception {
-		HttpGet req = new HttpGet("http://" + login.getHost()
-				+ "/attachment?DB=" + login.getDBName() + "&AttachmentID=" + id);
-		CloseableHttpResponse res = httpClient.execute(req);
-		long len = res.getEntity().getContentLength();
-		System.out.print("Download id:" + id + "(" + len + "bytes)");
-		FileOutputStream out = new FileOutputStream(file);
-		InputStream in = res.getEntity().getContent();
-		byte[] buf = new byte[1024];
-		long current = 0;
-		while (current < len) {
-			int nbyte = in.read(buf);
-			out.write(buf, 0, nbyte);
-			current += nbyte;
-			System.out.print("=");
+	public void download(String id, File file) {
+		try {
+			HttpGet req = new HttpGet("http://" + login.getHost()
+					+ "/attachment?DB=" + login.getDBName() + "&AttachmentID="
+					+ id);
+			CloseableHttpResponse res = httpClient.execute(req);
+			long len = res.getEntity().getContentLength();
+			System.out.print("Download id:" + id + "(" + len + "bytes)");
+			if (len <= 0) {
+				System.out.println("canceled.");
+				return;
+			}
+			FileOutputStream out = new FileOutputStream(file);
+			InputStream in = res.getEntity().getContent();
+			byte[] buf = new byte[1024];
+			long current = 0;
+			while (current < len) {
+				int nbyte = in.read(buf);
+				out.write(buf, 0, nbyte);
+				current += nbyte;
+				System.out.print("=");
+			}
+			System.out.println();
+			in.close();
+			out.close();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
-		System.out.println();
-		in.close();
-		out.close();
 	}
 }
