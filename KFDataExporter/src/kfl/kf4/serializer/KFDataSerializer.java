@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.Properties;
 
 import kfl.kf4.connector.KFLoginModel;
 
@@ -21,13 +20,10 @@ import org.zoolib.tuplebase.ZTBIter;
 import org.zoolib.tuplebase.ZTBQuery;
 import org.zoolib.tuplebase.ZTBSpec;
 
-import clib.common.filesystem.CDirectory;
-
 import com.knowledgeforum.k5.common.K5TBConnector;
 
 /**
- * 
- * @author bodong
+ * @author Yoshiaki Matsuzawa
  */
 public class KFDataSerializer {
 	private static final ZTBQuery ALL_OBJECT_QUERY = new ZTBQuery(
@@ -36,31 +32,28 @@ public class KFDataSerializer {
 			ZTBSpec.sHas("Link"));
 
 	// public static void main(String[] args) throws IOException {
-	public void dump(KFLoginModel login, CDirectory dir) throws IOException {
+	public void start(KFSerializeFolder dir) throws IOException {
 
 		// Database connection
+		KFLoginModel login = dir.getLoginModel();
 		ZTB theTB = K5TBConnector.sGetTB_HTTP_UserName(
 				new K5TBConnector.HostInfo(login.getHost(), login.getPort(),
 						login.getDBName()), null, login.getUser(), login
 						.getPassword(), null);
-
 		ZTxn theTxn = new ZTxn();
 
-		File linksFile = dir.findOrCreateFile("links.db").toJavaFile();
+		File linksFile = dir.getLinksFile();
 		int numLinks = dumpOne(theTxn, theTB, All_LINKS_QUERY, linksFile);
-		File objsFile = dir.findOrCreateFile("objects.db").toJavaFile();
-		int numObjects = dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, objsFile);
+		dir.setLinkCount(numLinks);
 
-		File metaFile = dir.findOrCreateFile("meta.txt").toJavaFile();
-		Properties prop = new Properties();
-		prop.setProperty("host", login.getHost());
-		prop.setProperty("name", login.getDBName());
-		prop.setProperty("objects", Integer.toString(numObjects));
-		prop.setProperty("links", Integer.toString(numLinks));
-		prop.store(new FileOutputStream(metaFile), "");
+		File objsFile = dir.getObjectsFile();
+		int numObjects = dumpOne(theTxn, theTB, ALL_OBJECT_QUERY, objsFile);
+		dir.setObjectCount(numObjects);
+
+		dir.saveMeta();
 	}
 
-	private int dumpOne(ZTxn theTxn, ZTB theTB, ZTBQuery all_q, File file)
+	private int dumpOne(ZTxn theTxn, ZTB theTB, ZTBQuery query, File file)
 			throws IOException {
 
 		// Prepare file
@@ -72,7 +65,7 @@ public class KFDataSerializer {
 				file));
 
 		int count = 0;
-		ZTBIter itr = new ZTBIter(theTxn, theTB, all_q);
+		ZTBIter itr = new ZTBIter(theTxn, theTB, query);
 		while (itr.hasNext()) {
 			ZTuple t = itr.getTuple();
 			oos.writeObject(itr.getZID());

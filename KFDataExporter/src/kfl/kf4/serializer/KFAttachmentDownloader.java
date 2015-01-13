@@ -35,7 +35,7 @@ public class KFAttachmentDownloader {
 	}
 
 	public void download(String id, File file) {
-		try {
+		try {			
 			String dbName = URLEncoder.encode(login.getDBName(), "UTF8");
 			HttpGet req = new HttpGet("http://" + login.getHost()
 					+ "/attachment?DB=" + dbName + "&AttachmentID=" + id);
@@ -59,6 +59,7 @@ public class KFAttachmentDownloader {
 			System.out.println();
 			in.close();
 			out.close();
+			res.close();
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

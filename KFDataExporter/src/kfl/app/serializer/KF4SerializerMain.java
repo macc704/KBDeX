@@ -17,6 +17,7 @@ import kfl.kf4.connector.KFConnector;
 import kfl.kf4.connector.KFLoginModel;
 import kfl.kf4.serializer.KFAllAttachmentDownloader;
 import kfl.kf4.serializer.KFDataSerializer;
+import kfl.kf4.serializer.KFSerializeFolder;
 
 import org.zoolib.tuplebase.ZTB;
 
@@ -65,10 +66,10 @@ public class KF4SerializerMain {
 
 		CDirectory baseDir = CFileSystem.getExecuteDirectory()
 				.findOrCreateDirectory("kf.out");
-		final CDirectory newDir = baseDir.findOrCreateDirectory(model
-				.getDBName() + format.format(new Date()));
-		// final CDirectory newDir =
-		// baseDir.findOrCreateDirectory("ICS Lab School-20150112-174341");
+		final String name = model.getDBName() + format.format(new Date());
+		CDirectory newDir = baseDir.findOrCreateDirectory(name);
+		final KFSerializeFolder folder = new KFSerializeFolder(newDir);
+		folder.setLoginModel(model);
 
 		prop.setProperty("host", model.getHost());
 		prop.setProperty("db", model.getDBName());
@@ -81,13 +82,12 @@ public class KF4SerializerMain {
 		monitor.doTaskWithDialog(new ICTask() {
 			public void doTask() {
 				try {
-					new KFDataSerializer().dump(model, newDir);
-					new KFAllAttachmentDownloader().start(model, newDir);
+					new KFDataSerializer().start(folder);
+					new KFAllAttachmentDownloader().start(folder);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}
-				System.out.println("kf4data serialized to "
-						+ newDir.getNameByString());
+				System.out.println("kf4data serialized to " + name);
 				System.exit(0);
 			}
 		});

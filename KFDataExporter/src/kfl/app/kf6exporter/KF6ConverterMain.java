@@ -3,13 +3,11 @@ package kfl.app.kf6exporter;
 import java.awt.Color;
 import java.awt.Point;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.Set;
 
 import kfl.app.kf6exporter.model.KFAttachment;
@@ -24,8 +22,8 @@ import kfl.app.kf6exporter.model.KFNote;
 import kfl.app.kf6exporter.model.KFObject;
 import kfl.app.kf6exporter.model.KFRecord;
 import kfl.app.kf6exporter.model.KFShape;
-import kfl.kf4.serializer.KFSerializeFolder;
 import kfl.kf4.serializer.IKFTupleProcessor;
+import kfl.kf4.serializer.KFSerializeFolder;
 
 import org.zoolib.ZID;
 import org.zoolib.ZTuple;
@@ -61,22 +59,20 @@ public class KF6ConverterMain {
 	private Set<String> unsupportedTypes = new HashSet<String>();
 
 	void process(CDirectory dir) throws Exception {
-		File metaFile = dir.findOrCreateFile("meta.txt").toJavaFile();
-		Properties prop = new Properties();
-		prop.load(new FileInputStream(metaFile));
+		KFSerializeFolder folder = new KFSerializeFolder(dir);
+		folder.loadMeta();
 		KFCommunity community = new KFCommunity();
-		community.title = prop.getProperty("name");
+		community.title = folder.getLoginModel().getDBName();
 
 		data = new KFJson();
 		data.community = community;
 
-		KFSerializeFolder folder = new KFSerializeFolder(dir);
-		folder.process("objects", new IKFTupleProcessor() {
+		folder.processObjects(new IKFTupleProcessor() {
 			public void processOne(ZID id, ZTuple tuple) throws Exception {
 				processObject(id, tuple.getString("Object"), tuple);
 			}
 		});
-		folder.process("links", new IKFTupleProcessor() {
+		folder.processLinks(new IKFTupleProcessor() {
 			public void processOne(ZID id, ZTuple tuple) throws Exception {
 				processLink(tuple.getString("Link"), tuple);
 			}
