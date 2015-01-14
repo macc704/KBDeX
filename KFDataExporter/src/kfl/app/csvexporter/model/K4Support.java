@@ -1,7 +1,7 @@
 package kfl.app.csvexporter.model;
 
 
-public class KFSupport extends KFElement {
+public class K4Support extends K4Element {
 	
 	private static final long serialVersionUID = 1L;
 	

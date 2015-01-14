@@ -6,25 +6,25 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class KFLog implements Serializable {
+public class K4Log implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	private String method;
 	private Date time;
-	private KFAuthor author;
-	private KFElement target1;
-	private KFElement target2;
+	private K4Author author;
+	private K4Element target1;
+	private K4Element target2;
 
-	public KFLog(String method, Date time, KFAuthor author, KFElement target1) {
+	public K4Log(String method, Date time, K4Author author, K4Element target1) {
 		this.method = method;
 		this.time = time;
 		this.author = author;
 		this.target1 = target1;
 	}
 
-	public KFLog(String method, Date time, KFAuthor author, KFElement target1,
-			KFElement target2) {
+	public K4Log(String method, Date time, K4Author author, K4Element target1,
+			K4Element target2) {
 		this.method = method;
 		this.time = time;
 		this.author = author;
@@ -40,19 +40,19 @@ public class KFLog implements Serializable {
 		return time;
 	}
 
-	public KFAuthor getAuthor() {
+	public K4Author getAuthor() {
 		return author;
 	}
 
-	public KFElement getTarget() {
+	public K4Element getTarget() {
 		return getTarget1();
 	}
 
-	public KFElement getTarget1() {
+	public K4Element getTarget1() {
 		return target1;
 	}
 
-	public KFElement getTarget2() {
+	public K4Element getTarget2() {
 		return target2;
 	}
 	

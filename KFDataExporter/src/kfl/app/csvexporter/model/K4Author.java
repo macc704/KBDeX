@@ -14,7 +14,7 @@ import java.util.List;
  * @author macchan
  * 
  */
-public class KFAuthor extends KFOwnerObject {
+public class K4Author extends K4OwnerObject {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,10 +24,10 @@ public class KFAuthor extends KFOwnerObject {
 	private String role;
 	private Date lastLogin;
 
-	private List<KFNote> notes = new ArrayList<KFNote>();
-	private KFGroup group;
+	private List<K4Note> notes = new ArrayList<K4Note>();
+	private K4Group group;
 
-	public KFAuthor() {
+	public K4Author() {
 	}
 
 	@Override
@@ -79,19 +79,19 @@ public class KFAuthor extends KFOwnerObject {
 		this.lastLogin = lastLogin;
 	}
 
-	public List<KFNote> getNotes() {
+	public List<K4Note> getNotes() {
 		return notes;
 	}
 
-	public void addNotes(KFNote note) {
+	public void addNotes(K4Note note) {
 		this.notes.add(note);
 	}
 
-	public KFGroup getGroup() {
+	public K4Group getGroup() {
 		return group;
 	}
 
-	public void setGroup(KFGroup group) {
+	public void setGroup(K4Group group) {
 		this.group = group;
 	}
 

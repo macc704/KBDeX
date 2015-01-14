@@ -1,6 +1,6 @@
 package kfl.app.kf6exporter.model;
 
-public class KFLink {
+public class K6Link {
 	public String type;
 	public String to;
 	public String from;

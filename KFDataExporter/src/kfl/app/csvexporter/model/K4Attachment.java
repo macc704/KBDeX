@@ -6,7 +6,7 @@ import java.util.List;
 
 //To retrive the body of attachement, throw a query in this form
 //http://builder.ikit.org/attachment?DB=Susana_test&AttachmentID=1638
-public class KFAttachment extends KFElement {
+public class K4Attachment extends K4Element {
 
 	private static final long serialVersionUID = 1L;
 
@@ -15,7 +15,7 @@ public class KFAttachment extends KFElement {
 	private String mime;
 	private String userFileName;
 
-	public KFAttachment() {
+	public K4Attachment() {
 	}
 
 	public String getTitle() {

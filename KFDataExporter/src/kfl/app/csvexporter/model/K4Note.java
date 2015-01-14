@@ -15,7 +15,7 @@ import java.util.Map;
  * @author macchan
  * 
  */
-public class KFNote extends KFElement {
+public class K4Note extends K4Element {
 
 	private static final long serialVersionUID = 1L;
 
@@ -23,14 +23,14 @@ public class KFNote extends KFElement {
 	private String text;
 	// private KFAuthor author;
 
-	private KFNote buildson;
-	private List<KFRiseAbove> riseaboves = new ArrayList<KFRiseAbove>();
-	private Map<KFSupport, KFTextLocator> supporteds = new LinkedHashMap<KFSupport, KFTextLocator>();
-	private Map<KFNote, KFTextLocator> references = new LinkedHashMap<KFNote, KFTextLocator>();
-	private List<KFKeyword> keywords = new ArrayList<KFKeyword>();
+	private K4Note buildson;
+	private List<K4RiseAbove> riseaboves = new ArrayList<K4RiseAbove>();
+	private Map<K4Support, K4TextLocator> supporteds = new LinkedHashMap<K4Support, K4TextLocator>();
+	private Map<K4Note, K4TextLocator> references = new LinkedHashMap<K4Note, K4TextLocator>();
+	private List<K4Keyword> keywords = new ArrayList<K4Keyword>();
 	private List<Integer> offsets = new ArrayList<Integer>();
 
-	public KFNote() {
+	public K4Note() {
 	}
 
 	@Override
@@ -62,15 +62,15 @@ public class KFNote extends KFElement {
 	// this.author = author;
 	// }
 
-	public void addRiseabove(KFRiseAbove riseabove) {
+	public void addRiseabove(K4RiseAbove riseabove) {
 		riseaboves.add(riseabove);
 	}
 
-	public void addSupport(KFSupport support, KFTextLocator locator) {
+	public void addSupport(K4Support support, K4TextLocator locator) {
 		supporteds.put(support, locator);
 	}
 
-	public void addReference(KFNote note, KFTextLocator locator) {
+	public void addReference(K4Note note, K4TextLocator locator) {
 		references.put(note, locator);
 	}
 
@@ -85,7 +85,7 @@ public class KFNote extends KFElement {
 		this.offsets = offsets;
 	}
 
-	public void addKeyword(KFKeyword keyword) {
+	public void addKeyword(K4Keyword keyword) {
 		keywords.add(keyword);
 	}
 
@@ -103,11 +103,11 @@ public class KFNote extends KFElement {
 	//
 	// }
 
-	public void setBuildson(KFNote buildson) {
+	public void setBuildson(K4Note buildson) {
 		this.buildson = buildson;
 	}
 
-	public KFNote getBuildson() {
+	public K4Note getBuildson() {
 		return buildson;
 	}
 
@@ -134,10 +134,10 @@ public class KFNote extends KFElement {
 			strings.add("");
 		}
 		strings.add(listToString("keywords", keywords));
-		strings.add(listToString("supported", new ArrayList<KFSupport>(
+		strings.add(listToString("supported", new ArrayList<K4Support>(
 				supporteds.keySet())));
 		strings.add(listToString("references",
-				new ArrayList<KFNote>(references.keySet())));
+				new ArrayList<K4Note>(references.keySet())));
 		strings.add(listToString("riseaboves", riseaboves));
 		strings.add(listToString("views", getViews()));
 		strings.add(listToString("authors", getAuthors()));
@@ -147,8 +147,8 @@ public class KFNote extends KFElement {
 
 	private String getDecoratedText() {
 		ReplacableString replacable = new ReplacableString(getText(), offsets);
-		for (KFSupport support : supporteds.keySet()) {
-			KFTextLocator loca = supporteds.get(support);
+		for (K4Support support : supporteds.keySet()) {
+			K4TextLocator loca = supporteds.get(support);
 			if (checkRange(loca.getOffset1()) == false
 					|| checkRange(loca.getOffset2()) == false) {
 				replacable.insertLast("{[" + support.getName() + "]:}");
@@ -158,8 +158,8 @@ public class KFNote extends KFElement {
 					+ "]:");
 			replacable.insert(loca.getOffset2(), "}");
 		}
-		for (KFNote note : references.keySet()) {
-			KFTextLocator loca = references.get(note);
+		for (K4Note note : references.keySet()) {
+			K4TextLocator loca = references.get(note);
 			String textInsert = "[[" + loca.getText() + "][from "
 					+ note.getIdAsString() + "]]";
 			if (checkRange(loca.getOffset1()) == false) {

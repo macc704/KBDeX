@@ -11,18 +11,18 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
-import kfl.app.kf6exporter.model.KFAttachment;
-import kfl.app.kf6exporter.model.KFAuthor;
-import kfl.app.kf6exporter.model.KFCommunity;
-import kfl.app.kf6exporter.model.KFContains;
-import kfl.app.kf6exporter.model.KFContribution;
-import kfl.app.kf6exporter.model.KFDrawing;
-import kfl.app.kf6exporter.model.KFJson;
-import kfl.app.kf6exporter.model.KFLink;
-import kfl.app.kf6exporter.model.KFNote;
-import kfl.app.kf6exporter.model.KFObject;
-import kfl.app.kf6exporter.model.KFRecord;
-import kfl.app.kf6exporter.model.KFShape;
+import kfl.app.kf6exporter.model.K6Attachment;
+import kfl.app.kf6exporter.model.K6Author;
+import kfl.app.kf6exporter.model.K6Community;
+import kfl.app.kf6exporter.model.K6Contains;
+import kfl.app.kf6exporter.model.K6Contribution;
+import kfl.app.kf6exporter.model.K6Drawing;
+import kfl.app.kf6exporter.model.K6Json;
+import kfl.app.kf6exporter.model.K6Link;
+import kfl.app.kf6exporter.model.K6Note;
+import kfl.app.kf6exporter.model.K6Object;
+import kfl.app.kf6exporter.model.K6Record;
+import kfl.app.kf6exporter.model.K6Shape;
 import kfl.kf4.serializer.IKFTupleProcessor;
 import kfl.kf4.serializer.KFSerializeFolder;
 
@@ -55,8 +55,8 @@ public class KF6ConverterMain {
 		process(dir);
 	}
 
-	private KFJson data;
-	private Map<ZID, KFObject> objects = new LinkedHashMap<ZID, KFObject>();
+	private K6Json data;
+	private Map<ZID, K6Object> objects = new LinkedHashMap<ZID, K6Object>();
 	private Set<String> unsupportedTypes = new HashSet<String>();
 	private KFViewLocationConverter viewLocationConverter = new KFViewLocationConverter();
 	
@@ -69,10 +69,10 @@ public class KF6ConverterMain {
 		
 		KFSerializeFolder folder = new KFSerializeFolder(dir);
 		folder.loadMeta();
-		KFCommunity community = new KFCommunity();
+		K6Community community = new K6Community();
 		community.title = folder.getLoginModel().getDBName();
 
-		data = new KFJson();
+		data = new K6Json();
 		data.community = community;
 
 		folder.processObjects(new IKFTupleProcessor() {
@@ -99,10 +99,10 @@ public class KF6ConverterMain {
 
 	@SuppressWarnings("unchecked")
 	private void processObject(ZID id, String type, ZTuple t) throws Exception {
-		KFContribution contribution;
+		K6Contribution contribution;
 		if (type.equals("author")) {
 			// System.out.println(t.toString());
-			KFAuthor author = new KFAuthor();
+			K6Author author = new K6Author();
 			author._id = id.toString();
 			author.email = t.getString("unam");
 			author.name = t.getString("fnam") + " " + t.getString("lnam");
@@ -114,7 +114,7 @@ public class KF6ConverterMain {
 			return;
 		} else if (type.equals("note")) {
 			// System.out.println(t.toString());
-			KFNote note = new KFNote();
+			K6Note note = new K6Note();
 			contribution = note;
 			note.type = "Note";
 			note._id = id.toString();
@@ -123,22 +123,22 @@ public class KF6ConverterMain {
 			data.contributions.add(note);
 		} else if (type.equals("view")) {
 			// System.out.println(t.toString());
-			contribution = new KFContribution();
+			contribution = new K6Contribution();
 			contribution.type = "View";
 			contribution.title = t.getString("titl");
 			data.community.views.add(id.toString());
 		} else if (type.equals("scaffold")) {
-			contribution = new KFContribution();
+			contribution = new K6Contribution();
 			contribution.type = "Scaffold";
 			contribution.title = t.getString("text");
 			data.community.scaffolds.add(id.toString());
 		} else if (type.equals("support")) {
-			contribution = new KFContribution();
+			contribution = new K6Contribution();
 			contribution.type = "Support";
 			contribution.title = t.getString("text");
 		} else if (type.equals("drawing")) {
 			// System.out.println(t.toString());
-			contribution = new KFDrawing();
+			contribution = new K6Drawing();
 			contribution.type = "Drawing";
 			contribution.title = t.getString("titl") /* + id */;
 			// if (t.has("preview")) {
@@ -156,7 +156,7 @@ public class KF6ConverterMain {
 			// "image/png"; modi = date(1.251138324512E9)/* Mon Aug 24 14:25:24
 			// EDT 2009 */; stat = "active"; titl = "Picture 1.png";
 			// userFileName = "Picture 1.png"; }
-			KFAttachment attachment = new KFAttachment();
+			K6Attachment attachment = new K6Attachment();
 			contribution = attachment;
 			attachment.title = t.getString("titl");
 			attachment.mime = t.getString("mime");
@@ -192,7 +192,7 @@ public class KF6ConverterMain {
 			// pen-width = int32(1); point1 = point(0, 0); point2 = point(164,
 			// 115); shape = "oval"; stat = "active"; }
 			// System.out.println(t.toString());
-			KFShape shape = new KFShape();
+			K6Shape shape = new K6Shape();
 			contribution = shape;
 			shape.type = "Shape";
 			shape.shapeType = t.getString("shape");
@@ -217,7 +217,7 @@ public class KF6ConverterMain {
 			return;
 		} else if (type.equals("historicalNote")) {
 			// temporary
-			KFNote note = new KFNote();
+			K6Note note = new K6Note();
 			contribution = note;
 			note.type = "HistoricalNote";
 			note.body = t.getString("text");
@@ -225,7 +225,7 @@ public class KF6ConverterMain {
 			// return;
 		} else if (type.equals("backpack")) {
 			// System.out.println(t.toString());
-			contribution = new KFContribution();
+			contribution = new K6Contribution();
 			contribution.type = "View";
 			ZID authorId = t.getZID("author");
 			Object authorObj = objects.get(authorId);
@@ -233,14 +233,14 @@ public class KF6ConverterMain {
 				System.out.println("author is null for backpack");
 				return;
 			}
-			KFAuthor author = (KFAuthor) authorObj;
+			K6Author author = (K6Author) authorObj;
 			contribution.authors.add(author._id);
 			contribution.title = "BackPack: " + author.name;
 		} else if (type.equals("session")) {
 			return;
 		} else {
 			warnIfNotShowBefore("unsupported object: ", type, t);
-			contribution = new KFContribution();
+			contribution = new K6Contribution();
 			contribution.type = type;
 		}
 		contribution._id = id.toString();
@@ -257,15 +257,15 @@ public class KF6ConverterMain {
 	}
 
 	private void processLink(String type, ZTuple t) {
-		KFObject to = objects.get(t.getZID("to"));
-		KFObject from = objects.get(t.getZID("from"));
+		K6Object to = objects.get(t.getZID("to"));
+		K6Object from = objects.get(t.getZID("from"));
 		if (to == null || from == null) {
 			missingLinkOut.println("missing link: type=" + type + ", from=" + from + ", to="
 					+ to);
 			return;
 		}
 
-		KFLink link = new KFLink();
+		K6Link link = new K6Link();
 		link.type = type;
 		link.from = t.getZID("from").toString();
 		link.to = t.getZID("to").toString();
@@ -276,8 +276,8 @@ public class KF6ConverterMain {
 		} else if (type.equals("contains") && from.type.equals("View")) {
 			if (to.type.equals("Shape")) {// Direct Shape will be converted to
 											// Drawing
-				KFShape shape = (KFShape) to;
-				KFDrawing drawing = new KFDrawing();
+				K6Shape shape = (K6Shape) to;
+				K6Drawing drawing = new K6Drawing();
 				drawing._id = to._id;
 				drawing.title = "FromShape:" + to._id;
 				drawing.type = "Drawing";
@@ -288,7 +288,7 @@ public class KF6ConverterMain {
 			}
 			link.type = "onviewref";
 
-			KFContains contains = new KFContains();
+			K6Contains contains = new K6Contains();
 			Point p;
 			if (t.has("location")) {
 				p = t.getPoint("location");
@@ -320,23 +320,23 @@ public class KF6ConverterMain {
 		} else if (type.equals("contains") && from.type.equals("Drawing")
 				&& to.type.equals("Shape")) {
 			// System.out.println(t.toString());
-			KFDrawing drawing = (KFDrawing) from;
-			KFShape shape = (KFShape) to;
+			K6Drawing drawing = (K6Drawing) from;
+			K6Shape shape = (K6Shape) to;
 			Point location = t.getPoint("location");
 			drawing.addShape(shape, location);
 			return;
 		} else if (type.equals("owns") && from.type.equals("Author")) {
-			KFAuthor author = (KFAuthor) from;
-			KFContribution contribution = (KFContribution) to;
+			K6Author author = (K6Author) from;
+			K6Contribution contribution = (K6Contribution) to;
 			contribution.authors.add(author._id);
 			return;
 		} else if ((type.equals("read") || type.equals("modified") || type
 				.equals("created"))
 				&& from.type.equals("Author")
 				&& !to.type.equals("Author")) {
-			KFRecord record = new KFRecord();
-			KFAuthor author = (KFAuthor) from;
-			KFContribution contribution = (KFContribution) to;
+			K6Record record = new K6Record();
+			K6Author author = (K6Author) from;
+			K6Contribution contribution = (K6Contribution) to;
 			record.authorId = author._id;
 			record.targetId = contribution._id;
 			record.type = type;

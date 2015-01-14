@@ -1,6 +1,6 @@
 package kfl.app.kf6exporter.model;
 
-public class KFAuthor extends KFObject{
+public class K6Author extends K6Object{
 	public String email;
 	public String name;
 	public String hashedPassword;

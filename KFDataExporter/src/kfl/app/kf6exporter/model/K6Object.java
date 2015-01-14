@@ -1,6 +1,6 @@
 package kfl.app.kf6exporter.model;
 
-public class KFObject {
+public class K6Object {
 	public String _id;
 	public String type;
 	

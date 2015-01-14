@@ -3,22 +3,22 @@ package kfl.app.csvexporter.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KFRiseAbove extends KFElement {
+public class K4RiseAbove extends K4Element {
 
 	private static final long serialVersionUID = 1L;
 	
-	private List<KFNote> notes = new ArrayList<KFNote>();
+	private List<K4Note> notes = new ArrayList<K4Note>();
 
 	@Override
 	public String getType() {
 		return "riseabove";
 	}
 
-	public void addNote(KFNote note) {
+	public void addNote(K4Note note) {
 		notes.add(note);
 	}
 
-	public List<KFNote> getNotes() {
+	public List<K4Note> getNotes() {
 		return notes;
 	}
 	

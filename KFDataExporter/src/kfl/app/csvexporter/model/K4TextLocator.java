@@ -2,7 +2,7 @@ package kfl.app.csvexporter.model;
 
 import java.io.Serializable;
 
-public class KFTextLocator implements Serializable {
+public class K4TextLocator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -10,7 +10,7 @@ public class KFTextLocator implements Serializable {
 	private int offset1;
 	private int offset2;
 
-	public KFTextLocator() {
+	public K4TextLocator() {
 
 	}
 

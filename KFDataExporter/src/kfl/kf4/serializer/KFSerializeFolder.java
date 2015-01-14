@@ -46,6 +46,10 @@ public class KFSerializeFolder {
 		}
 		ois.close();
 	}
+	
+	public CDirectory getDir() {
+		return dir;
+	}
 
 	public File getLinksFile() {
 		return dir.findOrCreateFile("links.db").toJavaFile();

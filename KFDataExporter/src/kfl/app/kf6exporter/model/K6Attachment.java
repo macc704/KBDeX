@@ -5,7 +5,7 @@ package kfl.app.kf6exporter.model;
 //mime: String,
 //originalName: String,
 //size: Number
-public class KFAttachment extends KFContribution{
+public class K6Attachment extends K6Contribution{
 	public String url;
 	public String originalName;
 	public String mime;

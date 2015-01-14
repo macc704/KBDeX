@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class KFContribution extends KFObject {
+public class K6Contribution extends K6Object {
 	public Date created;
 	public String title;
 	public String permission;

@@ -16,7 +16,7 @@ import org.zoolib.ZID;
 /**
  * @author macchan
  */
-public abstract class KFElement implements Serializable {
+public abstract class K4Element implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
@@ -24,8 +24,8 @@ public abstract class KFElement implements Serializable {
 	private Date created;
 	private Date modified;
 	private String status;
-	private List<KFOwnerObject> authors = new ArrayList<KFOwnerObject>();
-	private List<KFView> views = new ArrayList<KFView>();
+	private List<K4OwnerObject> authors = new ArrayList<K4OwnerObject>();
+	private List<K4View> views = new ArrayList<K4View>();
 
 	public ZID getId() {
 		return id;
@@ -81,19 +81,19 @@ public abstract class KFElement implements Serializable {
 		this.status = status;
 	}
 	
-	public List<KFOwnerObject> getAuthors() {
+	public List<K4OwnerObject> getAuthors() {
 		return authors;
 	}
 	
-	public void addAuthor(KFOwnerObject author){
+	public void addAuthor(K4OwnerObject author){
 		authors.add(author);
 	}
 	
-	public List<KFView> getViews() {
+	public List<K4View> getViews() {
 		return views;
 	}
 	
-	public void addView(KFView view){
+	public void addView(K4View view){
 		views.add(view);
 	}
 
@@ -122,7 +122,7 @@ public abstract class KFElement implements Serializable {
 		}
 	}
 
-	protected String listToString(String name, List<? extends KFElement> list) {
+	protected String listToString(String name, List<? extends K4Element> list) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(name + "{");
 		for (int i = 0; i < list.size(); i++) {
@@ -138,16 +138,16 @@ public abstract class KFElement implements Serializable {
 		return buf.toString();
 	}
 
-	protected String mapToString(String name, Map<? extends KFElement, ?> map) {
+	protected String mapToString(String name, Map<? extends K4Element, ?> map) {
 		StringBuffer buf = new StringBuffer();
 		buf.append(name + "{");
-		List<? extends KFElement> keys = new ArrayList<KFElement>(
+		List<? extends K4Element> keys = new ArrayList<K4Element>(
 				map.keySet());
 		for (int i = 0; i < keys.size(); i++) {
 			if (i != 0) {
 				buf.append(", ");
 			}
-			KFElement key = keys.get(i);
+			K4Element key = keys.get(i);
 			Object value = map.get(key); 
 			buf.append(key.getIdAsString());
 			buf.append("(");

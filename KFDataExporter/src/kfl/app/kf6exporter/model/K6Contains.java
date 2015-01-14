@@ -1,6 +1,6 @@
 package kfl.app.kf6exporter.model;
 
-public class KFContains {
+public class K6Contains {
 	public int x;
 	public int y;
 	public double z;

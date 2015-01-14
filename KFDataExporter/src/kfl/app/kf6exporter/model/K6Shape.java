@@ -6,7 +6,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KFShape extends KFContribution {
+public class K6Shape extends K6Contribution {
 	public String shapeType;
 	public Color color = Color.black;
 	public Color fill;

@@ -7,19 +7,19 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class KFView extends KFElement {
+public class K4View extends K4Element {
 
 	private static final long serialVersionUID = 1L;
 
 	private String name;
 
-	private List<KFScaffold> scaffolds = new ArrayList<KFScaffold>();
-	private Map<KFElement, Point> elements = new LinkedHashMap<KFElement, Point>();
+	private List<K4Scaffold> scaffolds = new ArrayList<K4Scaffold>();
+	private Map<K4Element, Point> elements = new LinkedHashMap<K4Element, Point>();
 
 	// mode = "as link", or "in place"
 	// locked = true, or false
 
-	public KFView() {
+	public K4View() {
 		this("");
 	}
 
@@ -28,24 +28,24 @@ public class KFView extends KFElement {
 		return "view";
 	}
 
-	public KFView(String name) {
+	public K4View(String name) {
 		this.name = name;
 	}
 
-	public void addElement(KFElement element, Point p) {
+	public void addElement(K4Element element, Point p) {
 		// System.out.println(element+""+p);
 		elements.put(element, p);
 	}
 
-	public List<KFElement> getElements() {
-		return new ArrayList<KFElement>(elements.keySet());
+	public List<K4Element> getElements() {
+		return new ArrayList<K4Element>(elements.keySet());
 	}
 
-	public void addScaffold(KFScaffold scaffold) {
+	public void addScaffold(K4Scaffold scaffold) {
 		scaffolds.add(scaffold);
 	}
 
-	public List<KFScaffold> getScaffolds() {
+	public List<K4Scaffold> getScaffolds() {
 		return scaffolds;
 	}
 
@@ -64,11 +64,11 @@ public class KFView extends KFElement {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof KFView)) {
+		if (!(obj instanceof K4View)) {
 			return false;
 		}
 
-		return toString().equals(((KFView) obj).toString());
+		return toString().equals(((K4View) obj).toString());
 	}
 
 	@Override

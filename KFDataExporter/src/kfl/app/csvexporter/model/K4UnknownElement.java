@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.zoolib.ZTuple;
 
-public class KFUnknownElement extends KFElement{
+public class K4UnknownElement extends K4Element{
 
 	private static final long serialVersionUID = 1L;
 	
@@ -13,7 +13,7 @@ public class KFUnknownElement extends KFElement{
 	
 	private Map<String, String> props = new HashMap<String, String>();
 			
-	public KFUnknownElement(String type) {
+	public K4UnknownElement(String type) {
 		this.type = type;
 	}
 	

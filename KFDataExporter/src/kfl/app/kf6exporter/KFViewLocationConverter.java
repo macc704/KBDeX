@@ -5,43 +5,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import kfl.app.kf6exporter.model.KFContains;
-import kfl.app.kf6exporter.model.KFLink;
-import kfl.app.kf6exporter.model.KFObject;
+import kfl.app.kf6exporter.model.K6Contains;
+import kfl.app.kf6exporter.model.K6Link;
+import kfl.app.kf6exporter.model.K6Object;
 
 public class KFViewLocationConverter {
 
-	private Map<KFObject, List<KFLink>> views = new HashMap<KFObject, List<KFLink>>();
+	private Map<K6Object, List<K6Link>> views = new HashMap<K6Object, List<K6Link>>();
 
-	public void put(KFObject view, KFLink link) {
+	public void put(K6Object view, K6Link link) {
 		getLinks(view).add(link);
 	}
 
-	private List<KFLink> getLinks(KFObject view) {
+	private List<K6Link> getLinks(K6Object view) {
 		if (!views.containsKey(view)) {
-			views.put(view, new ArrayList<KFLink>());
+			views.put(view, new ArrayList<K6Link>());
 		}
 		return views.get(view);
 	}
 
 	public void doConvert() {
-		for (KFObject view : views.keySet()) {
+		for (K6Object view : views.keySet()) {
 			processConvert(getLinks(view));
 		}
 	}
 
-	private void processConvert(List<KFLink> links) {
+	private void processConvert(List<K6Link> links) {
 		int minX = 0;
 		int minY = 0;
-		for (KFLink link : links) {
-			KFContains data = (KFContains) link.data;
+		for (K6Link link : links) {
+			K6Contains data = (K6Contains) link.data;
 			minX = Math.min(minX, data.x);
 			minY = Math.min(minY, data.y);
 		}
 		int additiveX = (minX * -1) + 10;
 		int additiveY = (minY * -1) + 10;
-		for (KFLink link : links) {
-			KFContains data = (KFContains) link.data;
+		for (K6Link link : links) {
+			K6Contains data = (K6Contains) link.data;
 			data.x = data.x + additiveX;
 			data.y = data.y + additiveY;
 		}

@@ -5,16 +5,16 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KFDrawing extends KFContribution {
+public class K6Drawing extends K6Contribution {
 	public String svg;
 	private transient List<ShapeRegistration> shapes = new ArrayList<ShapeRegistration>();
 
 	class ShapeRegistration {
-		KFShape shape;
+		K6Shape shape;
 		Point location;
 	}
 
-	public void addShape(KFShape shape, Point location) {
+	public void addShape(K6Shape shape, Point location) {
 		ShapeRegistration registration = new ShapeRegistration();
 		registration.shape = shape;
 		registration.location = location;

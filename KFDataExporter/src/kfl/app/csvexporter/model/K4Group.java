@@ -13,13 +13,13 @@ import java.util.List;
  * @author macchan
  * 
  */
-public class KFGroup extends KFOwnerObject {
+public class K4Group extends K4OwnerObject {
 
 	private static final long serialVersionUID = 1L;
 
 	private String name;
 
-	private List<KFAuthor> members = new ArrayList<KFAuthor>();
+	private List<K4Author> members = new ArrayList<K4Author>();
 
 	@Override
 	public String getType() {
@@ -44,7 +44,7 @@ public class KFGroup extends KFOwnerObject {
 	/**
 	 * @return the authors
 	 */
-	public List<KFAuthor> getMembers() {
+	public List<K4Author> getMembers() {
 		return members;
 	}
 
@@ -52,7 +52,7 @@ public class KFGroup extends KFOwnerObject {
 	 * @param members
 	 *            the authors to set
 	 */
-	public void addMember(KFAuthor author) {
+	public void addMember(K4Author author) {
 		this.members.add(author);
 	}
 
@@ -62,7 +62,7 @@ public class KFGroup extends KFOwnerObject {
 	}
 
 	@Override
-	public String listToString(String name, List<? extends KFElement> list) {
+	public String listToString(String name, List<? extends K4Element> list) {
 		StringBuffer buf = new StringBuffer();
 		buf.append("{'" + name + "':[");
 		for (int i = 0; i < list.size(); i++) {

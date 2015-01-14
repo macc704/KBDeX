@@ -1,5 +1,5 @@
 package kfl.app.kf6exporter.model;
 
-public class KFNote extends KFContribution {
+public class K6Note extends K6Contribution {
 	public String body;
 }

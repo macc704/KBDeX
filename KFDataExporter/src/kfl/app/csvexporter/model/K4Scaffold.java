@@ -3,13 +3,13 @@ package kfl.app.csvexporter.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KFScaffold extends KFElement {
+public class K4Scaffold extends K4Element {
 	
 	private static final long serialVersionUID = 1L;
 	
 	private String name;
 
-	private List<KFSupport> supports = new ArrayList<KFSupport>();
+	private List<K4Support> supports = new ArrayList<K4Support>();
 	
 	public void setName(String name) {
 		this.name = name;
@@ -19,11 +19,11 @@ public class KFScaffold extends KFElement {
 		return name;
 	}
 
-	public void addSupport(KFSupport support) {
+	public void addSupport(K4Support support) {
 		supports.add(support);
 	}
 
-	public List<KFSupport> getSupports() {
+	public List<K4Support> getSupports() {
 		return supports;
 	}
 
