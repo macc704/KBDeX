@@ -7,5 +7,7 @@ import java.util.List;
 public class KFContribution extends KFObject {
 	public Date created;
 	public String title;
+	public String permission;
+	public boolean locked;
 	public List<String> authors = new ArrayList<String>();
 }

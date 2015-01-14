@@ -112,6 +112,7 @@ public class KF6ConverterMain {
 			note.body = t.getString("text");
 			data.contributions.add(note);
 		} else if (type.equals("view")) {
+			// System.out.println(t.toString());
 			contribution = new KFContribution();
 			contribution.type = "View";
 			contribution.title = t.getString("titl");
@@ -152,7 +153,6 @@ public class KF6ConverterMain {
 			attachment.type = "Attachment";
 			attachment.url = t.getString("file");
 			attachment.originalName = t.getString("file");
-
 		} else if (type.equals("shape")) {
 			// { Object = "shape"; color = int32(-16777216); crea =
 			// date(1.398175088758E9)/* Tue Apr 22 09:58:08 EDT 2014 */; modi =
@@ -235,6 +235,10 @@ public class KF6ConverterMain {
 		}
 		contribution._id = id.toString();
 		contribution.created = t.getTime("crea");
+		contribution.permission = t.getString("perm"); // "public" or "private"
+		contribution.locked = t.getString("lock").equals("locked"); // "locked"
+																	// or
+																	// "unlocked"
 
 		if (!contribution.type.equals("Shape")) {
 			data.contributions.add(contribution);
@@ -249,6 +253,33 @@ public class KF6ConverterMain {
 		if (type.equals("read_ideas")) {// temporary
 			return;
 		}
+		if (type.equals("issued")) {// search related
+			return;
+		}
+		if (type.equals("idea_reminds")) {// search related
+			return;
+		}
+		if (type.equals("enabledfor")) {// notification related
+			return;
+		}
+		if (type.equals("hostlist")) {
+			return;
+		}
+		if (type.equals("prefers")) {// from author
+			return;
+		}
+		if (type.equals("nominated")) {
+			return;
+		}
+		if (type.equals("pauseRemind")) {// to view
+			return;
+		}
+		if (type.equals("check_tracker")) {// to view
+			return;
+		}
+		if (type.equals("identifies")) {// to idea
+			return;
+		}
 		KFObject to = objects.get(t.getZID("to"));
 		KFObject from = objects.get(t.getZID("from"));
 		if (to == null || from == null) {
@@ -261,6 +292,11 @@ public class KF6ConverterMain {
 		link.type = type;
 		link.from = t.getZID("from").toString();
 		link.to = t.getZID("to").toString();
+
+		if (type.equals("cleared")) {
+			//System.out.println("cleared from " + from.type + ", to " + to.type);
+		}
+
 		if (type.equals("predates")) {
 			// historical note to note
 			// detail is not implemented yet
@@ -278,10 +314,14 @@ public class KF6ConverterMain {
 				to = drawing;
 			}
 			link.type = "onviewref";
+			
 			KFContains contains = new KFContains();
 			Point p;
 			if (t.has("location")) {
 				p = t.getPoint("location");
+				//be careful they can be located in the negative position
+				//p.x = p.x + 50;//temporally solution
+				//p.y = p.y + 50;//temporally solution
 			} else {
 				p = new Point(10, 10);
 			}
@@ -297,6 +337,9 @@ public class KF6ConverterMain {
 				contains.fixed = t.getBool("locked");
 			}
 			link.data = contains;
+		} else if (type.equals("contains") && from.type.equals("group")) {
+			// group does not support yet.
+			return;
 		} else if (type.equals("contains") && from.type.equals("Scaffold")) {
 			// do nothing
 		} else if (type.equals("contains") && from.type.equals("Drawing")
@@ -374,6 +417,6 @@ public class KF6ConverterMain {
 	}
 
 	private void println(String msg) {
-		System.out.println(msg);
+		// System.out.println(msg);
 	}
 }
