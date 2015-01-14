@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -57,8 +58,15 @@ public class KF6ConverterMain {
 	private KFJson data;
 	private Map<ZID, KFObject> objects = new LinkedHashMap<ZID, KFObject>();
 	private Set<String> unsupportedTypes = new HashSet<String>();
+	private KFViewLocationConverter viewLocationConverter = new KFViewLocationConverter();
+	
+	private PrintStream unsupportedOut = System.out;
+	private PrintStream missingLinkOut = System.out;
 
 	void process(CDirectory dir) throws Exception {
+		unsupportedOut = new PrintStream(dir.findOrCreateFile("unsupportedLog.txt").toJavaFile());
+		missingLinkOut = new PrintStream(dir.findOrCreateFile("missingLinkLog.txt").toJavaFile());
+		
 		KFSerializeFolder folder = new KFSerializeFolder(dir);
 		folder.loadMeta();
 		KFCommunity community = new KFCommunity();
@@ -77,6 +85,8 @@ public class KF6ConverterMain {
 				processLink(tuple.getString("Link"), tuple);
 			}
 		});
+
+		viewLocationConverter.doConvert();
 
 		File jsonFile = dir.findOrCreateFile("data.json").toJavaFile();
 		Gson gson = new Gson();
@@ -247,43 +257,10 @@ public class KF6ConverterMain {
 	}
 
 	private void processLink(String type, ZTuple t) {
-		if (type.equals("beacon")) {// temporary
-			return;
-		}
-		if (type.equals("read_ideas")) {// temporary
-			return;
-		}
-		if (type.equals("issued")) {// search related
-			return;
-		}
-		if (type.equals("idea_reminds")) {// search related
-			return;
-		}
-		if (type.equals("enabledfor")) {// notification related
-			return;
-		}
-		if (type.equals("hostlist")) {
-			return;
-		}
-		if (type.equals("prefers")) {// from author
-			return;
-		}
-		if (type.equals("nominated")) {
-			return;
-		}
-		if (type.equals("pauseRemind")) {// to view
-			return;
-		}
-		if (type.equals("check_tracker")) {// to view
-			return;
-		}
-		if (type.equals("identifies")) {// to idea
-			return;
-		}
 		KFObject to = objects.get(t.getZID("to"));
 		KFObject from = objects.get(t.getZID("from"));
 		if (to == null || from == null) {
-			println("missing link: type=" + type + ", from=" + from + ", to="
+			missingLinkOut.println("missing link: type=" + type + ", from=" + from + ", to="
 					+ to);
 			return;
 		}
@@ -292,10 +269,6 @@ public class KF6ConverterMain {
 		link.type = type;
 		link.from = t.getZID("from").toString();
 		link.to = t.getZID("to").toString();
-
-		if (type.equals("cleared")) {
-			//System.out.println("cleared from " + from.type + ", to " + to.type);
-		}
 
 		if (type.equals("predates")) {
 			// historical note to note
@@ -314,19 +287,20 @@ public class KF6ConverterMain {
 				to = drawing;
 			}
 			link.type = "onviewref";
-			
+
 			KFContains contains = new KFContains();
 			Point p;
 			if (t.has("location")) {
 				p = t.getPoint("location");
-				//be careful they can be located in the negative position
-				//p.x = p.x + 50;//temporally solution
-				//p.y = p.y + 50;//temporally solution
+				// be careful they can be located in the negative position
+				contains.x = p.x;
+				contains.y = p.y;
 			} else {
 				p = new Point(10, 10);
 			}
-			contains.x = Math.max(10, p.x);
-			contains.y = Math.max(10, p.y);
+
+			viewLocationConverter.put(from, link);
+
 			contains.z = t.getDouble("z");
 			if (t.has("mode") && t.getString("mode").equals("in place")) {
 				contains.showInPlace = true;
@@ -337,6 +311,7 @@ public class KF6ConverterMain {
 				contains.fixed = t.getBool("locked");
 			}
 			link.data = contains;
+
 		} else if (type.equals("contains") && from.type.equals("group")) {
 			// group does not support yet.
 			return;
@@ -386,8 +361,14 @@ public class KF6ConverterMain {
 			// pending
 			return;
 		} else {
+			// does not support
+			// known unsupported "cleared", "beacon", "read_ideas", "issued",
+			// "idea_reminds", "enabledfor"// notification related
+			// "hostlist", "prefers" // from author, "nominated", "pauseRemind"
+			// // to view, "check_tracker"// to view, "identifies"// to idea
 			String concreteType = type + "From:" + from.type + "To:" + to.type;
 			warnIfNotShowBefore("unsupported link type: ", concreteType, t);
+			return;
 		}
 		data.links.add(link);
 	}
@@ -412,11 +393,8 @@ public class KF6ConverterMain {
 			return;
 		}
 		unsupportedTypes.add(type);
-		println(msg + type);
-		println(t.toString());
+		unsupportedOut.println(msg + type);
+		unsupportedOut.println(t.toString());
 	}
 
-	private void println(String msg) {
-		// System.out.println(msg);
-	}
 }
