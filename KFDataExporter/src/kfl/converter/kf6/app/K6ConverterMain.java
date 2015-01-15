@@ -25,6 +25,7 @@ import kfl.converter.kf6.model.K6Link;
 import kfl.converter.kf6.model.K6Note;
 import kfl.converter.kf6.model.K6Object;
 import kfl.converter.kf6.model.K6Record;
+import kfl.converter.kf6.model.K6References;
 import kfl.converter.kf6.model.K6Shape;
 
 import org.zoolib.ZID;
@@ -74,10 +75,10 @@ public class K6ConverterMain {
 		k4builder.build(dir);
 		BasicK4World k4world = k4builder.getWorld();
 		System.out.println("k4world finished.");
-		
+
 		K6Community community = new K6Community();
-		community.title = k4world.getName();		
-		
+		community.title = k4world.getName();
+
 		data = new K6Json();
 		data.community = community;
 
@@ -86,13 +87,13 @@ public class K6ConverterMain {
 		}
 		for (BasicK4Link link : k4world.getLinks()) {
 			processLink(link);
-		}		
+		}
 		System.out.println("k6world finished.");
 
 		viewLocationConverter.doConvert();
-		new K6NoteContentConverter().doConvert(data);		
+		new K6NoteContentConverter().doConvert(data);
 		System.out.println("k6world postprocess finished.");
-		
+
 		Gson gson = new Gson();
 		String json = gson.toJson(data);
 		System.out.println("gson finished.");
@@ -101,9 +102,9 @@ public class K6ConverterMain {
 		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(
 				jsonFile), "UTF8");
 		osw.write(json);
-		osw.close();		
+		osw.close();
 		System.out.println("json writing finished.");
-		
+
 		System.exit(0);
 	}
 
@@ -372,6 +373,11 @@ public class K6ConverterMain {
 				K6Note note = (K6Note) from;
 				K4TextLocator locator = K4TextLocator.fromReferences(t);
 				note.references.put(link, locator);
+				K6References data = new K6References();
+				if (t.has("quotation")) {
+					data.text = t.getString("quotation");
+				}
+				link.data = data;
 			} else {
 				System.out.println("references is not to note but to "
 						+ to.type);
