@@ -250,6 +250,7 @@ public class K6ConverterMain {
 			K6Author author = (K6Author) authorObj;
 			contribution.authors.add(author._id);
 			contribution.title = "BackPack: " + author.name;
+			author.workspaces.add(author._id);
 		} else if (type.equals("session")) {
 			return;
 		} else {
