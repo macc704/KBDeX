@@ -13,6 +13,7 @@ import kfl.converter.basic.app.K4BasicWorldBuilder;
 import kfl.converter.basic.model.BasicK4Link;
 import kfl.converter.basic.model.BasicK4Object;
 import kfl.converter.basic.model.BasicK4World;
+import kfl.converter.kf4.model.K4TextLocator;
 import kfl.converter.kf6.model.K6Attachment;
 import kfl.converter.kf6.model.K6Author;
 import kfl.converter.kf6.model.K6Community;
@@ -72,10 +73,11 @@ public class K6ConverterMain {
 		K4BasicWorldBuilder k4builder = new K4BasicWorldBuilder();
 		k4builder.build(dir);
 		BasicK4World k4world = k4builder.getWorld();
-
+		System.out.println("k4world finished.");
+		
 		K6Community community = new K6Community();
-		community.title = k4world.getName();
-
+		community.title = k4world.getName();		
+		
 		data = new K6Json();
 		data.community = community;
 
@@ -84,17 +86,25 @@ public class K6ConverterMain {
 		}
 		for (BasicK4Link link : k4world.getLinks()) {
 			processLink(link);
-		}
+		}		
+		System.out.println("k6world finished.");
 
 		viewLocationConverter.doConvert();
-
-		File jsonFile = dir.findOrCreateFile("data.json").toJavaFile();
+		new K6NoteContentConverter().doConvert(data);		
+		System.out.println("k6world postprocess finished.");
+		
 		Gson gson = new Gson();
 		String json = gson.toJson(data);
+		System.out.println("gson finished.");
+
+		File jsonFile = dir.findOrCreateFile("data.json").toJavaFile();
 		OutputStreamWriter osw = new OutputStreamWriter(new FileOutputStream(
 				jsonFile), "UTF8");
 		osw.write(json);
-		osw.close();
+		osw.close();		
+		System.out.println("json writing finished.");
+		
+		System.exit(0);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -123,7 +133,7 @@ public class K6ConverterMain {
 			note._id = id.toString();
 			note.title = t.getString("titl");
 			note.body = t.getString("text");
-			data.contributions.add(note);
+			note.offsets = t.getList("offsets");
 		} else if (type.equals("view")) {
 			// System.out.println(t.toString());
 			contribution = new K6Contribution();
@@ -254,7 +264,7 @@ public class K6ConverterMain {
 																	// "unlocked"
 
 		if (!contribution.type.equals("Shape")) {
-			data.contributions.add(contribution);
+			data.addContribution(contribution);
 		}
 		data.put(contribution);
 	}
@@ -271,6 +281,7 @@ public class K6ConverterMain {
 		}
 
 		K6Link link = new K6Link();
+		link._id = k4link.getId();
 		link.type = type;
 		link.from = t.getZID("from").toString();
 		link.to = t.getZID("to").toString();
@@ -287,7 +298,7 @@ public class K6ConverterMain {
 				drawing.title = "FromShape:" + to._id;
 				drawing.type = "Drawing";
 				drawing.addShape(shape, new Point(0, 0));
-				data.contributions.add(drawing);
+				data.addContribution(drawing);
 				data.put(drawing);
 				to = drawing;
 			}
@@ -357,10 +368,18 @@ public class K6ConverterMain {
 		} else if (type.equals("buildson")) {
 			// not necessary to do
 		} else if (type.equals("references")) {
-			// not necessary to do
+			if (from instanceof K6Note) {
+				K6Note note = (K6Note) from;
+				K4TextLocator locator = K4TextLocator.fromReferences(t);
+				note.references.put(link, locator);
+			} else {
+				System.out.println("references is not to note but to "
+						+ to.type);
+			}
 		} else if (type.equals("supports")) {
-			// support to note
-			// pending
+			K4TextLocator locator = K4TextLocator.fromSupports(t);
+			K6Note note = (K6Note) to;
+			note.supporteds.put(link, locator);
 		} else if (type.equals("describes")) {
 			// keyword to note
 			// pending
@@ -375,7 +394,7 @@ public class K6ConverterMain {
 			warnIfNotShowBefore("unsupported link type: ", concreteType, t);
 			return;
 		}
-		data.links.add(link);
+		data.addLink(link);
 	}
 
 	private Color parseColor(int color) {

@@ -151,8 +151,8 @@ public class K4Note extends K4Element {
 		KReplacableString replacable = new KReplacableString(getText(), offsets);
 		for (K4Support support : supporteds.keySet()) {
 			K4TextLocator loca = supporteds.get(support);
-			if (checkRange(loca.getOffset1()) == false
-					|| checkRange(loca.getOffset2()) == false) {
+			if (replacable.checkRange(loca.getOffset1()) == false
+					|| replacable.checkRange(loca.getOffset2()) == false) {
 				replacable.insertLast("{[" + support.getName() + "]:}");
 				continue;
 			}
@@ -164,33 +164,13 @@ public class K4Note extends K4Element {
 			K4TextLocator loca = references.get(note);
 			String textInsert = "[[" + loca.getText() + "][from "
 					+ note.getIdAsString() + "]]";
-			if (checkRange(loca.getOffset1()) == false) {
+			if (replacable.checkRange(loca.getOffset1()) == false) {
 				replacable.insertLast(textInsert);
 				continue;
 			}
 			replacable.insert(loca.getOffset1(), textInsert);
 		}
 		return replacable.getText();
-	}
-
-	private boolean checkRange(int offsetIndex) {
-		if (offsetIndex >= offsets.size()) {
-			// System.out.println("[offset index error] noteId=" + getId()
-			// + ", title=" + getTitle() + ", offsetIndex=" + offsetIndex
-			// + ", offsets=" + offsets);
-			// System.err.flush();
-			return false;
-		}
-		if (offsets.get(offsetIndex) > text.length()) {// = ok
-			// System.out.println("[offset error] noteId=" + getId() +
-			// ", title="
-			// + getTitle() + ", offsetIndex=" + offsetIndex + ", offset="
-			// + offsets.get(offsetIndex) + ", textlength="
-			// + text.length());
-			// System.err.flush();
-			return false;
-		}
-		return true;
 	}
 
 	@Override

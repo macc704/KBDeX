@@ -244,20 +244,12 @@ public class K4DataBuilder {
 		} else if (kind.startsWith("supports from:support to:note")) {
 			K4Support support = (K4Support) fromObject;
 			K4Note note = (K4Note) toObject;
-			K4TextLocator locator = new K4TextLocator();
-			String text = tuple.getString("text");
-			locator.setText(text);
-			int loca = tuple.getInt32("loca");
-			locator.setOffset(loca);
+			K4TextLocator locator = K4TextLocator.fromSupports(tuple);
 			note.addSupport(support, locator);
 		} else if (kind.startsWith("references from:note to:note")) {
 			K4Note noteFrom = (K4Note) fromObject;
 			K4Note noteTo = (K4Note) toObject;
-			K4TextLocator locator = new K4TextLocator();
-			String text = tuple.getString("quotation");
-			locator.setText(text);
-			int loca = tuple.getInt32("loca");
-			locator.setOffset(loca);
+			K4TextLocator locator = K4TextLocator.fromReferences(tuple);
 			noteFrom.addReference(noteTo, locator);
 		} else {
 			if (!unhandled.containsKey(kind)) {

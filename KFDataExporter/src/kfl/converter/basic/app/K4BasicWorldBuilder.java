@@ -1,5 +1,7 @@
 package kfl.converter.basic.app;
 
+import java.io.PrintStream;
+
 import kfl.converter.basic.model.BasicK4Link;
 import kfl.converter.basic.model.BasicK4Object;
 import kfl.converter.basic.model.BasicK4World;
@@ -12,19 +14,23 @@ import org.zoolib.ZTuple;
 import clib.common.filesystem.CDirectory;
 
 public class K4BasicWorldBuilder {
-	
+
 	private BasicK4World world;
-	
+
 	public K4BasicWorldBuilder() {
 	}
-	
+
 	public BasicK4World getWorld() {
 		return world;
 	}
 
+	private PrintStream missingLinkOut = System.out;
+
 	public void build(CDirectory dir) throws Exception {
-		world =  new BasicK4World();
-		
+		world = new BasicK4World();
+		missingLinkOut = new PrintStream(dir.findOrCreateFile(
+				"missingLinkInBasicLog.txt").toJavaFile());
+
 		KFSerializeFolder folder = new KFSerializeFolder(dir);
 		folder.loadMeta();
 		world.setName(folder.getLoginModel().getDBName());
@@ -50,8 +56,8 @@ public class K4BasicWorldBuilder {
 		BasicK4Object to = world.getObject(tuple.getZID("to").toString());
 		BasicK4Object from = world.getObject(tuple.getZID("from").toString());
 		if (to == null || from == null) {
-			System.out.println("missing link from=" + from + ", to=" + to);
-			System.out.println(tuple.toString());
+			missingLinkOut.println("missing link from=" + from + ", to=" + to);
+			missingLinkOut.println(tuple.toString());
 			return;
 		}
 		BasicK4Link link = new BasicK4Link(id, tuple);

@@ -2,6 +2,8 @@ package kfl.converter.kf4.model;
 
 import java.io.Serializable;
 
+import org.zoolib.ZTuple;
+
 public class K4TextLocator implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -38,6 +40,24 @@ public class K4TextLocator implements Serializable {
 	@Override
 	public String toString() {
 		return "Locator(offset1:" + offset1 + ", offset2:" + offset2 + ")";
+	}
+	
+	public static K4TextLocator fromSupports(ZTuple tuple) {
+		K4TextLocator locator = new K4TextLocator();
+		String text = tuple.getString("text");
+		locator.setText(text);
+		int loca = tuple.getInt32("loca");
+		locator.setOffset(loca);
+		return locator;
+	}
+
+	public static K4TextLocator fromReferences(ZTuple tuple) {
+		K4TextLocator locator = new K4TextLocator();
+		String text = tuple.getString("quotation");
+		locator.setText(text);
+		int loca = tuple.getInt32("loca");
+		locator.setOffset(loca);
+		return locator;
 	}
 
 }
