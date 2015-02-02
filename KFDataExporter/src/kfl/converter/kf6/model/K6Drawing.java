@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class K6Drawing extends K6Contribution {
-	public String svg;
+
 	private transient List<ShapeRegistration> shapes = new ArrayList<ShapeRegistration>();
 
 	class ShapeRegistration {
@@ -33,9 +33,10 @@ public class K6Drawing extends K6Contribution {
 		int w = Math.max(100, r.width);
 		int h = Math.max(100, r.height);
 		//System.out.println(w+","+h);
-		svg = template.replace("%WIDTH%", Integer.toString(w));
+		String svg = template.replace("%WIDTH%", Integer.toString(w));
 		svg = svg.replace("%HEIGHT%", Integer.toString(h));
-		svg = svg.replace("%CONTENT%", contents.toString());	
+		svg = svg.replace("%CONTENT%", contents.toString());
+		data.put("svg", svg);
 		// System.out.println(svg);
 	}
 }

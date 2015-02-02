@@ -18,12 +18,14 @@ public class K6NoteContentConverter {
 	}
 
 	private void processOne(K6Note note) {
-		String org = note.body;
+		String org = (String) note.data.get("body");
 		KReplacableString replacable = new KReplacableString(org, note.offsets);
 		for (K6Link link : note.supporteds.keySet()) {
 			K4TextLocator loca = note.supporteds.get(link);
-			String startTag = "<span id=\"" + link._id + "\" class=\"KFSupportStart\"/>";
-			String endTag = "<span id=\"" + link._id + "\" class=\"KFSupportEnd\"/>";
+			String startTag = "<span id=\"" + link._id
+					+ "\" class=\"KFSupportStart\"/>";
+			String endTag = "<span id=\"" + link._id
+					+ "\" class=\"KFSupportEnd\"/>";
 			if (replacable.checkRange(loca.getOffset1()) == false
 					|| replacable.checkRange(loca.getOffset2()) == false) {
 				replacable.insertLast(startTag + endTag);
@@ -34,7 +36,8 @@ public class K6NoteContentConverter {
 		}
 		for (K6Link link : note.references.keySet()) {
 			K4TextLocator loca = note.references.get(link);
-			String textInsert = "<span id=\"" + link._id + "\" class=\"KFReference\"/>";
+			String textInsert = "<span id=\"" + link._id
+					+ "\" class=\"KFReference\"/>";
 			if (replacable.checkRange(loca.getOffset1()) == false) {
 				replacable.insertLast(textInsert);
 				continue;
@@ -44,6 +47,6 @@ public class K6NoteContentConverter {
 
 		String embedded = replacable.getText();
 		String html = embedded.replaceAll("\n", "<br>");
-		note.body = html;
+		note.data.put("body", html);
 	}
 }

@@ -14,7 +14,6 @@ import kfl.converter.basic.model.BasicK4Link;
 import kfl.converter.basic.model.BasicK4Object;
 import kfl.converter.basic.model.BasicK4World;
 import kfl.converter.kf4.model.K4TextLocator;
-import kfl.converter.kf6.model.K6Attachment;
 import kfl.converter.kf6.model.K6Author;
 import kfl.converter.kf6.model.K6Community;
 import kfl.converter.kf6.model.K6Contains;
@@ -133,7 +132,7 @@ public class K6ConverterMain {
 			note.type = "Note";
 			note._id = id.toString();
 			note.title = t.getString("titl");
-			note.body = t.getString("text");
+			note.data.put("body", t.getString("text"));
 			note.offsets = t.getList("offsets");
 		} else if (type.equals("view")) {
 			// System.out.println(t.toString());
@@ -170,13 +169,13 @@ public class K6ConverterMain {
 			// "image/png"; modi = date(1.251138324512E9)/* Mon Aug 24 14:25:24
 			// EDT 2009 */; stat = "active"; titl = "Picture 1.png";
 			// userFileName = "Picture 1.png"; }
-			K6Attachment attachment = new K6Attachment();
+			K6Contribution attachment = new K6Contribution();
 			contribution = attachment;
-			attachment.title = t.getString("titl");
-			attachment.mime = t.getString("mime");
 			attachment.type = "Attachment";
-			attachment.url = t.getString("file");
-			attachment.originalName = t.getString("file");
+			attachment.title = t.getString("titl");
+			attachment.data.put("type", t.getString("mime"));
+			attachment.data.put("url", t.getString("file"));
+			attachment.data.put("originalFilename", t.getString("file"));
 		} else if (type.equals("shape")) {
 			// { Object = "shape"; color = int32(-16777216); crea =
 			// date(1.398175088758E9)/* Tue Apr 22 09:58:08 EDT 2014 */; modi =
@@ -234,7 +233,7 @@ public class K6ConverterMain {
 			K6Note note = new K6Note();
 			contribution = note;
 			note.type = "HistoricalNote";
-			note.body = t.getString("text");
+			note.data.put("body", t.getString("text"));
 			// System.out.println(t.toString());
 			// return;
 		} else if (type.equals("backpack")) {
@@ -260,10 +259,8 @@ public class K6ConverterMain {
 		}
 		contribution._id = id.toString();
 		contribution.created = t.getTime("crea");
+		contribution.modified = t.getTime("modi");
 		contribution.permission = t.getString("perm"); // "public" or "private"
-		contribution.locked = t.getString("lock").equals("locked"); // "locked"
-																	// or
-																	// "unlocked"
 
 		if (!contribution.type.equals("Shape")) {
 			data.addContribution(contribution);
@@ -304,7 +301,7 @@ public class K6ConverterMain {
 				data.put(drawing);
 				to = drawing;
 			}
-			link.type = "onviewref";
+			link.type = "contains";
 
 			K6Contains contains = new K6Contains();
 			Point p;
