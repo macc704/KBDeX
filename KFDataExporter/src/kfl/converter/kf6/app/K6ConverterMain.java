@@ -349,18 +349,13 @@ public class K6ConverterMain {
 				.equals("created"))
 				&& from.type.equals("Author")
 				&& !to.type.equals("Author")) {
+			// "cleared" is not a record
 			K6Record record = new K6Record();
 			K6Author author = (K6Author) from;
 			K6Contribution contribution = (K6Contribution) to;
 			record.authorId = author._id;
 			record.targetId = contribution._id;
 			record.type = type;
-			if (type.equals("modified")) {
-				record.type = "edit";
-			}
-			if (type.equals("created")) {
-				record.type = "create";
-			}
 			record.timestamp = t.getTime("crea");
 			data.records.add(record);
 			return;
