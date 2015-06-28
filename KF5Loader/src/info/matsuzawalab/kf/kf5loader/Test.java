@@ -16,11 +16,11 @@ public class Test {
 	private void run() throws Exception {
 		// KF5Service service = new KF5Service("http://132.203.154.41:8080/");
 		// KF5Service service = new KF5Service("http://128.100.72.137:8080/");
-		KF5Service service = new KF5Service("http://localhost:8080/");
+		KF5Service service = new KF5Service("https:kf.utoronto.ca/");
 		service.setKf51(true);
 
 		try {
-			/* JSONArray user = */service.login("ikit", "pass");
+			/* JSONArray user = */service.login("ymatsuzawa", "");
 			// String username = user.getJSONObject(0).getString("userName");
 			// System.out.println(username);
 		} catch (HttpHostConnectException ex) {

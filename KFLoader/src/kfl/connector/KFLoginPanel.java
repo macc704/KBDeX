@@ -10,8 +10,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -28,6 +31,8 @@ public class KFLoginPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private JLabel protocolLabel = new JLabel("Protocol:");
+	private JComboBox<String> protocols = new JComboBox<String>();
 	private JLabel hostLabel = new JLabel("Host:");
 	private JTextField host = new JTextField(20);
 	private JLabel portLabel = new JLabel("Port:");
@@ -87,6 +92,7 @@ public class KFLoginPanel extends JPanel {
 	}
 
 	private void refreshModel() {
+		model.setProtocol((String) protocols.getSelectedItem());
 		model.setHost(host.getText());
 		model.setPort(Integer.parseInt(port.getText()));
 		model.setDBName(database.getText());
@@ -95,6 +101,21 @@ public class KFLoginPanel extends JPanel {
 	}
 
 	void initializeComponents() {
+		protocols.setPreferredSize(new Dimension(100, protocols
+				.getPreferredSize().height));
+		protocols.addItem("https");
+		protocols.addItem("http");
+		protocols.addItemListener(new ItemListener() {
+			@Override
+			public void itemStateChanged(ItemEvent e) {
+				if ("https".equals(protocols.getSelectedItem())) {
+					port.setText("443");
+				}
+				if ("http".equals(protocols.getSelectedItem())) {
+					port.setText("80");
+				}
+			}
+		});
 		login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ok = true;
@@ -125,6 +146,8 @@ public class KFLoginPanel extends JPanel {
 			label.setForeground(Color.RED);
 			addC(label, x + w1, y);
 		}
+		y += h;
+		addLine(protocolLabel, protocols, w1, x, y);
 		y += h;
 		addLine(hostLabel, host, w1, x, y);
 		y += h;

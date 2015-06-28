@@ -10,6 +10,7 @@ package kfl.connector;
  */
 public class KFLoginModel {
 
+	private String protocol = "http";
 	private String host;
 	private int port = 80;
 	private String dbName;
@@ -17,6 +18,14 @@ public class KFLoginModel {
 	private String password;
 
 	public KFLoginModel() {
+	}
+	
+	public String getProtocol() {
+		return protocol;
+	}
+	
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 
 	public String getHost() {
@@ -60,7 +69,7 @@ public class KFLoginModel {
 	}
 
 	public String getBaseAddress() {
-		return "http://" + host + ":" + port + "/";
+		return protocol + "://" + host + ":" + port + "/";
 	}
 
 }

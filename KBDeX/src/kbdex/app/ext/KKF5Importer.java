@@ -43,8 +43,9 @@ import clib.view.progress.CPanelProcessingMonitor;
 public class KKF5Importer {
 
 	//private static final String SERVER = "132.203.154.41";
-	private static final String SERVER = "128.100.72.137";
-	private static final int PORT = 8080;
+	//private static final String SERVER = "128.100.72.137";
+	private static final String SERVER = "kf.utoronto.ca";	
+	private static final int PORT = 443;
 	private static final String DATABASE = "-- not nessary to choose -- ";
 	private static final String USER = "";
 	private static final String PASSWORD = "";
@@ -95,7 +96,7 @@ public class KKF5Importer {
 				if (!panel.isOk()) {// cancel
 					return;
 				}
-				service.setHost(model.getBaseAddress());
+				service.setBaseURI(model.getBaseAddress());
 				service.login(model.getUser(), model.getPassword());
 				break;
 			} catch (HttpHostConnectException ex) {

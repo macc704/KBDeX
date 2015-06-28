@@ -6,6 +6,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
@@ -13,23 +16,42 @@ import org.json.JSONArray;
 
 public class KF5Service {
 
-	private CloseableHttpClient httpClient = HttpClients.createDefault();
+	//Trusting SelfSigned Strategy	
+	private static SSLConnectionSocketFactory sslsf;
+	static {
+		try {
+			SSLContextBuilder builder = new SSLContextBuilder();
+			builder.loadTrustMaterial(null, new TrustSelfSignedStrategy());
+			sslsf = new SSLConnectionSocketFactory(builder.build());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	private CloseableHttpClient httpClient = HttpClients.custom()
+			.setSSLSocketFactory(sslsf).build();
+	
+	// private CloseableHttpClient httpClient = HttpClients.createDefault();
+	
+	// handshake alert: unrecognized_name Problem and Solution
+	// http://d.hatena.ne.jp/ttshiko/20121103/1351927402
+	// Solution: java option to invalidate => -Djsse.enableSNIExtension=false
 
-	private String host;
+	private String baseURI;
 
 	// kf5.1
 	private boolean kf51 = false;
 	private JSONArray registrations;
 
-	public KF5Service(String host) {
-		setHost(host);
+	public KF5Service(String baseURI) {
+		setBaseURI(baseURI);
 	}
 
-	public void setHost(String host) {
-		if (!host.endsWith("/")) {
-			host = host + "/";
+	public void setBaseURI(String baseURI) {
+		if (!baseURI.endsWith("/")) {
+			baseURI = baseURI + "/";
 		}
-		this.host = host;
+		this.baseURI = baseURI;
 	}
 
 	public void setKf51(boolean kf51) {
@@ -37,7 +59,7 @@ public class KF5Service {
 	}
 
 	private String getServiceURI(String path) {
-		return host + "kforum/rest/" + path;
+		return baseURI + "kforum/rest/" + path;
 	}
 
 	private JSONArray getJSON(HttpUriRequest request) throws Exception {
@@ -102,16 +124,16 @@ public class KF5Service {
 				+ communityId));
 		return getJSON(method);
 	}
-	
+
 	public JSONArray getPostHistory(String postId) throws Exception {
 		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistory/"
 				+ postId));
 		return getJSON(method);
 	}
-	
+
 	public JSONArray getPostHistoriesForView(String viewId) throws Exception {
-		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistoriesForView/"
-				+ viewId));
+		HttpGet method = new HttpGet(
+				getServiceURI("mobile/getPostHistoriesForView/" + viewId));
 		return getJSON(method);
 	}
 
