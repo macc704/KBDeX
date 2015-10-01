@@ -14,6 +14,8 @@ import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 public class KF6Service {
@@ -60,6 +62,7 @@ public class KF6Service {
 		String content = EntityUtils.toString(res.getEntity());
 		List<KAuthor> authors = gson.fromJson(content, new TypeToken<List<KAuthor>>() {
 		}.getType());
+		// prettyPrint(content);
 		return authors;
 	}
 
@@ -111,6 +114,22 @@ public class KF6Service {
 		return notes;
 	}
 
+	@SuppressWarnings("unused")
+	private void prettyPrint(String jsonString) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		JsonParser jp = new JsonParser();
+		JsonElement je = jp.parse(jsonString);
+		String prettyJsonString = gson.toJson(je);
+		System.out.println(prettyJsonString);
+	}
+
+	@SuppressWarnings("unused")
+	private void prettyPrint(Object obj) {
+		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		String prettyJsonString = gson.toJson(obj);
+		System.out.println(prettyJsonString);
+	}
+
 }
 
 class Login {
@@ -134,11 +153,11 @@ class Query {
 
 class KObject {
 	String _id;
+	String communityId;
 }
 
 class KContribution extends KObject {
 	String title;
-	String communityId;
 }
 
 class KView extends KContribution {

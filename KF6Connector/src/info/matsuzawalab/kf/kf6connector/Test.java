@@ -12,7 +12,7 @@ public class Test {
 		KF6Service service = new KF6Service("localhost:9000");
 		service.login("yoshiaki.matsuzawa@gmail.com", "test");
 		List<KAuthor> authors = service.getRegistrations();
-		service.setCommunityId(authors.get(4)._community._id);
+		service.setCommunityId(authors.get(3).communityId);
 		List<KNote> notes = service.getAllNotes();
 		for (KNote note : notes) {
 			System.out.println(note.title);
