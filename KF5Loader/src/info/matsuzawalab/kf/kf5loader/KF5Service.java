@@ -14,10 +14,12 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 
+@SuppressWarnings("deprecation")
 public class KF5Service {
 
-	//Trusting SelfSigned Strategy	
+	// Trusting SelfSigned Strategy
 	private static SSLConnectionSocketFactory sslsf;
+
 	static {
 		try {
 			SSLContextBuilder builder = new SSLContextBuilder();
@@ -27,12 +29,11 @@ public class KF5Service {
 			ex.printStackTrace();
 		}
 	}
-	
-	private CloseableHttpClient httpClient = HttpClients.custom()
-			.setSSLSocketFactory(sslsf).build();
-	
+
+	private CloseableHttpClient httpClient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+
 	// private CloseableHttpClient httpClient = HttpClients.createDefault();
-	
+
 	// handshake alert: unrecognized_name Problem and Solution
 	// http://d.hatena.ne.jp/ttshiko/20121103/1351927402
 	// Solution: java option to invalidate => -Djsse.enableSNIExtension=false
@@ -78,8 +79,8 @@ public class KF5Service {
 
 	public boolean login(String username, String password) throws Exception {
 		HttpPost method = new HttpPost(getServiceURI("account/userLogin"));
-		method.setEntity(new UrlEncodedFormEntity(Form.form()
-				.add("userName", username).add("password", password).build()));
+		method.setEntity(
+				new UrlEncodedFormEntity(Form.form().add("userName", username).add("password", password).build()));
 		registrations = getJSON(method);
 		return true;
 	}
@@ -103,14 +104,12 @@ public class KF5Service {
 	}
 
 	public JSONArray enterCommunity(String registrationCode) throws Exception {
-		HttpGet method = new HttpGet(getServiceURI("account/selectSection/"
-				+ registrationCode));
+		HttpGet method = new HttpGet(getServiceURI("account/selectSection/" + registrationCode));
 		return getJSON(method);
 	}
 
 	public JSONArray getViews(String communityId) throws Exception {
-		HttpGet method = new HttpGet(getServiceURI("content/getSectionViews/"
-				+ communityId));
+		HttpGet method = new HttpGet(getServiceURI("content/getSectionViews/" + communityId));
 		return getJSON(method);
 	}
 
@@ -120,20 +119,17 @@ public class KF5Service {
 	}
 
 	public JSONArray getPostsForCommunity(String communityId) throws Exception {
-		HttpGet method = new HttpGet(getServiceURI("content/getSectionPosts/"
-				+ communityId));
+		HttpGet method = new HttpGet(getServiceURI("content/getSectionPosts/" + communityId));
 		return getJSON(method);
 	}
 
 	public JSONArray getPostHistory(String postId) throws Exception {
-		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistory/"
-				+ postId));
+		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistory/" + postId));
 		return getJSON(method);
 	}
 
 	public JSONArray getPostHistoriesForView(String viewId) throws Exception {
-		HttpGet method = new HttpGet(
-				getServiceURI("mobile/getPostHistoriesForView/" + viewId));
+		HttpGet method = new HttpGet(getServiceURI("mobile/getPostHistoriesForView/" + viewId));
 		return getJSON(method);
 	}
 
