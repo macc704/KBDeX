@@ -1,8 +1,5 @@
 package kbdex.app.ext;
 
-import info.matsuzawalab.kf.kf5loader.KF5Service;
-import info.matsuzawalab.kf.kf5loader.KF5ServiceException;
-
 import java.awt.Color;
 import java.awt.Dimension;
 import java.net.SocketException;
@@ -21,6 +18,16 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import org.apache.http.conn.HttpHostConnectException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import clib.common.filesystem.CFile;
+import clib.common.thread.ICTask;
+import clib.common.utils.ICProgressMonitor;
+import clib.view.progress.CPanelProcessingMonitor;
+import info.matsuzawalab.kf.kf5loader.KF5Service;
+import info.matsuzawalab.kf.kf5loader.KF5ServiceException;
 import kbdex.app.KBDeX;
 import kbdex.app.manager.KDDiscourseManager;
 import kbdex.model.discourse.KDDiscourseFile;
@@ -31,20 +38,11 @@ import kfl.connector.KFLoginPanel;
 import net.htmlparser.jericho.Source;
 import net.htmlparser.jericho.TextExtractor;
 
-import org.apache.http.conn.HttpHostConnectException;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import clib.common.filesystem.CFile;
-import clib.common.thread.ICTask;
-import clib.common.utils.ICProgressMonitor;
-import clib.view.progress.CPanelProcessingMonitor;
-
 public class KKF5Importer {
 
 	//private static final String SERVER = "132.203.154.41";
 	//private static final String SERVER = "128.100.72.137";
-	private static final String SERVER = "kf.utoronto.ca";	
+	private static final String SERVER = "kf.utoronto.ca";
 	private static final int PORT = 443;
 	private static final String DATABASE = "-- not nessary to choose -- ";
 	private static final String USER = "";
@@ -52,7 +50,8 @@ public class KKF5Importer {
 
 	private static DateFormat format = new SimpleDateFormat(
 			"MMM d, yyyy HH:mm:ss a");
-	private static DateFormat fnameFormat = new SimpleDateFormat("yyyyMMddHHmm");
+	private static DateFormat fnameFormat = new SimpleDateFormat(
+			"yyyyMMddHHmm");
 
 	private final KF5Service service = new KF5Service("");
 	private final KFLoginModel model = new KFLoginModel();
@@ -100,12 +99,14 @@ public class KKF5Importer {
 				service.login(model.getUser(), model.getPassword());
 				break;
 			} catch (HttpHostConnectException ex) {
-				panel.setFailiureMessage("failed to connect the server or the port");
+				panel.setFailiureMessage(
+						"failed to connect the server or the port");
 			} catch (SocketException ex) {
 				panel.setFailiureMessage("failed to connect the internet");
 			} catch (KF5ServiceException ex) {
 				if (ex.getHttpCode() == 404) {
-					panel.setFailiureMessage("there is no service on the server");
+					panel.setFailiureMessage(
+							"there is no service on the server");
 				} else if (ex.getHttpCode() == 401) {
 					panel.setFailiureMessage("login failed");
 				} else {
@@ -129,7 +130,8 @@ public class KKF5Importer {
 			}
 			JComboBox<KF5Registration> combobox = new JComboBox<KF5Registration>();
 			for (int i = 0; i < len; i++) {
-				KF5Registration reg = new KF5Registration(regs.getJSONObject(i));
+				KF5Registration reg = new KF5Registration(
+						regs.getJSONObject(i));
 				combobox.addItem(reg);
 			}
 			int res = JOptionPane.showConfirmDialog(null, combobox,
@@ -267,8 +269,8 @@ public class KKF5Importer {
 		List<JSONObject> posts = new ArrayList<JSONObject>();
 		JSONArray viewPostRefs;
 		try {
-			viewPostRefs = jsonPosts.getJSONObject(0).getJSONArray(
-					"viewPostRefs");
+			viewPostRefs = jsonPosts.getJSONObject(0)
+					.getJSONArray("viewPostRefs");
 		} catch (Exception ex) {
 			return new ArrayList<JSONObject>();
 		}

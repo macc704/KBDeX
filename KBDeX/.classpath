@@ -6,6 +6,7 @@
 	<classpathentry kind="src" path="construction"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CommonLibrary"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/KF6Connector"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/JUNG"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CSwing"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/CChart"/>

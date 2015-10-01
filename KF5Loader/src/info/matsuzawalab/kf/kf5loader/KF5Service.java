@@ -14,7 +14,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 
-@SuppressWarnings("deprecation")
 public class KF5Service {
 
 	// Trusting SelfSigned Strategy

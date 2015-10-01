@@ -23,11 +23,6 @@ import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import kbdex.app.KBDeX;
-import kbdex.app.ext.KKF5Importer;
-import kbdex.app.ext.KKFDiscourseImporter;
-import kbdex.app.ext.KKaniChatCSVImporter;
-import kbdex.model.discourse.KDDiscourseFile;
 import clib.common.filesystem.CDirectory;
 import clib.common.thread.ICTask;
 import clib.view.actions.CAction;
@@ -39,6 +34,11 @@ import clib.view.list.CDirectoryListModel;
 import clib.view.list.CListPanel;
 import clib.view.panels.CPanelUtils;
 import clib.view.progress.CPanelProcessingMonitor;
+import kbdex.app.KBDeX;
+import kbdex.app.ext.KKF5Importer;
+import kbdex.app.ext.KKFDiscourseImporter;
+import kbdex.app.ext.KKaniChatCSVImporter;
+import kbdex.model.discourse.KDDiscourseFile;
 
 /**
  * @author macchan
@@ -79,7 +79,8 @@ public class KDiscourseManagerFrame extends JFrame {
 				}
 			});
 
-	public KDiscourseManagerFrame(KDDiscourseManager manager, String windowTitle) {
+	public KDiscourseManagerFrame(KDDiscourseManager manager,
+			String windowTitle) {
 		this.manager = manager;
 		setTitle(windowTitle);
 		initialize();
@@ -99,6 +100,18 @@ public class KDiscourseManagerFrame extends JFrame {
 		{
 			JMenu menu = new JMenu("Import");
 			menuBar.add(menu);
+			//			{
+			//				final KKF6Importer importer = new KKF6Importer();
+			//				CAction action = CActionUtils.createAction("From KF6",
+			//						new ICTask() {
+			//							@Override
+			//							public void doTask() {
+			//								importer.doLoad();
+			//								refreshDiscourseList();
+			//							}
+			//						});
+			//				menu.add(action);
+			//			}
 			{
 				final KKF5Importer importer = new KKF5Importer();
 				CAction action = CActionUtils.createAction("From KF5",
@@ -110,10 +123,10 @@ public class KDiscourseManagerFrame extends JFrame {
 							}
 						});
 				menu.add(action);
-			}			
+			}
 			{
 				final KKFDiscourseImporter importer = new KKFDiscourseImporter();
-				CAction action = CActionUtils.createAction("From KF",
+				CAction action = CActionUtils.createAction("From KF4",
 						new ICTask() {
 							@Override
 							public void doTask() {
@@ -148,8 +161,8 @@ public class KDiscourseManagerFrame extends JFrame {
 	private void initializePanel() {
 
 		//ListPanel		
-		listPanel.getJList().setSelectionMode(
-				ListSelectionModel.SINGLE_SELECTION);
+		listPanel.getJList()
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listPanel.setModel(new CDirectoryListModel(manager.getBaseDirectory()));
 		listPanel.getJList().getSelectionModel()
 				.addListSelectionListener(new ListSelectionListener() {
@@ -215,8 +228,8 @@ public class KDiscourseManagerFrame extends JFrame {
 				try {
 					manager.openDiscourse(dir.getNameByString(), monitor);
 				} catch (Exception ex) {
-					KBDeX.getInstance().handleException(
-							KDiscourseManagerFrame.this, ex);
+					KBDeX.getInstance()
+							.handleException(KDiscourseManagerFrame.this, ex);
 				}
 			}
 		});
