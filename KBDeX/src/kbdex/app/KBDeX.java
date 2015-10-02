@@ -17,14 +17,14 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import kbdex.app.manager.KDDiscourseManager;
-import kbdex.app.manager.KDiscourseManagerFrame;
 import clib.common.filesystem.CDirectory;
 import clib.common.filesystem.CFileSystem;
 import clib.common.system.CEncoding;
 import clib.common.system.CJavaSystem;
 import clib.view.dialogs.CErrorDialog;
 import clib.view.progress.CPanelProcessingMonitor;
+import kbdex.app.manager.KDDiscourseManager;
+import kbdex.app.manager.KDiscourseManagerFrame;
 
 /**
  * KBDeX(Knowledge Building Discourse eXplorer) Application
@@ -39,6 +39,11 @@ import clib.view.progress.CPanelProcessingMonitor;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.10.1 2015.10.02
+ *　		・kf6 support 		
+ * 
+ * 1.10.0 (gitの操作ミスによって消えた，幻のバージョン)
+ * 
  * 1.9.10 2015.06.28
  * 		・https support for kf5
  * 
@@ -246,10 +251,10 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.10.0";
+	private static final String VERSION = "1.10.1";
 	private static final String DATE = "2015.10.02";
 	private static final String TITLE = "KBDeX Version " + VERSION
-			+ " (build on " + DATE + ")";
+			+ " (built at " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
 	public static CEncoding ENCODING_OUT = CEncoding.UTF8;
 	public static final boolean DEBUG = true;
@@ -304,8 +309,8 @@ public class KBDeX {
 						"KBDeX");
 			}
 			// UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-			UIManager
-					.setLookAndFeel("com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
+			UIManager.setLookAndFeel(
+					"com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel");
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return;
@@ -318,8 +323,8 @@ public class KBDeX {
 
 	@Deprecated
 	public CDirectory getDataDir() {
-		return CFileSystem.getExecuteDirectory().findOrCreateDirectory(
-				DATA_DIR_NAME);
+		return CFileSystem.getExecuteDirectory()
+				.findOrCreateDirectory(DATA_DIR_NAME);
 	}
 
 	public Image getIconImage32() {
