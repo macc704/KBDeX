@@ -3,7 +3,7 @@ package info.matsuzawalab.kf.kf6connector;
 import java.util.List;
 
 import info.matsuzawalab.kf.kf6connector.model.K6Author;
-import info.matsuzawalab.kf.kf6connector.model.KNote;
+import info.matsuzawalab.kf.kf6connector.model.K6Note;
 
 public class Test {
 
@@ -17,8 +17,8 @@ public class Test {
 		service.login("yoshiaki.matsuzawa@gmail.com", "test");
 		List<K6Author> authors = service.getRegistrations();
 		service.setCommunityId(authors.get(3).communityId);
-		List<KNote> notes = service.getAllNotes();
-		for (KNote note : notes) {
+		List<K6Note> notes = service.getAllNotes();
+		for (K6Note note : notes) {
 			System.out.println(note.title);
 		}
 	}

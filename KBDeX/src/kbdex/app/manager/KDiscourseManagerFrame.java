@@ -36,6 +36,7 @@ import clib.view.panels.CPanelUtils;
 import clib.view.progress.CPanelProcessingMonitor;
 import kbdex.app.KBDeX;
 import kbdex.app.ext.KKF5Importer;
+import kbdex.app.ext.KKF6Importer;
 import kbdex.app.ext.KKFDiscourseImporter;
 import kbdex.app.ext.KKaniChatCSVImporter;
 import kbdex.model.discourse.KDDiscourseFile;
@@ -100,18 +101,18 @@ public class KDiscourseManagerFrame extends JFrame {
 		{
 			JMenu menu = new JMenu("Import");
 			menuBar.add(menu);
-			//			{
-			//				final KKF6Importer importer = new KKF6Importer();
-			//				CAction action = CActionUtils.createAction("From KF6",
-			//						new ICTask() {
-			//							@Override
-			//							public void doTask() {
-			//								importer.doLoad();
-			//								refreshDiscourseList();
-			//							}
-			//						});
-			//				menu.add(action);
-			//			}
+			{
+				final KKF6Importer importer = new KKF6Importer();
+				CAction action = CActionUtils.createAction("From KF6",
+						new ICTask() {
+							@Override
+							public void doTask() {
+								importer.doLoad();
+								refreshDiscourseList();
+							}
+						});
+				menu.add(action);
+			}
 			{
 				final KKF5Importer importer = new KKF5Importer();
 				CAction action = CActionUtils.createAction("From KF5",

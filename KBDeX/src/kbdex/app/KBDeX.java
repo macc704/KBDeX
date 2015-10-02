@@ -246,8 +246,8 @@ import clib.view.progress.CPanelProcessingMonitor;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.9.10";
-	private static final String DATE = "2015.06.28";
+	private static final String VERSION = "1.10.0";
+	private static final String DATE = "2015.10.02";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (build on " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";

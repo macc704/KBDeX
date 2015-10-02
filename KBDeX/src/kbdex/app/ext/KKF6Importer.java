@@ -1,5 +1,13 @@
 package kbdex.app.ext;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.net.SocketException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -7,10 +15,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
+import javax.swing.BoxLayout;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import clib.common.filesystem.CFile;
 import clib.common.thread.ICTask;
@@ -18,7 +33,8 @@ import clib.common.utils.ICProgressMonitor;
 import clib.view.progress.CPanelProcessingMonitor;
 import info.matsuzawalab.kf.kf6connector.KF6Service;
 import info.matsuzawalab.kf.kf6connector.model.K6Author;
-import info.matsuzawalab.kf.kf6connector.model.KNote;
+import info.matsuzawalab.kf.kf6connector.model.K6Note;
+import info.matsuzawalab.kf.kf6connector.model.K6View;
 import kbdex.app.KBDeX;
 import kbdex.app.manager.KDDiscourseManager;
 import kbdex.model.discourse.KDDiscourseFile;
@@ -29,14 +45,8 @@ import kfl.connector.KFLoginPanel;
 
 public class KKF6Importer {
 
-	private static final String SERVER = "localhost";
-	private static final int PORT = 9000;
-	private static final String DATABASE = "-- not nessary to choose -- ";
-	private static final String USER = "";
-	private static final String PASSWORD = "";
+	private static final String PROPFILE = "kf6.properties";
 
-	private static DateFormat format = new SimpleDateFormat(
-			"MMM d, yyyy HH:mm:ss a");
 	private static DateFormat fnameFormat = new SimpleDateFormat(
 			"yyyyMMddHHmm");
 
@@ -44,11 +54,6 @@ public class KKF6Importer {
 	private final KFLoginModel model = new KFLoginModel();
 
 	public KKF6Importer() {
-		model.setHost(SERVER);
-		model.setPort(PORT);
-		model.setDBName(DATABASE);
-		model.setUser(USER);
-		model.setPassword(PASSWORD);
 	}
 
 	public void doLoad() {
@@ -66,6 +71,22 @@ public class KKF6Importer {
 	}
 
 	private void doImport(ICProgressMonitor monitor) throws Exception {
+		Properties prop = new Properties();
+		{//read from properties			
+			File propFile = new File(PROPFILE);
+			if (!propFile.exists()) {
+				propFile.createNewFile();
+			}
+			prop.load(new FileReader(propFile));
+
+			model.setProtocol(prop.getProperty("protocol", "http"));
+			model.setHost(prop.getProperty("host", "localhost"));
+			model.setPort(Integer.parseInt(prop.getProperty("port", "80")));
+			model.setDBName(prop.getProperty("db", "db-unnecessary"));
+			model.setUser(prop.getProperty("user", ""));
+			model.setPassword(prop.getProperty("password", ""));
+		}
+
 		monitor.setMax(6);
 
 		monitor.setWorkTitle("login ...");
@@ -105,7 +126,7 @@ public class KKF6Importer {
 				combobox.addItem(author);
 			}
 			int res = JOptionPane.showConfirmDialog(null, combobox,
-					"Registration?", JOptionPane.OK_OPTION);
+					"Community?", JOptionPane.OK_CANCEL_OPTION);
 			if (res != JOptionPane.OK_OPTION) {
 				return;
 			}
@@ -114,76 +135,114 @@ public class KKF6Importer {
 		service.setCommunityId(selectedAuthor.communityId);
 		monitor.progress(1);
 
-		//		monitor.setWorkTitle("selecting view ...");
-		//		List<KF5View> selected = new ArrayList<KF5View>();
-		//		{
-		//			JSONArray viewJsons = service.getViews(selectedAuthor.communityId);
-		//			int len = viewJsons.length();
-		//			if (len <= 0) {
-		//				throw new RuntimeException("There is no view.");
-		//			}
-		//			List<KF5View> views = new ArrayList<KF5View>();
-		//			for (int i = 0; i < len; i++) {
-		//				KF5View view = new KF5View(viewJsons.getJSONObject(i));
-		//				views.add(view);
-		//			}
-		//
-		//			JPanel listPanel = new JPanel();
-		//			JScrollPane scroll = new JScrollPane(listPanel);
-		//			scroll.setPreferredSize(new Dimension(400, 300));
-		//
-		//			listPanel.setBackground(Color.WHITE);
-		//			listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
-		//
-		//			List<JCheckBox> boxes = new ArrayList<JCheckBox>();
-		//			for (KF5View view : views) {
-		//				JCheckBox box = new JCheckBox(view.title);
-		//				listPanel.add(box);
-		//				boxes.add(box);
-		//			}
-		//
-		//			int res = JOptionPane.showConfirmDialog(null, scroll, "View?",
-		//					JOptionPane.OK_OPTION);
-		//			if (res != JOptionPane.OK_OPTION) {
-		//				return;
-		//			}
-		//
-		//			for (int i = 0; i < len; i++) {
-		//				JCheckBox box = boxes.get(i);
-		//				if (box.isSelected()) {
-		//					selected.add(views.get(i));
-		//				}
-		//			}
-		//		}
-		//		monitor.progress(1);
+		{//write properties
+			prop.setProperty("protocol", model.getProtocol());
+			prop.setProperty("host", model.getHost());
+			prop.setProperty("port", Integer.toString(model.getPort()));
+			prop.setProperty("user", model.getUser());
+			prop.store(new FileWriter(PROPFILE),
+					"This is property file for kf6 connection setting.");
+		}
+
+		monitor.setWorkTitle("selecting view ...");
+		List<K6View> selectedViews = new ArrayList<K6View>();
+		{
+			List<K6View> views = service.getViews();
+			if (views.isEmpty()) {
+				throw new RuntimeException("There is no view.");
+			}
+
+			JPanel mainPanel = new JPanel();
+			mainPanel.setLayout(new BorderLayout());
+			mainPanel.setPreferredSize(new Dimension(400, 300));
+
+			JPanel listPanel = new JPanel();
+			JScrollPane scroll = new JScrollPane(listPanel);
+			scroll.setPreferredSize(new Dimension(400, 300));
+
+			listPanel.setBackground(Color.WHITE);
+			listPanel.setLayout(new BoxLayout(listPanel, BoxLayout.Y_AXIS));
+
+			final List<JCheckBox> boxes = new ArrayList<JCheckBox>();
+			for (K6View view : views) {
+				JCheckBox box = new JCheckBox(view.title);
+				listPanel.add(box);
+				boxes.add(box);
+			}
+
+			final JCheckBox allBox = new JCheckBox("Select All");
+			allBox.addItemListener(new ItemListener() {
+				@Override
+				public void itemStateChanged(ItemEvent e) {
+					boolean select = allBox.isSelected();
+					for (JCheckBox box : boxes) {
+						box.setSelected(select);
+					}
+				}
+			});
+
+			mainPanel.add(listPanel, BorderLayout.CENTER);
+			mainPanel.add(allBox, BorderLayout.SOUTH);
+
+			int res = JOptionPane.showConfirmDialog(null, mainPanel, "View?",
+					JOptionPane.OK_OPTION);
+			if (res != JOptionPane.OK_OPTION) {
+				return;
+			}
+
+			int len = boxes.size();
+			for (int i = 0; i < len; i++) {
+				JCheckBox box = boxes.get(i);
+				if (box.isSelected()) {
+					selectedViews.add(views.get(i));
+				}
+			}
+		}
+		monitor.progress(1);
+
+		if (selectedViews.isEmpty()) {
+			JOptionPane.showConfirmDialog(null, "No view was selected.",
+					"Operation Stopped", JOptionPane.DEFAULT_OPTION);
+			return;
+		}
 
 		monitor.setWorkTitle("connect and getting data...");
-		//		List<JSONObject> jsonPosts = new ArrayList<JSONObject>();
-		//		List<String> guids = new ArrayList<String>();
-		//		for (KF5View view : selected) {
-		//			List<JSONObject> jsonpostsview = retrieveNotesForView(view);
-		//			for (JSONObject jsonpost : jsonpostsview) {
-		//				String guid = jsonpost.getString("guid");
-		//				if (!guids.contains(guid)) {
-		//					jsonPosts.add(jsonpost);
-		//					guids.add(guid);
-		//				}
-		//			}
-		//		}
-		List<KNote> notes = service.getAllNotes();
+		List<String> viewIds = new ArrayList<String>();
+		for (K6View view : selectedViews) {
+			viewIds.add(view._id);
+		}
+		List<K6Note> notes = service.getNotes(viewIds);
+		List<K6Author> authors = service.getAuthors();
 		monitor.progress(1);
 
 		monitor.setWorkTitle("analyzing data...");
+		Map<String, K6Author> authorsMap = new HashMap<String, K6Author>();
+		for (K6Author author : authors) {
+			authorsMap.put(author._id, author);
+		}
 		List<KDDiscourseRecord> records = new ArrayList<KDDiscourseRecord>();
-		for (KNote note : notes) {
+		for (K6Note note : notes) {
 			try {
 				if (!note.type.equals("Note")) {
 					continue;
 				}
 
-				String author = "author-not-implemented";
-				String body = note.data.body;
-				KDDiscourseRecord record = new KDDiscourseRecord(0, author,
+				String authorStr = "";
+				for (String authorId : note.authors) {
+					K6Author author = authorsMap.get(authorId);
+					if (author == null) {
+						continue;
+					}
+					if (authorStr.length() != 0) {
+						authorStr += ", ";
+					}
+					authorStr += author.userName;
+				}
+				if (authorStr.length() == 0) {
+					authorStr = "author-not-detected";
+				}
+				String body = note.text4search;
+				KDDiscourseRecord record = new KDDiscourseRecord(0, authorStr,
 						body);
 				record.setGroupName("default-group"); /*tmp*/
 				record.setTime(note.created.getTime());
@@ -207,12 +266,12 @@ public class KKF6Importer {
 		}
 		monitor.progress(1);
 
-		monitor.setWorkTitle("writing to your disk...");
+		monitor.setWorkTitle("writing data into your disk...");
 
-		String viewnames = "test";
-		//		for (KF5View view : selected) {
-		//			viewnames += "-" + view.title;
-		//		}
+		String viewnames = "";
+		for (K6View view : selectedViews) {
+			viewnames += "-" + view.title;
+		}
 		viewnames = viewnames.replaceAll(":", "");
 		viewnames = viewnames.replaceAll(";", "");
 		viewnames = viewnames.replaceAll("&", "");
@@ -229,45 +288,6 @@ public class KKF6Importer {
 		KRecordFileIO.save(records, file);
 		monitor.progress(1);
 	}
-
-	//	private List<JSONObject> retrieveNotesForView(KF5View view)
-	//			throws Exception {
-	//		JSONArray jsonPosts = service.getPostsForView(view.guid);
-	//		List<JSONObject> posts = new ArrayList<JSONObject>();
-	//		JSONArray viewPostRefs;
-	//		try {
-	//			viewPostRefs = jsonPosts.getJSONObject(0)
-	//					.getJSONArray("viewPostRefs");
-	//		} catch (Exception ex) {
-	//			return new ArrayList<JSONObject>();
-	//		}
-	//		int len = viewPostRefs.length();
-	//		for (int i = 0; i < len; i++) {
-	//			posts.add(viewPostRefs.getJSONObject(i).getJSONObject("postInfo"));
-	//		}
-	//		return posts;
-	//	}
-	//
-	//	@SuppressWarnings("unused")
-	//	private List<JSONObject> retrieveAllPosts(KF5Registration selectedReg)
-	//			throws Exception {
-	//		JSONArray jsonPosts = service
-	//				.getPostsForCommunity(selectedReg.communityId);
-	//		List<JSONObject> posts = new ArrayList<JSONObject>();
-	//		int len = jsonPosts.length();
-	//		for (int i = 0; i < len; i++) {
-	//			posts.add(jsonPosts.getJSONObject(i));
-	//		}
-	//		return posts;
-	//	}
-
-	//	public String toText(String html) {
-	//		Source source = new Source(html);
-	//		TextExtractor extractor = source.getTextExtractor();
-	//		extractor.setExcludeNonHTMLElements(true);
-	//		String text = source.getTextExtractor().toString();
-	//		return text;
-	//	}
 
 	private static String encodeFilename(String name) {
 		String notAllowedChars = "[( |\\\\|/|:|\\*|?|\"|<|>|\\|)]";

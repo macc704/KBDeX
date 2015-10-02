@@ -10,7 +10,7 @@
                 <attribute name="Main-Class" value="kbdex.app.Main"/>
                 <attribute name="Class-Path" value="."/>
             </manifest>
-            <fileset dir="bin"/>
+            <fileset dir="target/classes"/>
             	
            	<fileset dir="../../KBDeX/Sen1221/bin"/>
         	<fileset dir="../../KBDeX/KFLoader/bin"/>   

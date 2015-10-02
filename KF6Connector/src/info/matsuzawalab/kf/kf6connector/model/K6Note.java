@@ -1,6 +1,6 @@
 package info.matsuzawalab.kf.kf6connector.model;
 
-public class KNote extends KContribution {
+public class K6Note extends K6Contribution {
 	public KNoteData data;
 
 	public class KNoteData {

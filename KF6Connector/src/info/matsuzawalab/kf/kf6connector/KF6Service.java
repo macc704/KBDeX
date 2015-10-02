@@ -1,7 +1,6 @@
 package info.matsuzawalab.kf.kf6connector;
 
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 import java.util.List;
 
 import org.apache.http.HttpResponse;
@@ -19,8 +18,8 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 import info.matsuzawalab.kf.kf6connector.model.K6Author;
-import info.matsuzawalab.kf.kf6connector.model.KNote;
-import info.matsuzawalab.kf.kf6connector.model.KView;
+import info.matsuzawalab.kf.kf6connector.model.K6Note;
+import info.matsuzawalab.kf.kf6connector.model.K6View;
 
 public class KF6Service {
 
@@ -89,23 +88,35 @@ public class KF6Service {
 		}
 	}
 
-	public List<KView> getViews() throws Exception {
+	public List<K6View> getViews() throws Exception {
 		checkStatus();
 
 		HttpGet req = new HttpGet(baseURI + "/api/communities/" + communityId + "/views");
 		req.setHeader("authorization", "Bearer " + token.token);
 		HttpResponse res = client.execute(req);
 		String content = EntityUtils.toString(res.getEntity());
-		List<KView> views = gson.fromJson(content, new TypeToken<List<KView>>() {
+		List<K6View> views = gson.fromJson(content, new TypeToken<List<K6View>>() {
 		}.getType());
 		return views;
 	}
 
-	public List<KNote> getAllNotes() throws Exception {
+	public List<K6Author> getAuthors() throws Exception {
+		checkStatus();
+
+		HttpGet req = new HttpGet(baseURI + "/api/communities/" + communityId + "/authors");
+		req.setHeader("authorization", "Bearer " + token.token);
+		HttpResponse res = client.execute(req);
+		String content = EntityUtils.toString(res.getEntity());
+		List<K6Author> authors = gson.fromJson(content, new TypeToken<List<K6Author>>() {
+		}.getType());
+		return authors;
+	}
+
+	public List<K6Note> getAllNotes() throws Exception {
 		return getNotes(null);
 	}
 
-	public List<KNote> getNotes(String viewId) throws Exception {
+	public List<K6Note> getNotes(List<String> viewIds) throws Exception {
 		checkStatus();
 
 		HttpPost req = new HttpPost(baseURI + "/api/contributions/" + communityId + "/search");
@@ -113,13 +124,13 @@ public class KF6Service {
 		Search search = new Search();
 		search.query.communityId = communityId;
 		search.query.pagesize = "10000";
-		search.query.viewIds = Arrays.asList(new String[] { viewId });
+		search.query.viewIds = viewIds;
 		StringEntity entity = new StringEntity(gson.toJson(search), StandardCharsets.UTF_8);
 		req.addHeader("Content-type", "application/json");
 		req.setEntity(entity);
 		HttpResponse res = client.execute(req);
 		String content = EntityUtils.toString(res.getEntity());
-		List<KNote> notes = gson.fromJson(content, new TypeToken<List<KNote>>() {
+		List<K6Note> notes = gson.fromJson(content, new TypeToken<List<K6Note>>() {
 		}.getType());
 		return notes;
 	}

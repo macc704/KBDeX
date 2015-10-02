@@ -2,3 +2,5 @@
 /bin
 data
 packages
+/kf6.properties
+/target/

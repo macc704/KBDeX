@@ -84,6 +84,7 @@ public class KFLoginPanel extends JPanel {
 
 	public void setModel(KFLoginModel model) {
 		this.model = model;
+		protocols.setSelectedItem(model.getProtocol());
 		host.setText(model.getHost());
 		port.setText(Integer.toString(model.getPort()));
 		database.setText(model.getDBName());
@@ -101,8 +102,7 @@ public class KFLoginPanel extends JPanel {
 	}
 
 	void initializeComponents() {
-		protocols.setPreferredSize(new Dimension(100, protocols
-				.getPreferredSize().height));
+		protocols.setPreferredSize(new Dimension(100, protocols.getPreferredSize().height));
 		protocols.addItem("https");
 		protocols.addItem("http");
 		protocols.addItemListener(new ItemListener() {
