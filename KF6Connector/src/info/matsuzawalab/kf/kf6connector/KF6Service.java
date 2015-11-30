@@ -23,6 +23,8 @@ import info.matsuzawalab.kf.kf6connector.model.K6View;
 
 public class KF6Service {
 
+	private static String CHARSET = "UTF-8";
+
 	private HttpClient client;
 	private Gson gson;
 	private String baseURI;
@@ -56,7 +58,7 @@ public class KF6Service {
 		if (code != 200) {
 			throw new RuntimeException("login failed on code=" + code);
 		}
-		String content = EntityUtils.toString(res.getEntity());
+		String content = res2String(res);
 		token = gson.fromJson(content, Token.class);
 	}
 
@@ -68,7 +70,7 @@ public class KF6Service {
 		HttpGet req = new HttpGet(baseURI + "/api/users/myRegistrations");
 		req.setHeader("authorization", "Bearer " + token.token);
 		HttpResponse res = client.execute(req);
-		String content = EntityUtils.toString(res.getEntity());
+		String content = res2String(res);
 		// prettyPrint(content);
 		List<K6Author> authors = gson.fromJson(content, new TypeToken<List<K6Author>>() {
 		}.getType());
@@ -94,10 +96,16 @@ public class KF6Service {
 		HttpGet req = new HttpGet(baseURI + "/api/communities/" + communityId + "/views");
 		req.setHeader("authorization", "Bearer " + token.token);
 		HttpResponse res = client.execute(req);
-		String content = EntityUtils.toString(res.getEntity());
+		String content = res2String(res);
 		List<K6View> views = gson.fromJson(content, new TypeToken<List<K6View>>() {
 		}.getType());
 		return views;
+	}
+
+	private String res2String(HttpResponse res) throws Exception {
+		String content = EntityUtils.toString(res.getEntity(), CHARSET);
+		// prettyPrint(content);
+		return content;
 	}
 
 	public List<K6Author> getAuthors() throws Exception {
@@ -106,7 +114,7 @@ public class KF6Service {
 		HttpGet req = new HttpGet(baseURI + "/api/communities/" + communityId + "/authors");
 		req.setHeader("authorization", "Bearer " + token.token);
 		HttpResponse res = client.execute(req);
-		String content = EntityUtils.toString(res.getEntity());
+		String content = res2String(res);
 		List<K6Author> authors = gson.fromJson(content, new TypeToken<List<K6Author>>() {
 		}.getType());
 		return authors;
@@ -129,7 +137,7 @@ public class KF6Service {
 		req.addHeader("Content-type", "application/json");
 		req.setEntity(entity);
 		HttpResponse res = client.execute(req);
-		String content = EntityUtils.toString(res.getEntity());
+		String content = res2String(res);
 		List<K6Note> notes = gson.fromJson(content, new TypeToken<List<K6Note>>() {
 		}.getType());
 		return notes;
