@@ -254,8 +254,8 @@ import kbdex.app.manager.KDiscourseManagerFrame;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.10.2";
-	private static final String DATE = "2015.11.26";
+	private static final String VERSION = "1.10.3";
+	private static final String DATE = "2015.11.30";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (built at " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
