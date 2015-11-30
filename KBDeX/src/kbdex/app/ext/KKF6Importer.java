@@ -181,7 +181,7 @@ public class KKF6Importer {
 				}
 			});
 
-			mainPanel.add(listPanel, BorderLayout.CENTER);
+			mainPanel.add(scroll, BorderLayout.CENTER);
 			mainPanel.add(allBox, BorderLayout.SOUTH);
 
 			int res = JOptionPane.showConfirmDialog(null, mainPanel, "View?",
