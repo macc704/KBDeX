@@ -35,8 +35,6 @@ import kbdex.model.discourse.KDDiscourseRecord;
 import kbdex.model.discourse.KRecordFileIO;
 import kfl.connector.KFLoginModel;
 import kfl.connector.KFLoginPanel;
-import net.htmlparser.jericho.Source;
-import net.htmlparser.jericho.TextExtractor;
 
 public class KKF5Importer {
 
@@ -212,7 +210,7 @@ public class KKF5Importer {
 
 				String author = post.getJSONArray("authors").getJSONObject(0)
 						.getString("userName"); /*tmp*/
-				String body = toText(post.getString("body"));
+				String body = KHtmlConverter.html2text(post.getString("body"));
 				KDDiscourseRecord record = new KDDiscourseRecord(0, author,
 						body);
 				record.setGroupName("default-group"); /*tmp*/
@@ -292,14 +290,6 @@ public class KKF5Importer {
 			posts.add(jsonPosts.getJSONObject(i));
 		}
 		return posts;
-	}
-
-	public String toText(String html) {
-		Source source = new Source(html);
-		TextExtractor extractor = source.getTextExtractor();
-		extractor.setExcludeNonHTMLElements(true);
-		String text = source.getTextExtractor().toString();
-		return text;
 	}
 
 	private static String encodeFilename(String name) {

@@ -206,6 +206,23 @@ public class KKF6Importer {
 			return;
 		}
 
+		boolean title = true;
+		{//selecting setting
+			JPanel settingPanel = new JPanel();
+			settingPanel
+					.setLayout(new BoxLayout(settingPanel, BoxLayout.Y_AXIS));
+			settingPanel.setPreferredSize(new Dimension(300, 300));
+			JCheckBox checkboxTitle = new JCheckBox("include title", title);
+			settingPanel.add(checkboxTitle);
+
+			int res = JOptionPane.showConfirmDialog(null, settingPanel,
+					"Import Option", JOptionPane.OK_OPTION);
+			if (res != JOptionPane.OK_OPTION) {
+				return;
+			}
+			title = checkboxTitle.isSelected();
+		}
+
 		monitor.setWorkTitle("connect and getting data...");
 		List<String> viewIds = new ArrayList<String>();
 		for (K6View view : selectedViews) {
@@ -241,7 +258,13 @@ public class KKF6Importer {
 				if (authorStr.length() == 0) {
 					authorStr = "author-not-detected";
 				}
-				String body = note.text4search;
+
+				String body = "";
+				if (title) {
+					body = note.text4search;
+				} else {
+					body = KHtmlConverter.html2text(note.data.body);
+				}
 				KDDiscourseRecord record = new KDDiscourseRecord(0, authorStr,
 						body);
 				record.setGroupName("default-group"); /*tmp*/
