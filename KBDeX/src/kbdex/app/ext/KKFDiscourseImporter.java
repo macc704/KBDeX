@@ -15,6 +15,13 @@ import java.util.List;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 
+import org.zoolib.tuplebase.ZTB;
+
+import clib.common.filesystem.CFile;
+import clib.common.thread.ICTask;
+import clib.common.utils.ICProgressMonitor;
+import clib.view.progress.CPanelProcessingMonitor;
+import clib.view.windowmanager.CWindowCentraizer;
 import kbdex.app.KBDeX;
 import kbdex.app.manager.KDDiscourseManager;
 import kbdex.model.discourse.KDDiscourseFile;
@@ -27,14 +34,6 @@ import kfl.connector.KFLoginModel;
 import kfl.connector.KFLoginPanel;
 import kfl.model.KFNote;
 import kfl.model.KFView;
-
-import org.zoolib.tuplebase.ZTB;
-
-import clib.common.filesystem.CFile;
-import clib.common.thread.ICTask;
-import clib.common.utils.ICProgressMonitor;
-import clib.view.progress.CPanelProcessingMonitor;
-import clib.view.windowmanager.CWindowCentraizer;
 
 /**
  * @author macchan
@@ -77,7 +76,7 @@ public class KKFDiscourseImporter {
 	}
 
 	private ZTB connectWithDialog(KFLoginModel model) {
-		KFLoginPanel panel = new KFLoginPanel();
+		KFLoginPanel panel = new KFLoginPanel("Login to KF4:");
 		panel.setModel(model);
 		ZTB conn = null;
 
@@ -118,9 +117,8 @@ public class KKFDiscourseImporter {
 		List<KFNote> notes = builder.getNotes(views);
 		List<KDDiscourseRecord> records = new ArrayList<KDDiscourseRecord>();
 		for (KFNote note : notes) {
-			KDDiscourseRecord record = new KDDiscourseRecord(
-					note.getIdAsLong(), note.getAuthor().getName(),
-					note.getText());
+			KDDiscourseRecord record = new KDDiscourseRecord(note.getIdAsLong(),
+					note.getAuthor().getName(), note.getText());
 			record.setGroupName(note.getAuthor().getGroup().getName());
 			//record.setTime(note.getModified().getTime()); //#bugfix 1.5.7
 			record.setTime(note.getCreated().getTime());//#bugfix 1.5.7

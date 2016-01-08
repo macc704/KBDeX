@@ -48,7 +48,7 @@ public class KF6Service {
 
 		HttpPost req = new HttpPost(baseURI + "/auth/local");
 		Login login = new Login();
-		login.email = userName;
+		login.userName = userName;
 		login.password = password;
 		StringEntity entity = new StringEntity(gson.toJson(login), StandardCharsets.UTF_8);
 		req.addHeader("Content-type", "application/json");
@@ -162,7 +162,7 @@ public class KF6Service {
 }
 
 class Login {
-	String email;
+	String userName;
 	String password;
 }
 

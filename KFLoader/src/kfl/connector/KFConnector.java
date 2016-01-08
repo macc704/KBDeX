@@ -20,19 +20,17 @@ public class KFConnector {
 
 	public static ZTB connect(KFLoginModel model) {
 		ZTB conn;
-		HostInfo host = new HostInfo(model.getHost(), model.getPort(), model
-				.getDBName());
+		HostInfo host = new HostInfo(model.getHost(), model.getPort(), model.getDBName());
 		Options hostOptions = new Options(1, 10);/* retryCount, interval */
 		String userName = model.getUser();
 		String password = model.getPassword();
 		ZID[] sessionZID = { null };
-		conn = K5TBConnector.sGetTB_HTTP_UserName(host, hostOptions, userName,
-				password, sessionZID);
+		conn = K5TBConnector.sGetTB_HTTP_UserName(host, hostOptions, userName, password, sessionZID);
 		return conn;
 	}
 
 	public static ZTB connectWithDialog(KFLoginModel model) {
-		KFLoginPanel panel = new KFLoginPanel();
+		KFLoginPanel panel = new KFLoginPanel("Login to KF:");
 		panel.setModel(model);
 		ZTB conn = null;
 

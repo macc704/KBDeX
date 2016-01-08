@@ -82,7 +82,7 @@ public class KKF5Importer {
 		monitor.setMax(6);
 
 		monitor.setWorkTitle("login ...");
-		KFLoginPanel panel = new KFLoginPanel();
+		KFLoginPanel panel = new KFLoginPanel("Login to KF5:");
 		panel.setShowDatabase(false);
 		panel.setModel(model);
 

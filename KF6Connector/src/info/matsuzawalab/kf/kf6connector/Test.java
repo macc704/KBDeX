@@ -16,7 +16,7 @@ public class Test {
 		service.setBaseURI("http://localhost:9000");
 		service.login("yoshiaki.matsuzawa@gmail.com", "test");
 		List<K6Author> authors = service.getRegistrations();
-		service.setCommunityId(authors.get(3).communityId);
+		service.setCommunityId(authors.get(0).communityId);
 		List<K6Note> notes = service.getAllNotes();
 		for (K6Note note : notes) {
 			System.out.println(note.title);

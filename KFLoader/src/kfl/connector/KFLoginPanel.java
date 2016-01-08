@@ -52,8 +52,10 @@ public class KFLoginPanel extends JPanel {
 	private boolean showDatabase = true;
 
 	private KFLoginModel model;
+	private String title;
 
-	public KFLoginPanel() {
+	public KFLoginPanel(String title) {
+		this.title = title;
 		initializeComponents();
 	}
 
@@ -139,7 +141,7 @@ public class KFLoginPanel extends JPanel {
 		int x = X;
 		int y = Y;
 
-		addC(new JLabel("Login to KF:"), x, y);
+		addC(new JLabel(title), x, y);
 
 		if (failiureMessage != null) {
 			JLabel label = new JLabel(failiureMessage);
@@ -198,7 +200,7 @@ public class KFLoginPanel extends JPanel {
 
 	public static void main(String[] args) {
 		// CFrameTester.open(new KFLoginPanel());
-		new KFLoginPanel().openDialog();
+		new KFLoginPanel("Login to KFX:").openDialog();
 		System.exit(0);
 	}
 }

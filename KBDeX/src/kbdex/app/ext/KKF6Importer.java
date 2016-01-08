@@ -90,7 +90,7 @@ public class KKF6Importer {
 		monitor.setMax(6);
 
 		monitor.setWorkTitle("login ...");
-		KFLoginPanel panel = new KFLoginPanel();
+		KFLoginPanel panel = new KFLoginPanel("Login to KF6:");
 		panel.setShowDatabase(false);
 		panel.setModel(model);
 
