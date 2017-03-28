@@ -83,7 +83,7 @@ public class KF4SerializerMain {
 			public void doTask() {
 				try {
 					new KFDataSerializer().start(folder);
-					new KFAllAttachmentDownloader().start(folder);
+					//new KFAllAttachmentDownloader().start(folder);
 				} catch (Exception ex) {
 					ex.printStackTrace();
 				}

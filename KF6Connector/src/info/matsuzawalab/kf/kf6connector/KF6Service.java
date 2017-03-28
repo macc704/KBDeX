@@ -3,12 +3,17 @@ package info.matsuzawalab.kf.kf6connector;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import javax.net.ssl.SSLContext;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
 import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.TrustStrategy;
 import org.apache.http.util.EntityUtils;
 
 import com.google.gson.Gson;
@@ -34,7 +39,18 @@ public class KF6Service {
 
 	public KF6Service() {
 		gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").create();
-		client = HttpClientBuilder.create().build();
+		// client = HttpClientBuilder.create().build();
+		try {
+			TrustStrategy trustStrategy = new TrustSelfSignedStrategy();
+			SSLContext sslContext = SSLContexts.custom().loadTrustMaterial(trustStrategy).build();
+			client =
+                    HttpClients
+                            .custom()
+                            .setSSLContext(sslContext)
+                            .build();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex);
+		}
 	}
 
 	public void setBaseURI(String baseURI) {
