@@ -37,14 +37,14 @@
         	<fileset dir="../../KBDeX/KF6Connector/target/classes"/> 
         	<zipfileset excludes="META-INF/*.SF" src="${user.home}/.m2/repository/com/google/code/gson/gson/2.3.1/gson-2.3.1.jar"/>
         	
-        	<fileset dir="../../commonlibrary/CommonLibrary/bin"/>
+        	<fileset dir="../../commonlibrary/CommonLibrary/target/classes"/>
         	<zipfileset excludes="META-INF/*.SF" src="../../commonlibrary/CommonLibrary/lib/commons-csv-20070730.jar"/>
         	<zipfileset excludes="META-INF/*.SF" src="../../commonlibrary/CommonLibrary/lib/CEncodingDetector.jar"/>
-        	<fileset dir="../../commonlibrary/CSwing/bin"/>
-        	<fileset dir="../../commonlibrary/CSwingApp/bin"/>
-        	<fileset dir="../../commonlibrary/CChart/bin"/>
-        	<fileset dir="../../commonlibrary/CTable/bin"/>
-        	<fileset dir="../../commonlibrary/CTimeLineView/bin"/>
+        	<fileset dir="../../commonlibrary/CSwing/target/classes"/>
+        	<fileset dir="../../commonlibrary/CSwingApp/target/classes"/>
+        	<fileset dir="../../commonlibrary/CChart/target/classes"/>
+        	<fileset dir="../../commonlibrary/CTable/target/classes"/>
+        	<fileset dir="../../commonlibrary/CTimeLineView/target/classes"/>
      	
         	<zipfileset excludes="META-INF/*.SF" src="../../KBDeX/KBDeX/lib/BiSlider.jar"/>
         	<zipfileset excludes="META-INF/*.SF" src="../../KBDeX/Sen1221/lib/commons-logging.jar"/>

@@ -39,6 +39,9 @@ import kbdex.app.manager.KDiscourseManagerFrame;
  * TODO 10 Graph表示, Table表示からのcsv, xls吐出機能，（R，Gnuplotもイイネ！）
  * 
  * ＜更新履歴＞
+ * 1.10.5 2017.03.27
+ * 		* SSL問題を回避
+ * 
  * 1.10.4 2016.01.08
  *　		・Fixed bug: for supporting kf6.5.x
  *
@@ -258,8 +261,8 @@ import kbdex.app.manager.KDiscourseManagerFrame;
  */
 public class KBDeX {
 
-	private static final String VERSION = "1.10.4";
-	private static final String DATE = "2016.01.08";
+	private static final String VERSION = "1.10.5";
+	private static final String DATE = "2017.03.27";
 	private static final String TITLE = "KBDeX Version " + VERSION
 			+ " (built at " + DATE + ")";
 	private static final String DATA_DIR_NAME = "data";
